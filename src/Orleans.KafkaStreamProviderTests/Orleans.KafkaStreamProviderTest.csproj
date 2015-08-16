@@ -119,7 +119,7 @@
     <Folder Include="Utils\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OrleansKafkaUtils\Orleans.KafkaStreamProvider.csproj">
+    <ProjectReference Include="..\Orleans.KafkaStreamProvider\Orleans.KafkaStreamProvider.csproj">
       <Project>{a3def98d-e1c3-4799-822f-090d0dcd0144}</Project>
       <Name>Orleans.KafkaStreamProvider</Name>
     </ProjectReference>

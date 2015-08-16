@@ -159,7 +159,7 @@
       <Project>{e782dd19-51f7-4f66-8217-bacac33767e4}</Project>
       <Name>ClientGenerator</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OrleansKafkaUtils\Orleans.KafkaStreamProvider.csproj">
+    <ProjectReference Include="..\Orleans.KafkaStreamProvider\Orleans.KafkaStreamProvider.csproj">
       <Project>{a3def98d-e1c3-4799-822f-090d0dcd0144}</Project>
       <Name>Orleans.KafkaStreamProvider</Name>
     </ProjectReference>
