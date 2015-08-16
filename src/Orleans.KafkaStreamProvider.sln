@@ -1,0 +1,69 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orleans.KafkaStreamProviderTest", "OrleansKafkaUtilsTests\Orleans.KafkaStreamProviderTest.csproj", "{7AD97664-B419-456B-881D-7C7F9A6405F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tester", "Tester\Tester.csproj", "{591EF75B-D3B0-403D-830C-39D032A73404}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestGrainInterfaces", "TestGrainInterfaces\TestGrainInterfaces.csproj", "{3972213F-189B-41D4-90FE-38D513C1106D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestGrains", "TestGrains\TestGrains.csproj", "{EACE28AE-F301-472A-B633-02B55434871B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orleans.KafkaStreamProvider", "OrleansKafkaUtils\Orleans.KafkaStreamProvider.csproj", "{A3DEF98D-E1C3-4799-822F-090D0DCD0144}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientGenerator", "ClientGenerator\ClientGenerator.csproj", "{E782DD19-51F7-4F66-8217-BACAC33767E4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{A28FFF6A-8B72-4A1D-B83A-1D48608DC8CA}"
+	ProjectSection(SolutionItems) = preProject
+		Build\Azure SDK License.rtf = Build\Azure SDK License.rtf
+		Build\GlobalAssemblyInfo.cs = Build\GlobalAssemblyInfo.cs
+		Build\License.rtf = Build\License.rtf
+		Build\OrleansSetup.wixproj = Build\OrleansSetup.wixproj
+		Build\OrleansSetup.wxs = Build\OrleansSetup.wxs
+		Build\PostBuild.cmd = Build\PostBuild.cmd
+		Build\Version.txt = Build\Version.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrleansTestingHost", "OrleansTestingHost\OrleansTestingHost.csproj", "{40EE3B00-D381-485F-9C69-FF706837DEED}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7AD97664-B419-456B-881D-7C7F9A6405F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AD97664-B419-456B-881D-7C7F9A6405F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AD97664-B419-456B-881D-7C7F9A6405F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AD97664-B419-456B-881D-7C7F9A6405F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{591EF75B-D3B0-403D-830C-39D032A73404}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{591EF75B-D3B0-403D-830C-39D032A73404}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{591EF75B-D3B0-403D-830C-39D032A73404}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{591EF75B-D3B0-403D-830C-39D032A73404}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3972213F-189B-41D4-90FE-38D513C1106D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3972213F-189B-41D4-90FE-38D513C1106D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3972213F-189B-41D4-90FE-38D513C1106D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3972213F-189B-41D4-90FE-38D513C1106D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EACE28AE-F301-472A-B633-02B55434871B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EACE28AE-F301-472A-B633-02B55434871B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EACE28AE-F301-472A-B633-02B55434871B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EACE28AE-F301-472A-B633-02B55434871B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3DEF98D-E1C3-4799-822F-090D0DCD0144}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3DEF98D-E1C3-4799-822F-090D0DCD0144}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3DEF98D-E1C3-4799-822F-090D0DCD0144}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3DEF98D-E1C3-4799-822F-090D0DCD0144}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E782DD19-51F7-4F66-8217-BACAC33767E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E782DD19-51F7-4F66-8217-BACAC33767E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E782DD19-51F7-4F66-8217-BACAC33767E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E782DD19-51F7-4F66-8217-BACAC33767E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40EE3B00-D381-485F-9C69-FF706837DEED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40EE3B00-D381-485F-9C69-FF706837DEED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40EE3B00-D381-485F-9C69-FF706837DEED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40EE3B00-D381-485F-9C69-FF706837DEED}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
