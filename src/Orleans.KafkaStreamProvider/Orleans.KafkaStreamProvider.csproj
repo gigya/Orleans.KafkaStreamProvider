@@ -88,10 +88,9 @@
     <Compile Include="KafkaQueue\IKafkaBatchFactory.cs" />
     <Compile Include="KafkaQueue\KafkaBatchContainer.cs" />
     <Compile Include="KafkaQueue\KafkaBatchFactory.cs" />
-    <Compile Include="KafkaQueue\KafkaMessage.cs" />
     <Compile Include="KafkaQueue\KafkaQueueAdapterFactory.cs" />
     <Compile Include="KafkaQueue\KafkaQueueAdapterReceiver.cs" />
-    <Compile Include="KafkaQueue\KafkaQueueAdpater.cs" />
+    <Compile Include="KafkaQueue\KafkaQueueAdapter.cs" />
     <Compile Include="KafkaQueue\KafkaStreamProviderOptions.cs" />
     <Compile Include="PersistentStreams\KafkaStreamProvider.cs" />
   </ItemGroup>

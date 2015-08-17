@@ -10,7 +10,7 @@ using Orleans.Streams;
 
 namespace Orleans.KafkaStreamProvider.KafkaQueue
 {
-    public class KafkaQueueAdpater : IQueueAdapter
+    public class KafkaQueueAdapter : IQueueAdapter
     {
         private readonly HashRingBasedStreamQueueMapper _streamQueueMapper;
         private readonly ProtocolGateway _gateway;
@@ -20,7 +20,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private readonly Producer _producer;
         private readonly Dictionary<QueueId, int> _queues;
 
-        public KafkaQueueAdpater(HashRingBasedStreamQueueMapper queueMapper, KafkaStreamProviderOptions options, string providerName, IKafkaBatchFactory batchFactory, Logger logger)
+        public KafkaQueueAdapter(HashRingBasedStreamQueueMapper queueMapper, KafkaStreamProviderOptions options, string providerName, IKafkaBatchFactory batchFactory, Logger logger)
         {
             if (options == null) throw new ArgumentNullException("options");
             if (batchFactory == null) throw new ArgumentNullException("batchFactory");

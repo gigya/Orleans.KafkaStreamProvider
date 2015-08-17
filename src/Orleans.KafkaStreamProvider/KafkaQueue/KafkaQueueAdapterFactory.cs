@@ -88,7 +88,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 
         public Task<IQueueAdapter> CreateAdapter()
         {
-            var adapter = new KafkaQueueAdpater(_streamQueueMapper, _options, _providerName,
+            var adapter = new KafkaQueueAdapter(_streamQueueMapper, _options, _providerName,
                 new KafkaBatchFactory(), _logger);
             return Task.FromResult<IQueueAdapter>(adapter);
         }
