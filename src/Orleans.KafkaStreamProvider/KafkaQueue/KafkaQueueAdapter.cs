@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using KafkaNet;
 using KafkaNet.Model;
@@ -18,7 +20,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private readonly Logger _logger;
         private readonly KafkaStreamProviderOptions _options;
         private readonly Producer _producer;
-        private readonly Dictionary<QueueId, int> _queues;
+        private readonly ConcurrentDictionary<QueueId, int> _queues;
 
         public KafkaQueueAdapter(HashRingBasedStreamQueueMapper queueMapper, KafkaStreamProviderOptions options, string providerName, IKafkaBatchFactory batchFactory, Logger logger)
         {
@@ -33,7 +35,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             Name = providerName;
             _batchFactory = batchFactory;
             _logger = logger;
-            _queues = new Dictionary<QueueId, int>();
+            _queues = new ConcurrentDictionary<QueueId, int>();
 
             // Creating a producer
             KafkaOptions kafkaOptions = new KafkaOptions(_options.ConnectionStrings.ToArray()){Log = new KafkaLogBridge(logger)};
@@ -52,7 +54,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 
             for (var currPartition = 0; currPartition < _options.NumOfQueues; currPartition++)
             {
-                _queues.Add(queues[currPartition], currPartition);
+                _queues.TryAdd(queues[currPartition], currPartition);
             }
         }
 
@@ -67,8 +69,10 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 
             _logger.Info("KafkaQueueAdapter - Creating a KafkaQueueAdapterReceiver for partition {0} in topic {1}", partitionId, _options.TopicName);
 
+            var clientName = Environment.MachineName + AppDomain.CurrentDomain.FriendlyName;
+
             // Creating a receiver
-            var manualConsumer = new ManualConsumer(partitionId, _options.TopicName, _gateway, Environment.MachineName, _options.MaxBytesInMessageSet);
+            var manualConsumer = new ManualConsumer(partitionId, _options.TopicName, _gateway, clientName, _options.MaxBytesInMessageSet);
 
             return new KafkaQueueAdapterReceiver(queueId, manualConsumer, _options,_batchFactory, _logger);
         }
@@ -95,15 +99,18 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             // This is ackLevel != 0 check
             if (response != null)
             {
+                var responsesWithError =
+                    response.Where(messageResponse => messageResponse.Error != (int) ErrorResponseCode.NoError);
+
                 // Checking all the responses
-                foreach (var messageResponse in response.Where(messageResponse => messageResponse.Error != (int)ErrorResponseCode.NoError))
-                {
+                foreach (var messageResponse in responsesWithError)
+                {                    
                     _logger.Info(
-                        "KafkaQueueAdapter - Error sending message through kafka client, the error code is {1}",
-                        messageResponse);
+                        "KafkaQueueAdapter - Error sending message through kafka client, the error code is {0}, message offset is {1}",
+                        messageResponse.Error, messageResponse.Offset);
 
                     throw new KafkaApplicationException(
-                        "Failed at producing the message num {0} for queue {1} in topic {2}", messageResponse.Offset,
+                        "Failed at producing the message with offset {0} for queue {1} in topic {2}", messageResponse.Offset,
                         queueId, _options.TopicName)
                     {
                         ErrorCode = messageResponse.Error,
