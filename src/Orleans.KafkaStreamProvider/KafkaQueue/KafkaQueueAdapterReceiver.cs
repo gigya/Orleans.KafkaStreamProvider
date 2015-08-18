@@ -103,11 +103,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
                 }
 
                 var messages = task.Result.ToList();
-
-                // The sequence will be based on message offsets
-                var tokenToGive = _lastOffset;
-
-                var batches = messages.Select(m => _factory.FromKafkaMessage(m, tokenToGive++)).ToList();
+                var batches = messages.Select(m => _factory.FromKafkaMessage(m, m.Meta.Offset)).ToList();
 
                 if (batches.Count > 0)
                 {
