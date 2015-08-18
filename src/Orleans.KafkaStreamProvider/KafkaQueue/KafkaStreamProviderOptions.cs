@@ -22,12 +22,11 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private const string AckLevelParam = "AckLevel";
         private const string ReceiveWaitTimeInMsParam = "ReceiveWaitTimeInMs";
         private const string OffsetCommitIntervalParam = "OffsetCommitInterval";
-        private const string MaxMessagesToTakeFromKafkaParam = "MaxMessagesToTakeFromKafka";
         private const string ShouldInitWithLastOffsetParam = "ShouldInitWithLastOffsetParam";
         private const string MaxMessageSizeInBytesParam = "MaxMessageSize";
 
         // Default values
-        private const int DefaultNumOfQueues = 4;
+        private const int DefaultNumOfQueues = 1;
         private const int DefaultCacheSize = 4096 * 4;
         private const int DefaultProduceBatchSize = 1000;
         private const int DefaultTimeToWaitForBatchInMs = 10;
@@ -35,7 +34,6 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private const int DefaultAckLevel = 1;
         private const int DefaultReceiveWaitTimeInMs = 100;
         private const int DefaultOffsetCommitInterval = 1;
-        private const int DefaultMaxMessagesToTakeFromKafka = 65536;
         private const bool DefaultShouldInitWithLastOffset = true;
         private const int DefaultMaxMessageSizeInBytes = 4096;
 
@@ -55,7 +53,6 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         public int AckLevel { get; set; }
         public int ReceiveWaitTimeInMs { get; set; }
         public int OffsetCommitInterval { get; set; }
-        public int MaxMessagesToTakeFromKafka { get; set; }        
         public bool ShouldInitWithLastOffset { get; set; }
         public int MaxMessageSizeInBytes { get; set; }
 
@@ -78,7 +75,6 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             AckLevel = DefaultAckLevel;
             ReceiveWaitTimeInMs = DefaultReceiveWaitTimeInMs;
             OffsetCommitInterval = DefaultOffsetCommitInterval;
-            MaxMessagesToTakeFromKafka = DefaultMaxMessagesToTakeFromKafka;
             ShouldInitWithLastOffset = DefaultShouldInitWithLastOffset;
             MaxMessageSizeInBytes = DefaultMaxMessageSizeInBytes;
         }
@@ -106,7 +102,6 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             ProduceBatchSize = GetOptionalParamInt(ProduceBatchSizeParam, DefaultProduceBatchSize, config);
             TimeToWaitForBatchInMs = GetOptionalParamInt(TimeToWaitForBatchInMsParam, DefaultTimeToWaitForBatchInMs, config);
             ReceiveWaitTimeInMs = GetOptionalParamInt(ReceiveWaitTimeInMsParam, DefaultReceiveWaitTimeInMs, config);
-            MaxMessagesToTakeFromKafka = GetOptionalParamInt(MaxMessagesToTakeFromKafkaParam, DefaultMaxMessagesToTakeFromKafka, config);
             ShouldInitWithLastOffset = GetOptionalParamBool(ShouldInitWithLastOffsetParam, DefaultShouldInitWithLastOffset, config);
             MaxMessageSizeInBytes = GetOptionalParamInt(MaxMessageSizeInBytesParam, DefaultMaxBytesInMessageSet,
                 config);

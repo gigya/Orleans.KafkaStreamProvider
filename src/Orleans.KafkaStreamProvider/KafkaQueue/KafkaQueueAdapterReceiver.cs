@@ -79,24 +79,22 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         }
 
         public async Task<IList<IBatchContainer>> GetQueueMessagesAsync(int maxCount)
-        {
-            var numToGet = Math.Min(maxCount, _options.MaxMessagesToTakeFromKafka);
-
+        {            
             try
             {            
-                var task = _consumer.FetchMessages(numToGet, _lastOffset);
+                var task = _consumer.FetchMessages(maxCount, _lastOffset);
 
                 await Task.Run(() => Task.WaitAny(task, Task.Delay(_options.ReceiveWaitTimeInMs)));
               
                 // Checking that the task completed successfully
                 if (!task.IsCompleted)
                 {
-                    _logger.Verbose("KafkaQueueAdapterReceiver - Fetching operation was not completed, tried to fetch {0} messages from offest {1}", numToGet, _lastOffset);
+                    _logger.Verbose("KafkaQueueAdapterReceiver - Fetching operation was not completed, tried to fetch {0} messages from offest {1}", maxCount, _lastOffset);
                     return new List<IBatchContainer>();
                 }
                 if (task.IsFaulted && task.Exception != null)
                 {
-                    _logger.Info("KafkaQueueAdapterReceiver - Fetching messages from kafka failed, tried to fetch {0} messages from offest {1}", numToGet, _lastOffset);
+                    _logger.Info("KafkaQueueAdapterReceiver - Fetching messages from kafka failed, tried to fetch {0} messages from offest {1}", maxCount, _lastOffset);
                     throw task.Exception;
                 }
                 if (task.Result == null)
