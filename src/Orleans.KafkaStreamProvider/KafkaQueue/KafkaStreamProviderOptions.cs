@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Orleans.Providers;
 
 namespace Orleans.KafkaStreamProvider.KafkaQueue
 {
@@ -76,6 +77,67 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             OffsetCommitInterval = DefaultOffsetCommitInterval;
             MaxMessagesToTakeFromKafka = DefaultMaxMessagesToTakeFromKafka;
             ShouldInitWithLastOffset = DefaultShouldInitWithLastOffset;
+        }
+
+        public KafkaStreamProviderOptions(IProviderConfiguration config)
+        {
+            if (config == null) throw new ArgumentNullException("config");
+
+            string rawConnectionStrings = GetRequiredParam(ConnectionStringsParam, config);
+
+            // Parsing the connection strings
+            var dividedConnectionStrings = rawConnectionStrings.Split(ConnectionStringDelimiter);
+
+            // Setting the required params
+            _connectionStrings = dividedConnectionStrings.Select(dividedConnectionString => new Uri(dividedConnectionString)).ToList();
+            _topicName = GetRequiredParam(TopicNameParam, config);
+            _consumerGroupName = GetRequiredParam(ConsumerGroupNameParam, config);
+
+            // Setting the optional params
+            CacheSize = GetOptionalParam(CacheSizeParam, DefaultCacheSize, config);
+            NumOfQueues = GetOptionalParam(NumOfQueuesParam, DefaultNumOfQueues, config);
+            AckLevel = GetOptionalParam(AckLevelParam, DefaultAckLevel, config);
+            MaxBytesInMessageSet = GetOptionalParam(MaxBytesInMessageSetParam, DefaultMaxBytesInMessageSet, config);
+            OffsetCommitInterval = GetOptionalParam(OffsetCommitIntervalParam, DefaultOffsetCommitInterval, config);
+            ProduceBatchSize = GetOptionalParam(ProduceBatchSizeParam, DefaultProduceBatchSize, config);
+            TimeToWaitForBatchInMs = GetOptionalParam(TimeToWaitForBatchInMsParam, DefaultTimeToWaitForBatchInMs, config);
+            ReceiveWaitTimeInMs = GetOptionalParam(ReceiveWaitTimeInMsParam, DefaultReceiveWaitTimeInMs, config);
+            MaxMessagesToTakeFromKafka = GetOptionalParam(MaxMessagesToTakeFromKafkaParam, DefaultMaxMessagesToTakeFromKafka, config);
+            ShouldInitWithLastOffset = GetOptionalParam(ShouldInitWithLastOffsetParam, DefaultShouldInitWithLastOffset, config);
+        }
+
+        private static string GetRequiredParam(string paramName, IProviderConfiguration config)
+        {
+            string paramValue;
+
+            if (!config.Properties.TryGetValue(paramName, out paramValue))
+            {
+                throw new ArgumentException(String.Format("{0} property not set", paramName));
+            }
+
+            return paramValue;
+        }
+
+        private static int GetOptionalParam(string paramName, int defaultValue, IProviderConfiguration config)
+        {
+            string paramValuePreParsed;
+            var paramValue = defaultValue;
+            if (!config.Properties.TryGetValue(paramName, out paramValuePreParsed)) return paramValue;
+            if (!int.TryParse(paramValuePreParsed, out paramValue))
+                throw new ArgumentException(String.Format("{0} invalid.  Must be int", paramName));
+
+            return paramValue;
+        }
+
+        private static bool GetOptionalParam(string paramName, bool defaultValue, IProviderConfiguration config)
+        {
+            string paramValuePreParsed;
+            var paramValue = defaultValue;
+            if (!config.Properties.TryGetValue(paramName, out paramValuePreParsed)) return paramValue;
+            if (!bool.TryParse(paramValuePreParsed, out paramValue))
+                throw new ArgumentException(String.Format("{0} invalid.  Must be boolean", paramName));
+
+            return paramValue;
         }
     }
 }
