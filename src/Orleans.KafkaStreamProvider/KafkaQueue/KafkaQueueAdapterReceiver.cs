@@ -146,9 +146,16 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         {
             if (_numOfFetches >= _options.OffsetCommitInterval)
             {
-                await Task.Run(() => Task.WhenAny(_consumer.UpdateOrCreateOffset(_options.ConsumerGroupName, _lastOffset), Task.Delay(_options.ReceiveWaitTimeInMs)));                
-                _numOfFetches = 0;
-                _logger.Verbose("KafkaQueueAdapterReceiver - Commited an offset to the ConsumerGroup. ConsumerGroup is {0}, offset is {1}", _options.ConsumerGroupName, _lastOffset);
+                var commitTask = Task.Run(() => _consumer.UpdateOrCreateOffset(_options.ConsumerGroupName, _lastOffset));
+                await Task.WhenAny(commitTask, Task.Delay(_options.ReceiveWaitTimeInMs));
+
+                if (commitTask.IsCompleted)
+                {
+                    _numOfFetches = 0;
+                    _logger.Verbose(
+                        "KafkaQueueAdapterReceiver - Commited an offset to the ConsumerGroup. ConsumerGroup is {0}, offset is {1}",
+                        _options.ConsumerGroupName, _lastOffset);
+                }
             }
         }
 
@@ -156,7 +163,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         {
             if (_currentCommitTask != null)
             {
-                await Task.Run(() => Task.WhenAny(_currentCommitTask, Task.Delay(timeout)));
+                await Task.WhenAny(_currentCommitTask, Task.Delay(timeout));
                 _currentCommitTask = null;
                 _logger.Verbose("KafkaQueueAdapterReceiver - The receiver had finished a commit and was shutted down");
             }
