@@ -96,6 +96,10 @@
       <HintPath>..\packages\Microsoft.Orleans.OrleansRuntime.1.0.9.5\lib\net45\OrleansRuntime.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="OrleansTestingHost, Version=1.0.9.5, Culture=neutral, PublicKeyToken=070f47935e3ed133, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Orleans.TestingHost.1.0.9.5\lib\net45\OrleansTestingHost.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="OrleansZooKeeperUtils, Version=1.0.9.5, Culture=neutral, PublicKeyToken=070f47935e3ed133, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Orleans.OrleansZooKeeperUtils.1.0.9.5\lib\net45\OrleansZooKeeperUtils.dll</HintPath>
       <Private>True</Private>
@@ -133,14 +137,6 @@
       <Link>Version.txt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\OrleansTestingHost\ClientConfigurationForTesting.xml">
-      <Link>ClientConfigurationForTesting.xml</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\OrleansTestingHost\OrleansConfigurationForTesting.xml">
-      <Link>OrleansConfigurationForTesting.xml</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="ClientConfiguration.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -158,10 +154,6 @@
     <ProjectReference Include="..\Orleans.KafkaStreamProvider\Orleans.KafkaStreamProvider.csproj">
       <Project>{a3def98d-e1c3-4799-822f-090d0dcd0144}</Project>
       <Name>Orleans.KafkaStreamProvider</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OrleansTestingHost\OrleansTestingHost.csproj">
-      <Project>{40ee3b00-d381-485f-9c69-ff706837deed}</Project>
-      <Name>OrleansTestingHost</Name>
     </ProjectReference>
     <ProjectReference Include="..\TestGrainInterfaces\TestGrainInterfaces.csproj">
       <Project>{3972213f-189b-41d4-90fe-38d513c1106d}</Project>

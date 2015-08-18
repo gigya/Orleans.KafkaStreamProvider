@@ -21,27 +21,16 @@ OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHE
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+using Orleans;
 using System;
-using System.Diagnostics;
-using System.Net;
-using Orleans.Runtime;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Orleans.TestingHost
+namespace TestGrainInterfaces
 {
-    [Serializable]
-    public class SiloHandle
+    interface ISimpleBootstrapGrain: IGrain
     {
-        public Silo Silo { get; set; }
-        public AppDomain AppDomain { get; set; }
-        public TestingSiloOptions Options { get; set; }
-        public string Name { get; set; }
-        public Process Process { get; set; }
-        public string MachineName { get; set; }
-        public IPEndPoint Endpoint { get; set; }
-
-        public override string ToString()
-        {
-            return String.Format("SiloHandle:{0}", Endpoint);
-        }
     }
 }
