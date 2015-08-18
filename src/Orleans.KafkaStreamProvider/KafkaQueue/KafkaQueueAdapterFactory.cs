@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Orleans.Providers;
 using Orleans.Providers.Streams.Common;
 using Orleans.Runtime;
 using Orleans.Streams;
@@ -18,9 +19,11 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private string _providerName;
         private Logger _logger;
 
-        public void Init(Orleans.Providers.IProviderConfiguration config, string providerName, Logger logger)
+        public void Init(IProviderConfiguration config, string providerName, Logger logger)
         {
             if (config == null) throw new ArgumentNullException("config");            
+            if (logger == null) throw new ArgumentNullException("logger");
+            if (String.IsNullOrEmpty(providerName)) throw new ArgumentNullException("providerName");
 
             string rawConnectionStrings = GetRequiredParam(KafkaStreamProviderOptions.ConnectionStringsParam, config);
 
@@ -52,7 +55,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             _logger = logger;
         }
 
-        private static string GetRequiredParam(string paramName, Orleans.Providers.IProviderConfiguration config)
+        private static string GetRequiredParam(string paramName, IProviderConfiguration config)
         {
             string paramValue;
 
@@ -64,7 +67,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             return paramValue;
         }
 
-        private static int GetOptionalParam(string paramName, int defaultValue, Orleans.Providers.IProviderConfiguration config)
+        private static int GetOptionalParam(string paramName, int defaultValue, IProviderConfiguration config)
         {
             string paramValuePreParsed;
             var paramValue = defaultValue;
@@ -75,7 +78,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             return paramValue;
         }
 
-        private static bool GetOptionalParam(string paramName, bool defaultValue, Orleans.Providers.IProviderConfiguration config)
+        private static bool GetOptionalParam(string paramName, bool defaultValue, IProviderConfiguration config)
         {
             string paramValuePreParsed;
             var paramValue = defaultValue;
@@ -100,7 +103,6 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         /// <returns></returns>
         public Task<IStreamFailureHandler> GetDeliveryFailureHandler(QueueId queueId)
         {
-            // TODO: Realize what is it good for
             return Task.FromResult<IStreamFailureHandler>(new NoOpStreamDeliveryFailureHandler(false));
         }
 
