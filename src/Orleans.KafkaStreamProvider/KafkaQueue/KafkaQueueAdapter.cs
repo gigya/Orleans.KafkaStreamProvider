@@ -21,6 +21,15 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private readonly Producer _producer;
         private readonly ConcurrentDictionary<QueueId, int> _queues;
 
+        public bool IsRewindable { get { return false; } }
+
+        public string Name { get; private set; }
+
+        public StreamProviderDirection Direction
+        {
+            get { return StreamProviderDirection.ReadWrite; }
+        }
+
         public KafkaQueueAdapter(HashRingBasedStreamQueueMapper queueMapper, KafkaStreamProviderOptions options, string providerName, IKafkaBatchFactory batchFactory, Logger logger)
         {
             if (options == null) throw new ArgumentNullException("options");
@@ -41,7 +50,6 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             var broker = new BrokerRouter(kafkaOptions);
             _producer = new Producer(broker) { BatchDelayTime = TimeSpan.FromMilliseconds(_options.TimeToWaitForBatchInMs), BatchSize = _options.ProduceBatchSize };
             _gateway = new ProtocolGateway(kafkaOptions);
-
             InitializeQueueToPartitionMap();
 
             _logger.Info("KafkaQueueAdapter - Created a KafkaQueueAdapter");
@@ -57,10 +65,6 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             }
         }
 
-        public bool IsRewindable { get { return false; } }
-
-        public string Name { get; private set; }
-
         public IQueueAdapterReceiver CreateReceiver(QueueId queueId)
         {
             //var partitionId = queueId.GetNumericId();
@@ -73,12 +77,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             // Creating a receiver
             var manualConsumer = new ManualConsumer(partitionId, _options.TopicName, _gateway, clientName, _options.MaxBytesInMessageSet);
 
-            return new KafkaQueueAdapterReceiver(queueId, manualConsumer, _options,_batchFactory, _logger);
-        }
-
-        public StreamProviderDirection Direction
-        {
-            get { return StreamProviderDirection.ReadWrite; }
+            return new KafkaQueueAdapterReceiver(queueId, manualConsumer, _options, _batchFactory, _logger);
         }
 
         public async Task QueueMessageBatchAsync<T>(Guid streamGuid, string streamNamespace, IEnumerable<T> events)
@@ -88,12 +87,11 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             //var partitionId = queueId.GetNumericId();
             var partitionId = _queues[queueId];
 
-            _logger.Info("KafkaQueueAdapter - For StreamId: {0}, StreamNamespcae:{1} using partition {2}", streamGuid, streamNamespace, partitionId);
+            _logger.Verbose("KafkaQueueAdapter - For StreamId: {0}, StreamNamespcae:{1} using partition {2}", streamGuid, streamNamespace, partitionId);
 
             // Creating a message for each event, to support evenutally connecting the sequence token with the kafka offset
-            var messages = events.Select(singleEvent => _batchFactory.ToKafkaMessage(streamGuid, streamNamespace, singleEvent)).Where(m => m != null).ToList();
-
-            var response = await Task.Run(() => _producer.SendMessageAsync(_options.TopicName, messages, (short)_options.AckLevel, partition: partitionId));
+            var message = new List<Message> {_batchFactory.ToKafkaMessage(streamGuid, streamNamespace, events)};
+            var response = await Task.Run(() => _producer.SendMessageAsync(_options.TopicName, message, (short)_options.AckLevel, partition: partitionId));
 
             // This is ackLevel != 0 check
             if (response != null)

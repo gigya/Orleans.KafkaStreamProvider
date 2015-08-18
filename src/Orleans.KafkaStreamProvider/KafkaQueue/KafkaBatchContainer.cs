@@ -14,6 +14,12 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private EventSequenceToken _sequenceToken;
         private readonly List<object> _events;
 
+        public Guid StreamGuid { get; private set; }
+
+        public string StreamNamespace { get; private set; }
+
+        public StreamSequenceToken SequenceToken { get { return _sequenceToken; } }
+
         private KafkaBatchContainer(Guid streamId, string streamNamespace, List<object> events)
         {
             if (events == null)
@@ -34,13 +40,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             StreamNamespace = streamNamespace;
             _events = new List<object>(1){singleEvent};
         }
-
-        public Guid StreamGuid { get; private set; }
-
-        public string StreamNamespace { get; private set; }
-
-        public StreamSequenceToken SequenceToken { get { return _sequenceToken; }}
-
+        
         public IEnumerable<Tuple<T, StreamSequenceToken>> GetEvents<T>()
         {
             // Get events of the wanted type
@@ -61,7 +61,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         {
             KafkaBatchContainer container = new KafkaBatchContainer(streamId, streamNamespace, events.Cast<object>().ToList());
             var rawBytes = SerializationManager.SerializeToByteArray(container);
-            Message message = new Message(){Value = rawBytes};
+            Message message = new Message(){ Value = rawBytes };
 
             return message;
         }

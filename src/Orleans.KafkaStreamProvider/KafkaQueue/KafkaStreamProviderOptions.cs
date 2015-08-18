@@ -94,31 +94,28 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             _consumerGroupName = GetRequiredParam(ConsumerGroupNameParam, config);
 
             // Setting the optional params
-            CacheSize = GetOptionalParam(CacheSizeParam, DefaultCacheSize, config);
-            NumOfQueues = GetOptionalParam(NumOfQueuesParam, DefaultNumOfQueues, config);
-            AckLevel = GetOptionalParam(AckLevelParam, DefaultAckLevel, config);
-            MaxBytesInMessageSet = GetOptionalParam(MaxBytesInMessageSetParam, DefaultMaxBytesInMessageSet, config);
-            OffsetCommitInterval = GetOptionalParam(OffsetCommitIntervalParam, DefaultOffsetCommitInterval, config);
-            ProduceBatchSize = GetOptionalParam(ProduceBatchSizeParam, DefaultProduceBatchSize, config);
-            TimeToWaitForBatchInMs = GetOptionalParam(TimeToWaitForBatchInMsParam, DefaultTimeToWaitForBatchInMs, config);
-            ReceiveWaitTimeInMs = GetOptionalParam(ReceiveWaitTimeInMsParam, DefaultReceiveWaitTimeInMs, config);
-            MaxMessagesToTakeFromKafka = GetOptionalParam(MaxMessagesToTakeFromKafkaParam, DefaultMaxMessagesToTakeFromKafka, config);
-            ShouldInitWithLastOffset = GetOptionalParam(ShouldInitWithLastOffsetParam, DefaultShouldInitWithLastOffset, config);
+            CacheSize = GetOptionalParamInt(CacheSizeParam, DefaultCacheSize, config);
+            NumOfQueues = GetOptionalParamInt(NumOfQueuesParam, DefaultNumOfQueues, config);
+            AckLevel = GetOptionalParamInt(AckLevelParam, DefaultAckLevel, config);
+            MaxBytesInMessageSet = GetOptionalParamInt(MaxBytesInMessageSetParam, DefaultMaxBytesInMessageSet, config);
+            OffsetCommitInterval = GetOptionalParamInt(OffsetCommitIntervalParam, DefaultOffsetCommitInterval, config);
+            ProduceBatchSize = GetOptionalParamInt(ProduceBatchSizeParam, DefaultProduceBatchSize, config);
+            TimeToWaitForBatchInMs = GetOptionalParamInt(TimeToWaitForBatchInMsParam, DefaultTimeToWaitForBatchInMs, config);
+            ReceiveWaitTimeInMs = GetOptionalParamInt(ReceiveWaitTimeInMsParam, DefaultReceiveWaitTimeInMs, config);
+            MaxMessagesToTakeFromKafka = GetOptionalParamInt(MaxMessagesToTakeFromKafkaParam, DefaultMaxMessagesToTakeFromKafka, config);
+            ShouldInitWithLastOffset = GetOptionalParamBool(ShouldInitWithLastOffsetParam, DefaultShouldInitWithLastOffset, config);
         }
 
         private static string GetRequiredParam(string paramName, IProviderConfiguration config)
         {
             string paramValue;
 
-            if (!config.Properties.TryGetValue(paramName, out paramValue))
-            {
-                throw new ArgumentException(String.Format("{0} property not set", paramName));
-            }
+            if (!config.Properties.TryGetValue(paramName, out paramValue)) throw new ArgumentException(String.Format("{0} property not set", paramName));            
 
             return paramValue;
         }
 
-        private static int GetOptionalParam(string paramName, int defaultValue, IProviderConfiguration config)
+        private static int GetOptionalParamInt(string paramName, int defaultValue, IProviderConfiguration config)
         {
             string paramValuePreParsed;
             var paramValue = defaultValue;
@@ -129,7 +126,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             return paramValue;
         }
 
-        private static bool GetOptionalParam(string paramName, bool defaultValue, IProviderConfiguration config)
+        private static bool GetOptionalParamBool(string paramName, bool defaultValue, IProviderConfiguration config)
         {
             string paramValuePreParsed;
             var paramValue = defaultValue;

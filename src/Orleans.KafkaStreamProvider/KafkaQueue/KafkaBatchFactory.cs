@@ -16,7 +16,6 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             return KafkaBatchContainer.FromKafkaMessage(kafkaMessage, sequenceId);
         }
 
-
         public Message ToKafkaMessage<T>(Guid streamId, string streamNamespace, T singleEvent)
         {
             return KafkaBatchContainer.ToKafkaMessage(streamId, streamNamespace, singleEvent);
