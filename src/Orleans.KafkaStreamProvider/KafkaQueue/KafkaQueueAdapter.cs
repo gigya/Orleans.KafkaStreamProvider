@@ -82,16 +82,31 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 
         public async Task QueueMessageBatchAsync<T>(Guid streamGuid, string streamNamespace, IEnumerable<T> events)
         {
-            var queueId = _streamQueueMapper.GetQueueForStream(streamGuid, streamNamespace);            
+            var queueId = _streamQueueMapper.GetQueueForStream(streamGuid, streamNamespace);
+
+            int partitionId;
 
             //var partitionId = queueId.GetNumericId();
-            var partitionId = _queues[queueId];
+            if (!_queues.TryGetValue(queueId, out partitionId))
+            {
+                string errorFormat = string.Format("Couldn't find a partition for queue {0}", queueId);
+                _logger.Info(errorFormat);                
+                throw new KeyNotFoundException();
+            }
 
             _logger.Verbose("KafkaQueueAdapter - For StreamId: {0}, StreamNamespcae:{1} using partition {2}", streamGuid, streamNamespace, partitionId);
 
             // Creating a message for each event, to support evenutally connecting the sequence token with the kafka offset
-            var message = new List<Message> {_batchFactory.ToKafkaMessage(streamGuid, streamNamespace, events)};
-            var response = await Task.Run(() => _producer.SendMessageAsync(_options.TopicName, message, (short)_options.AckLevel, partition: partitionId));
+
+            var payload = _batchFactory.ToKafkaMessage(streamGuid, streamNamespace, events);
+            if (payload == null)
+            {
+                _logger.Info("The batch factory returned a faulty message, the message was not sent");
+                return;
+            }
+
+            var messageToSend = new List<Message> {payload};            
+            var response = await Task.Run(() => _producer.SendMessageAsync(_options.TopicName, messageToSend, (short)_options.AckLevel, partition: partitionId));
 
             // This is ackLevel != 0 check
             if (response != null)

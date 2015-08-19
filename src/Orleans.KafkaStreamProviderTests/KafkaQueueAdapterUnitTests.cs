@@ -16,7 +16,7 @@ namespace OrleansKafkaUtilsTests
     [SuppressMessage("ReSharper", "UnusedVariable")]
     public class KafkaQueueAdapterUnitTests
     {
-        private readonly HashRingBasedStreamQueueMapper _streamQueueMapper = new HashRingBasedStreamQueueMapper(4, "test");
+        private readonly HashRingBasedStreamQueueMapper _streamQueueMapper;
         private string _providerName = "Test";        
         private readonly Logger _logger;
         private readonly KafkaStreamProviderOptions _options;
@@ -30,6 +30,7 @@ namespace OrleansKafkaUtilsTests
 
             _logger = loggerMock.Object;
             _options = new KafkaStreamProviderOptions(connectionStrings.ToArray(), topicName, consumerGroupName);
+            _streamQueueMapper = new HashRingBasedStreamQueueMapper(_options.NumOfQueues, _options.TopicName);
         }
 
         [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
@@ -85,7 +86,7 @@ namespace OrleansKafkaUtilsTests
         {
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
 
-            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<int>())).Returns(new Message(){Value = new byte[] { 0, 1, 2, 3 }});
+            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<IEnumerable<int>>())).Returns(new Message(){Value = new byte[] { 0, 1, 2, 3 }});
 
             KafkaQueueAdapter adapter = new KafkaQueueAdapter(_streamQueueMapper, _options, _providerName, factoryMock.Object, _logger);
 
@@ -97,7 +98,7 @@ namespace OrleansKafkaUtilsTests
         {
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
 
-            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<int>())).Returns(new Message() { Value = new byte[] { 0, 1, 2, 3 } });
+            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<IEnumerable<int>>())).Returns(new Message() { Value = new byte[] { 0, 1, 2, 3 } });
 
             KafkaQueueAdapter adapter = new KafkaQueueAdapter(_streamQueueMapper, _options, _providerName, factoryMock.Object, _logger);
 
@@ -105,21 +106,6 @@ namespace OrleansKafkaUtilsTests
 
             await adapter.QueueMessageBatchAsync(myGuid, "Test", new List<int>() { 1, 2, 3, 4 });
             await adapter.QueueMessageBatchAsync(myGuid, "Test", new List<int>() { 1, 2, 3, 4 });
-        }
-
-        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
-        public async Task QueueMessageBatchAsyncOneMessageIsFaultyTest()
-        {
-            Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
-
-            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), 1)).Returns(new Message() { Value = new byte[] { 0, 1, 2, 3 } });
-            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), 2)).Returns((Message) null);
-
-            KafkaQueueAdapter adapter = new KafkaQueueAdapter(_streamQueueMapper, _options, _providerName, factoryMock.Object, _logger);
-
-            Guid myGuid = Guid.NewGuid();
-
-            await adapter.QueueMessageBatchAsync(myGuid, "Test", new List<int>() {1, 2});
         }
 
         [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
@@ -127,7 +113,7 @@ namespace OrleansKafkaUtilsTests
         {
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
 
-            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<int>())).Returns((Message) null);
+            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<IEnumerable<int>>())).Returns((Message)null);
 
             KafkaQueueAdapter adapter = new KafkaQueueAdapter(_streamQueueMapper, _options, _providerName, factoryMock.Object, _logger);
 
@@ -141,7 +127,7 @@ namespace OrleansKafkaUtilsTests
         {
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
 
-            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<int>())).Returns((Message)null);
+            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<IEnumerable<int>>())).Returns((Message)null);
 
             KafkaStreamProviderOptions differentOptions = new KafkaStreamProviderOptions(_options.ConnectionStrings,
                 _options.TopicName, _options.ConsumerGroupName) {AckLevel = 0};
@@ -158,7 +144,10 @@ namespace OrleansKafkaUtilsTests
         {
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
 
-            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<int>())).Returns(new Message() { Value = new byte[] { 0, 1, 2, 3 } });
+            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<IEnumerable<int>>())).Returns(new Message() { Value = new byte[] { 0, 1, 2, 3 } });
+
+            var twoQueuesStreamMapper = new HashRingBasedStreamQueueMapper(2, _options.TopicName);
+            var twoQueuesOptions = new KafkaStreamProviderOptions(_options.ConnectionStrings, _options.TopicName, _options.ConsumerGroupName){NumOfQueues = 2};
 
             KafkaQueueAdapter adapter = new KafkaQueueAdapter(_streamQueueMapper, _options, _providerName, factoryMock.Object, _logger);            
 
@@ -166,11 +155,11 @@ namespace OrleansKafkaUtilsTests
             var second = Guid.NewGuid();
 
             // Becuase we cannot mock the queue mapper.. we need to make sure we two guids that will return different queues...
-            bool willGiveDifferentQueue = !(_streamQueueMapper.GetQueueForStream(first, "test").Equals(_streamQueueMapper.GetQueueForStream(second, "otherTest")));
+            bool willGiveDifferentQueue = !(twoQueuesStreamMapper.GetQueueForStream(first, "test").Equals(twoQueuesStreamMapper.GetQueueForStream(second, "otherTest")));
             while (!willGiveDifferentQueue)
             {
                 second = Guid.NewGuid();
-                willGiveDifferentQueue = !(_streamQueueMapper.GetQueueForStream(first, "test").Equals(_streamQueueMapper.GetQueueForStream(second, "otherTest")));
+                willGiveDifferentQueue = !(twoQueuesStreamMapper.GetQueueForStream(first, "test").Equals(twoQueuesStreamMapper.GetQueueForStream(second, "otherTest")));
             }
 
             Task.WaitAll(adapter.QueueMessageBatchAsync(first, "test", new List<int>() { 1, 2, 3, 4 }),
