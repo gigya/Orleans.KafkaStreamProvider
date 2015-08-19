@@ -1,16 +1,15 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using KafkaNet.Protocol;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using Orleans.KafkaStreamProvider.KafkaQueue;
-using Orleans.Streams;
 using Orleans.Runtime;
+using Orleans.Streams;
 
-
-namespace OrleansKafkaUtilsTests
+namespace Orleans.KafkaStreamProviderTest
 {
     [TestClass]
     [SuppressMessage("ReSharper", "UnusedVariable")]
@@ -81,7 +80,7 @@ namespace OrleansKafkaUtilsTests
             var adapter = new KafkaQueueAdapter(_streamQueueMapper, _options, _providerName, factoryMock.Object, null);
         }
 
-        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
+        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider"), TestCategory("NeedsKafka")]
         public async Task QueueMessageBatchAsyncSimpleTest()
         {
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
@@ -93,7 +92,7 @@ namespace OrleansKafkaUtilsTests
             await adapter.QueueMessageBatchAsync(Guid.NewGuid(), "Test", new List<int>() { 1, 2, 3, 4 });
         }
 
-        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
+        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider"), TestCategory("NeedsKafka")]
         public async Task QueueMessageBatchAsyncQueueingTwiceSameQueueTest()
         {
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
@@ -108,7 +107,7 @@ namespace OrleansKafkaUtilsTests
             await adapter.QueueMessageBatchAsync(myGuid, "Test", new List<int>() { 1, 2, 3, 4 });
         }
 
-        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
+        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider"), TestCategory("NeedsKafka")]
         public async Task QueueMessageBatchAsyncAllMessagesAreFaultyTest()
         {
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
@@ -122,7 +121,7 @@ namespace OrleansKafkaUtilsTests
             await adapter.QueueMessageBatchAsync(myGuid, "Test", new List<int>() { 1, 2, 3, 4 });
         }
 
-        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
+        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider"), TestCategory("NeedsKafka")]
         public async Task QueueMessageBatchAsyncAllNoAck()
         {
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
@@ -139,7 +138,7 @@ namespace OrleansKafkaUtilsTests
             await adapter.QueueMessageBatchAsync(myGuid, "Test", new List<int>() { 1, 2, 3, 4 });
         }
 
-        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
+        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider"), TestCategory("NeedsKafka")]
         public void QueueMessageBatchAsyncQueueingTwiceDifferentQueuesTest()
         {
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();

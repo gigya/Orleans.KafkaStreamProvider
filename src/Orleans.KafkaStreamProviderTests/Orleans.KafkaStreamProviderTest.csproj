@@ -6,8 +6,8 @@
     <ProjectGuid>{7AD97664-B419-456B-881D-7C7F9A6405F9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OrleansKafkaUtilsTests</RootNamespace>
-    <AssemblyName>OrleansKafkaUtilsTests</AssemblyName>
+    <RootNamespace>Orleans.KafkaStreamProviderTest</RootNamespace>
+    <AssemblyName>Orleans.KafkaStreamProviderTest</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>

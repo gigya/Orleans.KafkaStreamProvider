@@ -7,12 +7,11 @@ using KafkaNet.Interfaces;
 using KafkaNet.Protocol;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Orleans;
 using Orleans.KafkaStreamProvider.KafkaQueue;
 using Orleans.Runtime;
 using Orleans.Streams;
 
-namespace OrleansKafkaUtilsTests
+namespace Orleans.KafkaStreamProviderTest
 {
     [TestClass]
     [SuppressMessage("ReSharper", "CollectionNeverUpdated.Local")]
@@ -35,7 +34,7 @@ namespace OrleansKafkaUtilsTests
             _id = QueueId.GetQueueId("test", 0, 0);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
         [ExpectedException(typeof (ArgumentNullException), "Didn't get ArgumentNull exception for ManualConsumer")]
         public void CtorManualConsumerNullTest()
         {
@@ -44,7 +43,7 @@ namespace OrleansKafkaUtilsTests
             KafkaQueueAdapterReceiver adapterReceiver = new KafkaQueueAdapterReceiver(_id, null, _options, factoryMock.Object, _logger);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
         [ExpectedException(typeof(ArgumentNullException), "Didn't get ArgumentNull exception for QueueId")]
         public void CtorQueueIdNullTest()
         {
@@ -54,7 +53,7 @@ namespace OrleansKafkaUtilsTests
             KafkaQueueAdapterReceiver adapterReceiver = new KafkaQueueAdapterReceiver(null, consumerMock.Object, _options, factoryMock.Object, _logger);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
         [ExpectedException(typeof(ArgumentNullException), "Didn't get ArgumentNull exception for KafkaStreamProviderOptions")]
         public void CtorOptionsNullTest()
         {
@@ -64,7 +63,7 @@ namespace OrleansKafkaUtilsTests
             KafkaQueueAdapterReceiver adapterReceiver = new KafkaQueueAdapterReceiver(_id, consumerMock.Object, null, factoryMock.Object, _logger);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
         [ExpectedException(typeof(ArgumentNullException), "Didn't get ArgumentNull exception for KafkaBatchFactory")]
         public void CtorFactoryNullTest()
         {
@@ -74,7 +73,7 @@ namespace OrleansKafkaUtilsTests
             KafkaQueueAdapterReceiver adapterReceiver = new KafkaQueueAdapterReceiver(_id, consumerMock.Object, _options, null, _logger);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
         [ExpectedException(typeof(ArgumentNullException), "Didn't get ArgumentNull exception for Logger")]
         public void CtorLoggerNullTest()
         {
@@ -84,7 +83,7 @@ namespace OrleansKafkaUtilsTests
             KafkaQueueAdapterReceiver adapterReceiver = new KafkaQueueAdapterReceiver(_id, consumerMock.Object, _options, factoryMock.Object, null);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
         public async Task InitializeGetLastOffsetTest()
         {
             var wantedOffset = 10;
@@ -102,7 +101,7 @@ namespace OrleansKafkaUtilsTests
             Assert.AreEqual(wantedOffset, adapterReceiver.CurrentOffset);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
         public async Task InitializeGetOffsetFromConsumerGroupTest()
         {
             var wantedOffset = 10;
@@ -121,7 +120,7 @@ namespace OrleansKafkaUtilsTests
             Assert.AreEqual(wantedOffset, adapterReceiver.CurrentOffset);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
         public async Task InitializeConsumerGroupDoesntExistTest()
         {
             var wantedOffset = 10;
@@ -141,7 +140,7 @@ namespace OrleansKafkaUtilsTests
             Assert.AreEqual(wantedOffset, adapterReceiver.CurrentOffset);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
         public async Task InitializeConsumerGroupDoesntExistRecoveryTest()
         {
             var wantedOffset = 10;
@@ -169,7 +168,7 @@ namespace OrleansKafkaUtilsTests
             Assert.AreEqual(wantedOffset, adapterReceiver.CurrentOffset);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
         public async Task GetMessagesQueueHasOneTest()
         {
             Message message1 = new Message() { Value = new byte[] { 1, 2, 3, 4 }, Meta = new MessageMetadata() { Offset = 0, PartitionId = 0 } };
@@ -194,7 +193,7 @@ namespace OrleansKafkaUtilsTests
             Assert.AreEqual(batchContainerMock.Object, result.FirstOrDefault());
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
         public async Task GetMessagesQueueHasFewTest()
         {
             Message message1 = new Message() { Value = new byte[] { 1, 2, 3, 4 }, Meta = new MessageMetadata() { Offset = 0, PartitionId = 0 } };
@@ -230,7 +229,7 @@ namespace OrleansKafkaUtilsTests
             Assert.AreEqual(batchContainerMock3.Object, result[2]);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
         public async Task GetMessageQueueIsEmpty()
         {
             Mock<IManualConsumer> consumerMock = new Mock<IManualConsumer>();
@@ -249,7 +248,7 @@ namespace OrleansKafkaUtilsTests
             Assert.AreEqual(0, result.Count);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
         public async Task GetMessagesRunTwiceTest()
         {
             Message message1 = new Message() { Value = new byte[] { 1, 2, 3, 4 }, Meta = new MessageMetadata() { Offset = 0, PartitionId = 0 } };
@@ -311,7 +310,7 @@ namespace OrleansKafkaUtilsTests
             Assert.AreEqual(batchContainerMock6.Object, result[2]);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
         public async Task GetMessagesQueueSavingBatchAfterFewFetchesTest()
         {
             bool hasCommited = false;
@@ -409,7 +408,7 @@ namespace OrleansKafkaUtilsTests
             Assert.AreEqual(batchContainerMock6.Object, result[2]);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
         public async Task GetMessagesBufferUnderflowRecoveryTest()
         {
             Message message1 = new Message() { Value = new byte[] { 1, 2, 3, 4 }, Meta = new MessageMetadata(){Offset = 0, PartitionId = 0}};
@@ -456,7 +455,7 @@ namespace OrleansKafkaUtilsTests
             Assert.AreEqual(batchContainerMock3.Object, result[2]);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
         public async Task GetMessageFailGotNull()
         {
             Mock<IManualConsumer> consumerMock = new Mock<IManualConsumer>();
@@ -474,7 +473,7 @@ namespace OrleansKafkaUtilsTests
             Assert.AreEqual(0, result.Count);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
         [ExpectedException(typeof(Exception))]
         public async Task GetMessageFailFetchTaskThrewException()
         {
