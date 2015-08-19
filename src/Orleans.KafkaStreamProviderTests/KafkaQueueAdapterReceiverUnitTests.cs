@@ -172,6 +172,8 @@ namespace OrleansKafkaUtilsTests
         [TestMethod]
         public async Task GetMessagesQueueHasOneTest()
         {
+            Message message1 = new Message() { Value = new byte[] { 1, 2, 3, 4 }, Meta = new MessageMetadata() { Offset = 0, PartitionId = 0 } };
+
             Mock<IManualConsumer> consumerMock = new Mock<IManualConsumer>();
             Mock<IBatchContainer> batchContainerMock = new Mock<IBatchContainer>();
             
@@ -179,7 +181,7 @@ namespace OrleansKafkaUtilsTests
 
             factoryMock.Setup(x => x.FromKafkaMessage(It.IsAny<Message>(), It.IsAny<long>())).Returns(batchContainerMock.Object);
 
-            var returnCollection = new List<Message>(){new Message(){Value = new byte[]{1,2,3,4}}};
+            var returnCollection = new List<Message>(){message1};
             consumerMock.Setup(x => x.FetchMessages(1, It.IsAny<long>())).ReturnsAsync(returnCollection);
 
             KafkaQueueAdapterReceiver adapterReceiver = new KafkaQueueAdapterReceiver(_id, consumerMock.Object, _options, factoryMock.Object, _logger);
@@ -195,9 +197,9 @@ namespace OrleansKafkaUtilsTests
         [TestMethod]
         public async Task GetMessagesQueueHasFewTest()
         {
-            Message message1 = new Message(){Value = new byte[] { 1, 2, 3, 4 }};
-            Message message2 = new Message(){Value = new byte[] { 1, 2, 3, 4 }};
-            Message message3 = new Message(){Value = new byte[] { 1, 2, 3, 4 }};
+            Message message1 = new Message() { Value = new byte[] { 1, 2, 3, 4 }, Meta = new MessageMetadata() { Offset = 0, PartitionId = 0 } };
+            Message message2 = new Message() { Value = new byte[] { 4, 5, 6, 7 }, Meta = new MessageMetadata() { Offset = 1, PartitionId = 0 } };
+            Message message3 = new Message() { Value = new byte[] { 8, 9, 10, 11 }, Meta = new MessageMetadata() { Offset = 2, PartitionId = 0 } };
 
             Mock<IManualConsumer> consumerMock = new Mock<IManualConsumer>();
             Mock<IBatchContainer> batchContainerMock1 = new Mock<IBatchContainer>();
@@ -248,14 +250,14 @@ namespace OrleansKafkaUtilsTests
         }
 
         [TestMethod]
-        public async Task GetMessagesRunTwice()
+        public async Task GetMessagesRunTwiceTest()
         {
-            Message message1 = new Message() { Value = new byte[] { 1, 2, 3, 4 } };
-            Message message2 = new Message() { Value = new byte[] { 4, 5, 6, 7 } };
-            Message message3 = new Message() { Value = new byte[] { 8, 9, 10, 11 } };
-            Message message4 = new Message() { Value = new byte[] { 12, 13, 14, 15 } };
-            Message message5 = new Message() { Value = new byte[] { 16, 17, 18, 19 } };
-            Message message6 = new Message() { Value = new byte[] { 21, 22, 23, 24 } };
+            Message message1 = new Message() { Value = new byte[] { 1, 2, 3, 4 }, Meta = new MessageMetadata() { Offset = 0, PartitionId = 0 } };
+            Message message2 = new Message() { Value = new byte[] { 4, 5, 6, 7 }, Meta = new MessageMetadata() { Offset = 1, PartitionId = 0 } };
+            Message message3 = new Message() { Value = new byte[] { 8, 9, 10, 11 }, Meta = new MessageMetadata() { Offset = 2, PartitionId = 0 } };
+            Message message4 = new Message() { Value = new byte[] { 12, 13, 14, 15 }, Meta = new MessageMetadata() { Offset = 3, PartitionId = 0 } };
+            Message message5 = new Message() { Value = new byte[] { 16, 17, 18, 19 }, Meta = new MessageMetadata() { Offset = 4, PartitionId = 0 } };
+            Message message6 = new Message() { Value = new byte[] { 21, 22, 23, 24 }, Meta = new MessageMetadata() { Offset = 5, PartitionId = 0 } };
 
             Mock<IManualConsumer> consumerMock = new Mock<IManualConsumer>();
             Mock<IBatchContainer> batchContainerMock1 = new Mock<IBatchContainer>();
@@ -314,12 +316,12 @@ namespace OrleansKafkaUtilsTests
         {
             bool hasCommited = false;
 
-            Message message1 = new Message() { Value = new byte[] { 1, 2, 3, 4 } };
-            Message message2 = new Message() { Value = new byte[] { 4, 5, 6, 7 } };
-            Message message3 = new Message() { Value = new byte[] { 8, 9, 10, 11 } };
-            Message message4 = new Message() { Value = new byte[] { 12, 13, 14, 15 } };
-            Message message5 = new Message() { Value = new byte[] { 16, 17, 18, 19 } };
-            Message message6 = new Message() { Value = new byte[] { 21, 22, 23, 24 } };
+            Message message1 = new Message() { Value = new byte[] { 1, 2, 3, 4 }, Meta = new MessageMetadata() { Offset = 0, PartitionId = 0 } };
+            Message message2 = new Message() { Value = new byte[] { 4, 5, 6, 7 }, Meta = new MessageMetadata() { Offset = 1, PartitionId = 0 } };
+            Message message3 = new Message() { Value = new byte[] { 8, 9, 10, 11 }, Meta = new MessageMetadata() { Offset = 2, PartitionId = 0 } };
+            Message message4 = new Message() { Value = new byte[] { 12, 13, 14, 15 }, Meta = new MessageMetadata() { Offset = 3, PartitionId = 0 } };
+            Message message5 = new Message() { Value = new byte[] { 16, 17, 18, 19 }, Meta = new MessageMetadata() { Offset = 4, PartitionId = 0 } };
+            Message message6 = new Message() { Value = new byte[] { 21, 22, 23, 24 }, Meta = new MessageMetadata() { Offset = 5, PartitionId = 0 } };
 
             Mock<IManualConsumer> consumerMock = new Mock<IManualConsumer>();
             Mock<IBatchContainer> batchContainerMock1 = new Mock<IBatchContainer>();
@@ -410,9 +412,9 @@ namespace OrleansKafkaUtilsTests
         [TestMethod]
         public async Task GetMessagesBufferUnderflowRecoveryTest()
         {
-            Message message1 = new Message() { Value = new byte[] { 1, 2, 3, 4 } };
-            Message message2 = new Message() { Value = new byte[] { 4, 5, 6, 7 } };
-            Message message3 = new Message() { Value = new byte[] { 8, 9, 10, 11 } };
+            Message message1 = new Message() { Value = new byte[] { 1, 2, 3, 4 }, Meta = new MessageMetadata(){Offset = 0, PartitionId = 0}};
+            Message message2 = new Message() { Value = new byte[] { 4, 5, 6, 7 }, Meta = new MessageMetadata() { Offset = 1, PartitionId = 0 } };
+            Message message3 = new Message() { Value = new byte[] { 8, 9, 10, 11 }, Meta = new MessageMetadata(){Offset = 2, PartitionId = 0}};
 
             Mock<IManualConsumer> consumerMock = new Mock<IManualConsumer>();
             Mock<IBatchContainer> batchContainerMock1 = new Mock<IBatchContainer>();

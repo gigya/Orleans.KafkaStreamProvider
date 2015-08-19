@@ -108,20 +108,19 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
                 if (batches.Count > 0)
                 {
                     _lastOffset += batches.Count;
-                    _numOfFetches++;
-                }
 
-                // Committing the offset            
-                _currentCommitTask = CommitIfNecessary();
+                    // Committing the offset            
+                    _currentCommitTask = CommitIfNecessary();
 
-                await _currentCommitTask;
-                if (_currentCommitTask.IsFaulted && _currentCommitTask.Exception != null)
-                {
-                    _logger.Info("KafkaQueueAdapterReceiver - There was an error comitting the offset to the ConsumerGroup. ConsumerGroup is {0}, offset is {1}", _options.ConsumerGroupName, _lastOffset);
-                    throw _currentCommitTask.Exception;
-                }
+                    await _currentCommitTask;
+                    if (_currentCommitTask.IsFaulted && _currentCommitTask.Exception != null)
+                    {
+                        _logger.Info("KafkaQueueAdapterReceiver - There was an error comitting the offset to the ConsumerGroup. ConsumerGroup is {0}, offset is {1}", _options.ConsumerGroupName, _lastOffset);
+                        throw _currentCommitTask.Exception;
+                    }
 
-                _currentCommitTask = null;                
+                    _currentCommitTask = null;                    
+                }               
 
                 return batches;
             }
@@ -138,19 +137,19 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 
         private async Task CommitIfNecessary()
         {
-            if (_numOfFetches >= _options.OffsetCommitInterval)
-            {
-                var commitTask = Task.Run(() => _consumer.UpdateOrCreateOffset(_options.ConsumerGroupName, _lastOffset));
-                await Task.WhenAny(commitTask, Task.Delay(_options.ReceiveWaitTimeInMs));
+            _numOfFetches++;
+            if (_numOfFetches < _options.OffsetCommitInterval) return;
+            
+            var commitTask = Task.Run(() => _consumer.UpdateOrCreateOffset(_options.ConsumerGroupName, _lastOffset));
+            await Task.WhenAny(commitTask, Task.Delay(_options.ReceiveWaitTimeInMs));
 
-                if (commitTask.IsCompleted)
-                {
-                    _numOfFetches = 0;
-                    _logger.Verbose(
-                        "KafkaQueueAdapterReceiver - Commited an offset to the ConsumerGroup. ConsumerGroup is {0}, offset is {1}",
-                        _options.ConsumerGroupName, _lastOffset);
-                }
-            }
+            if (commitTask.IsCompleted)
+            {
+                _numOfFetches = 0;
+                _logger.Verbose(
+                    "KafkaQueueAdapterReceiver - Commited an offset to the ConsumerGroup. ConsumerGroup is {0}, offset is {1}",
+                    _options.ConsumerGroupName, _lastOffset);
+            }            
         }
 
         public async Task Shutdown(TimeSpan timeout)
