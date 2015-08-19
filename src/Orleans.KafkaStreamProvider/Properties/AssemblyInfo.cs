@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Orleans.KafkaStreamProvider")]
 [assembly: AssemblyDescription("An Orleans PersistentStreamProvider based on Kafka")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Gigya inc")]
 [assembly: AssemblyProduct("Orleans.KafkaStreamProvider")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
