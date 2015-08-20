@@ -22,7 +22,9 @@ To start working with the KafkaStreamProvider make sure you do the following ste
 
 For Example:
 
-`<Provider Type="Orleans.KafkaStreamProvider.PersistentStreams.KafkaStreamProvider" Name="KafkaProvider" ConsumerGroupName="siloConsumerGroup" ConnectionStrings="http://192.168.1.1:9092" TopicName="TopicForSilo" NumQueues="4"/>`
+```xml
+<Provider Type="Orleans.KafkaStreamProvider.PersistentStreams.KafkaStreamProvider" Name="KafkaProvider" ConsumerGroupName="siloConsumerGroup" ConnectionStrings="http://192.168.1.1:9092" TopicName="TopicForSilo" NumQueues="4"/>
+```
 
 ## Implementation
 The KafkaStreamProvider is implemented using the Orleans Guidelines to implement a new PersistentStreamProvider over the PersistentStreamProvider class (shown in this page: http://dotnet.github.io/orleans/Orleans-Streams/Streams-Extensibility)
