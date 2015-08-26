@@ -84,49 +84,53 @@ namespace Orleans.KafkaStreamProviderTest
         public async Task QueueMessageBatchAsyncSimpleTest()
         {
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
+            Dictionary<string, object> requestContext = new Dictionary<string, object>();
 
-            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<IEnumerable<int>>())).Returns(new Message(){Value = new byte[] { 0, 1, 2, 3 }});
+            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<IEnumerable<int>>(), requestContext)).Returns(new Message(){Value = new byte[] { 0, 1, 2, 3 }});
 
             KafkaQueueAdapter adapter = new KafkaQueueAdapter(_streamQueueMapper, _options, _providerName, factoryMock.Object, _logger);
 
-            await adapter.QueueMessageBatchAsync(Guid.NewGuid(), "Test", new List<int>() { 1, 2, 3, 4 });
+            await adapter.QueueMessageBatchAsync(Guid.NewGuid(), "Test", new List<int>() { 1, 2, 3, 4 }, requestContext);
         }
 
         [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider"), TestCategory("NeedsKafka")]
         public async Task QueueMessageBatchAsyncQueueingTwiceSameQueueTest()
         {
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
+            Dictionary<string, object> requestContext = new Dictionary<string, object>();
 
-            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<IEnumerable<int>>())).Returns(new Message() { Value = new byte[] { 0, 1, 2, 3 } });
+            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<IEnumerable<int>>(), requestContext)).Returns(new Message() { Value = new byte[] { 0, 1, 2, 3 } });
 
             KafkaQueueAdapter adapter = new KafkaQueueAdapter(_streamQueueMapper, _options, _providerName, factoryMock.Object, _logger);
 
             Guid myGuid = Guid.NewGuid();
 
-            await adapter.QueueMessageBatchAsync(myGuid, "Test", new List<int>() { 1, 2, 3, 4 });
-            await adapter.QueueMessageBatchAsync(myGuid, "Test", new List<int>() { 1, 2, 3, 4 });
+            await adapter.QueueMessageBatchAsync(myGuid, "Test", new List<int>() { 1, 2, 3, 4 }, requestContext);
+            await adapter.QueueMessageBatchAsync(myGuid, "Test", new List<int>() { 1, 2, 3, 4 }, requestContext);
         }
 
         [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider"), TestCategory("NeedsKafka")]
         public async Task QueueMessageBatchAsyncAllMessagesAreFaultyTest()
         {
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
+            Dictionary<string, object> requestContext = new Dictionary<string, object>();
 
-            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<IEnumerable<int>>())).Returns((Message)null);
+            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<IEnumerable<int>>(), requestContext)).Returns((Message)null);
 
             KafkaQueueAdapter adapter = new KafkaQueueAdapter(_streamQueueMapper, _options, _providerName, factoryMock.Object, _logger);
 
             Guid myGuid = Guid.NewGuid();
 
-            await adapter.QueueMessageBatchAsync(myGuid, "Test", new List<int>() { 1, 2, 3, 4 });
+            await adapter.QueueMessageBatchAsync(myGuid, "Test", new List<int>() { 1, 2, 3, 4 }, requestContext);
         }
 
         [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider"), TestCategory("NeedsKafka")]
         public async Task QueueMessageBatchAsyncAllNoAck()
         {
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
+            Dictionary<string, object> requestContext = new Dictionary<string, object>();
 
-            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<IEnumerable<int>>())).Returns((Message)null);
+            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<IEnumerable<int>>(), requestContext)).Returns((Message)null);
 
             KafkaStreamProviderOptions differentOptions = new KafkaStreamProviderOptions(_options.ConnectionStrings,
                 _options.TopicName, _options.ConsumerGroupName) {AckLevel = 0};
@@ -135,15 +139,16 @@ namespace Orleans.KafkaStreamProviderTest
 
             Guid myGuid = Guid.NewGuid();
 
-            await adapter.QueueMessageBatchAsync(myGuid, "Test", new List<int>() { 1, 2, 3, 4 });
+            await adapter.QueueMessageBatchAsync(myGuid, "Test", new List<int>() { 1, 2, 3, 4 }, requestContext);
         }
 
         [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider"), TestCategory("NeedsKafka")]
         public void QueueMessageBatchAsyncQueueingTwiceDifferentQueuesTest()
         {
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
+            Dictionary<string, object> requestContext = new Dictionary<string, object>();
 
-            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<IEnumerable<int>>())).Returns(new Message() { Value = new byte[] { 0, 1, 2, 3 } });
+            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<IEnumerable<int>>(), requestContext)).Returns(new Message() { Value = new byte[] { 0, 1, 2, 3 } });
 
             var twoQueuesStreamMapper = new HashRingBasedStreamQueueMapper(2, _options.TopicName);
             var twoQueuesOptions = new KafkaStreamProviderOptions(_options.ConnectionStrings, _options.TopicName, _options.ConsumerGroupName){NumOfQueues = 2};
@@ -161,8 +166,8 @@ namespace Orleans.KafkaStreamProviderTest
                 willGiveDifferentQueue = !(twoQueuesStreamMapper.GetQueueForStream(first, "test").Equals(twoQueuesStreamMapper.GetQueueForStream(second, "otherTest")));
             }
 
-            Task.WaitAll(adapter.QueueMessageBatchAsync(first, "test", new List<int>() { 1, 2, 3, 4 }),
-                         adapter.QueueMessageBatchAsync(second, "otherTest", new List<int>() { 1, 2, 3, 4 }));
+            Task.WaitAll(adapter.QueueMessageBatchAsync(first, "test", new List<int>() { 1, 2, 3, 4 }, requestContext),
+                         adapter.QueueMessageBatchAsync(second, "otherTest", new List<int>() { 1, 2, 3, 4 }, requestContext));
         }
     }
 }

@@ -13,6 +13,12 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
     {
         private EventSequenceToken _sequenceToken;
         private readonly List<object> _events;
+        private readonly Dictionary<string, object> _requestContext;
+
+        public Dictionary<string, object> RequestContext
+        {
+            get { return _requestContext; }
+        }
 
         public Guid StreamGuid { get; private set; }
 
@@ -20,25 +26,24 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 
         public StreamSequenceToken SequenceToken { get { return _sequenceToken; } }
 
-        private KafkaBatchContainer(Guid streamId, string streamNamespace, List<object> events)
+        private KafkaBatchContainer(Guid streamId, string streamNamespace, List<object> events, Dictionary<string, object> requestContext)
         {
-            if (events == null)
-            {
-                throw new ArgumentNullException("events", "Message contains no events");
-            }
+            if (events == null) throw new ArgumentNullException("events", "Message contains no events");
 
             StreamGuid = streamId;
             StreamNamespace = streamNamespace;
             _events = events;
+            _requestContext = requestContext;
         }
 
-        private KafkaBatchContainer(Guid streamId, string streamNamespace, object singleEvent)
+        private KafkaBatchContainer(Guid streamId, string streamNamespace, object singleEvent, Dictionary<string, object> requestContext)
         {
-            if (singleEvent == null) throw new ArgumentNullException("singleEvent");            
+            if (singleEvent == null) throw new ArgumentNullException("singleEvent");
 
             StreamGuid = streamId;
             StreamNamespace = streamNamespace;
             _events = new List<object>(1){singleEvent};
+            _requestContext = requestContext;
         }
         
         public IEnumerable<Tuple<T, StreamSequenceToken>> GetEvents<T>()
@@ -57,18 +62,18 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             return _events.Any(item => shouldReceiveFunc(stream, filterData, item));
         }
 
-        internal static Message ToKafkaMessage<T>(Guid streamId, string streamNamespace, IEnumerable<T> events)
+        internal static Message ToKafkaMessage<T>(Guid streamId, string streamNamespace, IEnumerable<T> events, Dictionary<string, object> requestContext)
         {
-            KafkaBatchContainer container = new KafkaBatchContainer(streamId, streamNamespace, events.Cast<object>().ToList());
+            KafkaBatchContainer container = new KafkaBatchContainer(streamId, streamNamespace, events.Cast<object>().ToList(), requestContext);
             var rawBytes = SerializationManager.SerializeToByteArray(container);
             Message message = new Message(){ Value = rawBytes };
 
             return message;
         }
 
-        internal static Message ToKafkaMessage<T>(Guid streamId, string streamNamespace, T singleEvent)
+        internal static Message ToKafkaMessage<T>(Guid streamId, string streamNamespace, T singleEvent, Dictionary<string, object> requestContext)
         {
-            KafkaBatchContainer container = new KafkaBatchContainer(streamId, streamNamespace, singleEvent);
+            KafkaBatchContainer container = new KafkaBatchContainer(streamId, streamNamespace, singleEvent, requestContext);
             var rawBytes = SerializationManager.SerializeToByteArray(container);
             Message message = new Message() { Value = rawBytes };
 
