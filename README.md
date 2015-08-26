@@ -1,10 +1,10 @@
 # Orleans.KafkaStreamProvider
 Kafka persistent stream provider for Microsoft Orleans
 
-## Version 0.8
+## Version 0.8.5
 
 ### What's new?
-Basically everything, this is the first commit for KafkaStreamProvider and it contains the complete provider.
+Updated the StreamProvider to work with Orleans 1.0.9.8
 
 ## TBD
 - Support rewindable streams.
