@@ -108,7 +108,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
                 if (batches.Count > 0)
                 {
                     _lastOffset += batches.Count;
-
+                    _logger.Verbose("Pulled {0} messages from queue", batches.Count);
                     // Committing the offset            
                     _currentCommitTask = CommitIfNecessary();
 

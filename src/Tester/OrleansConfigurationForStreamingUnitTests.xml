@@ -5,7 +5,13 @@
       <Provider Type="Orleans.Storage.MemoryStorage" Name="PubSubStore" NumStorageGrains="1"/>
     </StorageProviders>
     <StreamProviders>
-      <Provider Type="Orleans.KafkaStreamProvider.PersistentStreams.KafkaStreamProvider" Name="KafkaProvider" ConsumerGroupName="TestConsumerGroupName" ConnectionStrings="http://192.168.10.27:9092" TopicName="Jonathan.ab.KafkaStreamProviderTestsNew" NumQueues="1"/>
+      <Provider Type="Orleans.KafkaStreamProvider.PersistentStreams.KafkaStreamProvider"
+                Name="KafkaProvider"
+                ConsumerGroupName="NotificationsTestConsumerGroupName"
+                ConnectionStrings="http://il1a-kafka-br01.gigya.net:9092;http://il1a-kafka-br02.gigya.net:9092;http://il1a-kafka-br03.gigya.net:9092"
+                TopicName="Ran.Integration2.NotificationTestTopic"
+                MaxBytesInMessageSet="262144"
+                NumQueues="1"/>
     </StreamProviders>
     <SeedNode Address="localhost" Port="22222"/>
     <Messaging ResponseTimeout="30s"/>

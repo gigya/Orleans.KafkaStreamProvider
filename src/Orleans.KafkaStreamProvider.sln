@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orleans.KafkaStreamProvider
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orleans.KafkaStreamProviderTest", "Orleans.KafkaStreamProviderTests\Orleans.KafkaStreamProviderTest.csproj", "{7AD97664-B419-456B-881D-7C7F9A6405F9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TesterLoads", "TesterLoads\TesterLoads.csproj", "{1CFDD71B-FF79-402D-A80B-C623F098B6BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TesterLoadsExecutable", "TesterLoadsExecutable\TesterLoadsExecutable.csproj", "{773E025B-00DA-42C6-BA55-9E7A1C3DCA73}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{7AD97664-B419-456B-881D-7C7F9A6405F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7AD97664-B419-456B-881D-7C7F9A6405F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7AD97664-B419-456B-881D-7C7F9A6405F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CFDD71B-FF79-402D-A80B-C623F098B6BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CFDD71B-FF79-402D-A80B-C623F098B6BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CFDD71B-FF79-402D-A80B-C623F098B6BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CFDD71B-FF79-402D-A80B-C623F098B6BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{773E025B-00DA-42C6-BA55-9E7A1C3DCA73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{773E025B-00DA-42C6-BA55-9E7A1C3DCA73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{773E025B-00DA-42C6-BA55-9E7A1C3DCA73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{773E025B-00DA-42C6-BA55-9E7A1C3DCA73}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
