@@ -109,6 +109,5 @@
       </PropertyGroup>
     </Otherwise>
   </Choose>
-  <Import Project="$(ProjectDir)..\Orleans.SDK.targets" />
   <!--End Orleans -->
 </Project>
