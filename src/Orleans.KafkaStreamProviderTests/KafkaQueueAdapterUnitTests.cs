@@ -90,7 +90,7 @@ namespace Orleans.KafkaStreamProviderTest
 
             KafkaQueueAdapter adapter = new KafkaQueueAdapter(_streamQueueMapper, _options, _providerName, factoryMock.Object, _logger);
 
-            await adapter.QueueMessageBatchAsync(Guid.NewGuid(), "Test", new List<int>() { 1, 2, 3, 4 }, requestContext);
+            await adapter.QueueMessageBatchAsync(Guid.NewGuid(), "Test", new List<int>() { 1, 2, 3, 4 }, null, requestContext);
         }
 
         [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider"), TestCategory("NeedsKafka")]
@@ -105,8 +105,8 @@ namespace Orleans.KafkaStreamProviderTest
 
             Guid myGuid = Guid.NewGuid();
 
-            await adapter.QueueMessageBatchAsync(myGuid, "Test", new List<int>() { 1, 2, 3, 4 }, requestContext);
-            await adapter.QueueMessageBatchAsync(myGuid, "Test", new List<int>() { 1, 2, 3, 4 }, requestContext);
+            await adapter.QueueMessageBatchAsync(myGuid, "Test", new List<int>() { 1, 2, 3, 4 }, null, requestContext);
+            await adapter.QueueMessageBatchAsync(myGuid, "Test", new List<int>() { 1, 2, 3, 4 }, null, requestContext);
         }
 
         [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider"), TestCategory("NeedsKafka")]
@@ -121,7 +121,7 @@ namespace Orleans.KafkaStreamProviderTest
 
             Guid myGuid = Guid.NewGuid();
 
-            await adapter.QueueMessageBatchAsync(myGuid, "Test", new List<int>() { 1, 2, 3, 4 }, requestContext);
+            await adapter.QueueMessageBatchAsync(myGuid, "Test", new List<int>() { 1, 2, 3, 4 }, null, requestContext);
         }
 
         [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider"), TestCategory("NeedsKafka")]
@@ -139,7 +139,7 @@ namespace Orleans.KafkaStreamProviderTest
 
             Guid myGuid = Guid.NewGuid();
 
-            await adapter.QueueMessageBatchAsync(myGuid, "Test", new List<int>() { 1, 2, 3, 4 }, requestContext);
+            await adapter.QueueMessageBatchAsync(myGuid, "Test", new List<int>() { 1, 2, 3, 4 }, null, requestContext);
         }
 
         [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider"), TestCategory("NeedsKafka")]
@@ -166,8 +166,8 @@ namespace Orleans.KafkaStreamProviderTest
                 willGiveDifferentQueue = !(twoQueuesStreamMapper.GetQueueForStream(first, "test").Equals(twoQueuesStreamMapper.GetQueueForStream(second, "otherTest")));
             }
 
-            Task.WaitAll(adapter.QueueMessageBatchAsync(first, "test", new List<int>() { 1, 2, 3, 4 }, requestContext),
-                         adapter.QueueMessageBatchAsync(second, "otherTest", new List<int>() { 1, 2, 3, 4 }, requestContext));
+            Task.WaitAll(adapter.QueueMessageBatchAsync(first, "test", new List<int>() { 1, 2, 3, 4 }, null, requestContext),
+                         adapter.QueueMessageBatchAsync(second, "otherTest", new List<int>() { 1, 2, 3, 4 }, null, requestContext));
         }
     }
 }
