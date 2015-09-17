@@ -107,6 +107,8 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 
                 if (batches.Count > 0)
                 {
+                    _logger.Verbose("KafkaQueueAdapterReceiver - Pulled {0} messages for queue number {1}", batches.Count, Id.GetNumericId());
+
                     _lastOffset += batches.Count;
 
                     // Committing the offset            
@@ -150,6 +152,23 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
                     "KafkaQueueAdapterReceiver - Commited an offset to the ConsumerGroup. ConsumerGroup is {0}, offset is {1}",
                     _options.ConsumerGroupName, _lastOffset);
             }            
+        }
+
+        public bool CommitOffset()
+        {
+            //var commitTask = Task.Run(() => _consumer.UpdateOrCreateOffset(_options.ConsumerGroupName, _lastOffset));
+            //commitTask.Wait(_options.ReceiveWaitTimeInMs);
+
+            //if (commitTask.IsCompleted)
+            //{
+            //    _logger.Verbose(
+            //        "KafkaQueueAdapterReceiver - Commited an offset to the ConsumerGroup. ConsumerGroup is {0}, offset is {1}",
+            //        _options.ConsumerGroupName, _lastOffset);
+
+            //    return true;
+            //}
+
+            return true;
         }
 
         public async Task Shutdown(TimeSpan timeout)

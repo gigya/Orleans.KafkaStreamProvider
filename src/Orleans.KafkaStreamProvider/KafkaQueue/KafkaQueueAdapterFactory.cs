@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache;
 using Orleans.Providers;
 using Orleans.Providers.Streams.Common;
 using Orleans.Runtime;
@@ -18,6 +19,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private IQueueAdapterCache _adapterCache;
         private string _providerName;
         private Logger _logger;
+        private KafkaQueueAdapter _adapter;
 
         public void Init(IProviderConfiguration config, string providerName, Logger logger)
         {
@@ -30,15 +32,20 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             
             _providerName = providerName;
             _streamQueueMapper = new HashRingBasedStreamQueueMapper(_options.NumOfQueues, providerName);
-            _adapterCache = new SimpleQueueAdapterCache(this, _options.CacheSize, logger);
             _logger = logger;
+            _adapter = new KafkaQueueAdapter(_streamQueueMapper, _options, providerName, new KafkaBatchFactory(), _logger);
+            _adapterCache = new TimedQueueAdapterCache(this, TimeSpan.FromSeconds(_options.CacheTimespanInSeconds), _options.CacheSize, _adapter.GetOffsetCommitFuncForQueue, _options.OffsetCommitInterval, logger);            
         }
 
         public Task<IQueueAdapter> CreateAdapter()
         {
-            var adapter = new KafkaQueueAdapter(_streamQueueMapper, _options, _providerName,
-                new KafkaBatchFactory(), _logger);
-            return Task.FromResult<IQueueAdapter>(adapter);
+            if (_adapter == null)
+            {
+                _adapter = new KafkaQueueAdapter(_streamQueueMapper, _options, _providerName,
+                    new KafkaBatchFactory(), _logger);
+            }
+
+            return Task.FromResult<IQueueAdapter>(_adapter);
         }
 
         /// <summary>

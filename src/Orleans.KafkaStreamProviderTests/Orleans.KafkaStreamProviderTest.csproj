@@ -52,16 +52,16 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Orleans, Version=1.0.9.8, Culture=neutral, PublicKeyToken=070f47935e3ed133, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.Core.1.0.9.8\lib\net45\Orleans.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\orleans\src\OrleansRuntime\bin\Debug\Orleans.dll</HintPath>
     </Reference>
     <Reference Include="OrleansProviders, Version=1.0.9.8, Culture=neutral, PublicKeyToken=070f47935e3ed133, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.OrleansProviders.1.0.9.8\lib\net45\OrleansProviders.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\orleans\src\OrleansProviders\bin\Debug\OrleansProviders.dll</HintPath>
     </Reference>
     <Reference Include="OrleansRuntime, Version=1.0.9.8, Culture=neutral, PublicKeyToken=070f47935e3ed133, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.OrleansRuntime.1.0.9.8\lib\net45\OrleansRuntime.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\orleans\src\OrleansRuntime\bin\Debug\OrleansRuntime.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -83,6 +83,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="KafkaQueueAdapterUnitTests.cs" />
     <Compile Include="KafkaQueueAdapterReceiverUnitTests.cs" />
+    <Compile Include="TimedQueueCacheTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

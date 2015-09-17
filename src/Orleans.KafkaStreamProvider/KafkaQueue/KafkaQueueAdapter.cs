@@ -1,4 +1,6 @@
 ﻿using System;
+using System.CodeDom;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,8 +20,9 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private readonly Logger _logger;
         private readonly KafkaStreamProviderOptions _options;
         private readonly Producer _producer;
+        private readonly ConcurrentDictionary<QueueId, KafkaQueueAdapterReceiver> _receivers;
 
-        public bool IsRewindable { get { return false; } }
+        public bool IsRewindable { get { return true; } }
 
         public string Name { get; private set; }
 
@@ -47,25 +50,42 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             var broker = new BrokerRouter(kafkaOptions);
             _producer = new Producer(broker) { BatchDelayTime = TimeSpan.FromMilliseconds(_options.TimeToWaitForBatchInMs), BatchSize = _options.ProduceBatchSize };
             _gateway = new ProtocolGateway(kafkaOptions);
+            _receivers = new ConcurrentDictionary<QueueId, KafkaQueueAdapterReceiver>();
 
             _logger.Info("KafkaQueueAdapter - Created a KafkaQueueAdapter");
         }
 
         public IQueueAdapterReceiver CreateReceiver(QueueId queueId)
         {
+            return InnerReceiverCreation(queueId);
+        }
+
+        private KafkaQueueAdapterReceiver InnerReceiverCreation(QueueId queueId)
+        {
+            KafkaQueueAdapterReceiver receiverToReturn;
+            if (_receivers.TryGetValue(queueId, out receiverToReturn)) return receiverToReturn;
+
             var partitionId = (int)queueId.GetNumericId();
-
-            _logger.Info("KafkaQueueAdapter - Creating a KafkaQueueAdapterReceiver for partition {0} in topic {1}", partitionId, _options.TopicName);
-
             var clientName = Environment.MachineName + AppDomain.CurrentDomain.FriendlyName;
+            _logger.Info("KafkaQueueAdapter - Creating a KafkaQueueAdapterReceiver for partition {0} in topic {1}", partitionId, _options.TopicName);
 
             // Creating a receiver
             var manualConsumer = new ManualConsumer(partitionId, _options.TopicName, _gateway, clientName, _options.MaxBytesInMessageSet);
+            receiverToReturn = new KafkaQueueAdapterReceiver(queueId, manualConsumer, _options, _batchFactory, _logger);
 
-            return new KafkaQueueAdapterReceiver(queueId, manualConsumer, _options, _batchFactory, _logger);
+            // Adding the dictionary and returning value
+            _receivers.TryAdd(queueId, receiverToReturn);
+
+            return receiverToReturn;
         }
 
-        public async Task QueueMessageBatchAsync<T>(Guid streamGuid, string streamNamespace, IEnumerable<T> events, Dictionary<string, object> requestContext)
+        public Func<bool> GetOffsetCommitFuncForQueue(QueueId queueId)
+        {
+            var relevantReceiver = InnerReceiverCreation(queueId);
+            return relevantReceiver.CommitOffset;
+        }
+
+        public async Task QueueMessageBatchAsync<T>(Guid streamGuid, string streamNamespace, IEnumerable<T> events, StreamSequenceToken token, Dictionary<string, object> requestContext)
         {
             var queueId = _streamQueueMapper.GetQueueForStream(streamGuid, streamNamespace);
             
