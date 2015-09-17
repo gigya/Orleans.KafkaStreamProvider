@@ -16,6 +16,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private const string ConsumerGroupNameParam = "ConsumerGroupName";
         private const string NumOfQueuesParam = "NumOfQueues";
         private const string CacheSizeParam = "CacheSize";
+        private const string CacheTimespanInSecondsParam = "CacheTimespan";
         private const string ProduceBatchSizeParam = "ProduceBatchSize";
         private const string TimeToWaitForBatchInMsParam = "TimeToWaitForBatchInMs";
         private const string MaxBytesInMessageSetParam = "MaxBytesInMessageSet";
@@ -28,6 +29,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         // Default values
         private const int DefaultNumOfQueues = 1;
         private const int DefaultCacheSize = 4096 * 4;
+        private const int DefaultCacheTimespanInSeconds = 60;
         private const int DefaultProduceBatchSize = 1000;
         private const int DefaultTimeToWaitForBatchInMs = 10;
         private const int DefaultMaxBytesInMessageSet = 4096 * 8;
@@ -55,6 +57,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         public int OffsetCommitInterval { get; set; }
         public bool ShouldInitWithLastOffset { get; set; }
         public int MaxMessageSizeInBytes { get; set; }
+        public int CacheTimespanInSeconds { get; set; }
 
         public KafkaStreamProviderOptions(IEnumerable<Uri> connectionStrings, string topicName, string consumerGroupName)
         {
@@ -77,6 +80,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             OffsetCommitInterval = DefaultOffsetCommitInterval;
             ShouldInitWithLastOffset = DefaultShouldInitWithLastOffset;
             MaxMessageSizeInBytes = DefaultMaxMessageSizeInBytes;
+            CacheTimespanInSeconds = DefaultCacheTimespanInSeconds;
         }
 
         public KafkaStreamProviderOptions(IProviderConfiguration config)
@@ -104,6 +108,8 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             ReceiveWaitTimeInMs = GetOptionalParamInt(ReceiveWaitTimeInMsParam, DefaultReceiveWaitTimeInMs, config);
             ShouldInitWithLastOffset = GetOptionalParamBool(ShouldInitWithLastOffsetParam, DefaultShouldInitWithLastOffset, config);
             MaxMessageSizeInBytes = GetOptionalParamInt(MaxMessageSizeInBytesParam, DefaultMaxBytesInMessageSet,
+                config);
+            CacheTimespanInSeconds = GetOptionalParamInt(CacheTimespanInSecondsParam, DefaultCacheTimespanInSeconds,
                 config);
         }
 
