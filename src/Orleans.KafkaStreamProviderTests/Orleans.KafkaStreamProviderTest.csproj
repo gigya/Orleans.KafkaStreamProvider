@@ -51,15 +51,15 @@
       <HintPath>..\packages\Moq.4.2.1507.0118\lib\net40\Moq.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Orleans, Version=1.0.9.8, Culture=neutral, PublicKeyToken=070f47935e3ed133, processorArchitecture=MSIL">
+    <Reference Include="Orleans, Version=1.0.9.0, Culture=neutral, PublicKeyToken=070f47935e3ed133, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\orleans\src\OrleansRuntime\bin\Debug\Orleans.dll</HintPath>
+      <HintPath>..\..\..\orleans\src\Orleans\bin\Debug\Orleans.dll</HintPath>
     </Reference>
-    <Reference Include="OrleansProviders, Version=1.0.9.8, Culture=neutral, PublicKeyToken=070f47935e3ed133, processorArchitecture=MSIL">
+    <Reference Include="OrleansProviders, Version=1.0.9.0, Culture=neutral, PublicKeyToken=070f47935e3ed133, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\orleans\src\OrleansProviders\bin\Debug\OrleansProviders.dll</HintPath>
     </Reference>
-    <Reference Include="OrleansRuntime, Version=1.0.9.8, Culture=neutral, PublicKeyToken=070f47935e3ed133, processorArchitecture=MSIL">
+    <Reference Include="OrleansRuntime, Version=1.0.9.0, Culture=neutral, PublicKeyToken=070f47935e3ed133, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\orleans\src\OrleansRuntime\bin\Debug\OrleansRuntime.dll</HintPath>
     </Reference>
@@ -87,7 +87,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Utils\" />

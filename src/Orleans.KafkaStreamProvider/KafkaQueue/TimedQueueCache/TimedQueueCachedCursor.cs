@@ -5,6 +5,10 @@ using Orleans.Streams;
 
 namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
 {
+    /// <summary>
+    /// The TimedQueueCacheCursor is at the moment identical to SimpleQueueCache cursor. We are not using the SimpleCacheCursor in order 
+    /// to be able to extend the CacheCursor without considering the SimpleQueueCache.
+    /// </summary>
     public class TimedQueueCacheCursor : IQueueCacheCursor
     {
         private readonly Guid _streamGuid;
@@ -48,12 +52,12 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
             _streamNamespace = streamNamespace;
             _logger = logger;
             _current = null;
-            TimedQueueCache.Log(logger, "SimpleQueueCacheCursor New Cursor for {0}, {1}", streamGuid, streamNamespace);
+            TimedQueueCache.Log(logger, "TimedQueueCacheCursor New Cursor for {0}, {1}", streamGuid, streamNamespace);
         }
 
         public virtual IBatchContainer GetCurrent(out Exception exception)
         {
-            TimedQueueCache.Log(_logger, "SimpleQueueCacheCursor.GetCurrent: {0}", _current);
+            TimedQueueCache.Log(_logger, "TimedQueueCacheCursor.GetCurrent: {0}", _current);
 
             exception = null;
             return _current;
