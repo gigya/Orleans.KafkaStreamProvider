@@ -17,7 +17,6 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private readonly IKafkaBatchFactory _factory;
         private readonly Logger _logger;
         private readonly KafkaStreamProviderOptions _options;
-        private int _numOfFetches;
 
         public QueueId Id { get; private set; }
 
@@ -108,20 +107,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
                 if (batches.Count > 0)
                 {
                     _logger.Verbose("KafkaQueueAdapterReceiver - Pulled {0} messages for queue number {1}", batches.Count, Id.GetNumericId());
-
-                    _lastOffset += batches.Count;
-
-                    // Committing the offset            
-                    _currentCommitTask = CommitIfNecessary();
-
-                    await _currentCommitTask;
-                    if (_currentCommitTask.IsFaulted && _currentCommitTask.Exception != null)
-                    {
-                        _logger.Info("KafkaQueueAdapterReceiver - There was an error comitting the offset to the ConsumerGroup. ConsumerGroup is {0}, offset is {1}", _options.ConsumerGroupName, _lastOffset);
-                        throw _currentCommitTask.Exception;
-                    }
-
-                    _currentCommitTask = null;                    
+                    _lastOffset += batches.Count;                
                 }               
 
                 return batches;
@@ -131,43 +117,21 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
                 // This case the next message in the queue is too big for us to read, so we skip it
                 _logger.Info("KafkaQueueAdapterReceiver - A message in the Kafka queue was too big to pull, skipping over it. offset was {0}", _lastOffset);
                 _lastOffset++;
-                _numOfFetches++;
 
                 return new List<IBatchContainer>();
             }
         }
 
-        private async Task CommitIfNecessary()
-        {
-            _numOfFetches++;
-            if (_numOfFetches < _options.OffsetCommitInterval) return;
-            
-            var commitTask = Task.Run(() => _consumer.UpdateOrCreateOffset(_options.ConsumerGroupName, _lastOffset));
-            await Task.WhenAny(commitTask, Task.Delay(_options.ReceiveWaitTimeInMs));
-
-            if (commitTask.IsCompleted)
-            {
-                _numOfFetches = 0;
-                _logger.Verbose(
-                    "KafkaQueueAdapterReceiver - Commited an offset to the ConsumerGroup. ConsumerGroup is {0}, offset is {1}",
-                    _options.ConsumerGroupName, _lastOffset);
-            }            
-        }
-
         public bool CommitOffset()
         {
-            //var commitTask = Task.Run(() => _consumer.UpdateOrCreateOffset(_options.ConsumerGroupName, _lastOffset));
-            //commitTask.Wait(_options.ReceiveWaitTimeInMs);
+            var commitTask = Task.Run(() => _consumer.UpdateOrCreateOffset(_options.ConsumerGroupName, _lastOffset));
+            commitTask.Wait(_options.ReceiveWaitTimeInMs);
 
-            //if (commitTask.IsCompleted)
-            //{
-            //    _logger.Verbose(
-            //        "KafkaQueueAdapterReceiver - Commited an offset to the ConsumerGroup. ConsumerGroup is {0}, offset is {1}",
-            //        _options.ConsumerGroupName, _lastOffset);
+            if (!commitTask.IsCompleted) return false;
 
-            //    return true;
-            //}
-
+            _logger.Verbose(
+                "KafkaQueueAdapterReceiver - Commited an offset to the ConsumerGroup. ConsumerGroup is {0}, offset is {1}",
+                _options.ConsumerGroupName, _lastOffset);
             return true;
         }
 
