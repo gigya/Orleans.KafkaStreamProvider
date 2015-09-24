@@ -13,5 +13,13 @@ namespace TestGrainInterfaces
         Task<int> GetNumberConsumed();
 
         Task<T> GetLastConsumedItem();
+
+        Task SetMessageExpectation(int value);
+
+        Task<TimeSpan> GetConsumingTime();
+
+        Task<bool> HasFinishedConsuming();
+
+        Task<TimeSpan> GetTotalSendTime();
     } 
 }

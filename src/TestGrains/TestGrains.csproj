@@ -45,8 +45,8 @@
     <WarningsAsErrors>4014</WarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Orleans, Version=1.0.9.13, Culture=neutral, PublicKeyToken=070f47935e3ed133, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Orleans.Core.1.0.9.13\lib\net45\Orleans.dll</HintPath>
+    <Reference Include="Orleans, Version=1.0.9.16, Culture=neutral, PublicKeyToken=070f47935e3ed133, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Orleans.Core.1.0.9.16\lib\net45\Orleans.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -58,6 +58,7 @@
     <Compile Include="CustomEventProducerGrain.cs" />
     <Compile Include="FaultableConsumerGrain.cs" />
     <Compile Include="GenericGrains.cs" />
+    <Compile Include="Models\LoadTestMessage.cs" />
     <Compile Include="MultipleProducingProducerGrain.cs" />
     <Compile Include="SimpleGenericGrain.cs" />
     <Compile Include="MultipleSubscriptionConsumerGrain.cs" />
