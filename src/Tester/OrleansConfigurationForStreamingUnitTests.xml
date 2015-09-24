@@ -9,7 +9,7 @@
                 Name="KafkaProvider"
                 ConsumerGroupName="NotificationsTestConsumerGroupName"
                 ConnectionStrings="http://il1a-kafka-br01.gigya.net:9092;http://il1a-kafka-br02.gigya.net:9092;http://il1a-kafka-br03.gigya.net:9092"
-                TopicName="Ran.Integration2.NotificationTestTopic"
+                TopicName="Johnny.LoadTests"
                 MaxBytesInMessageSet="262144"
                 NumQueues="1"/>
     </StreamProviders>
