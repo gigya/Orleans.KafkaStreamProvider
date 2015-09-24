@@ -65,7 +65,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             return new KafkaQueueAdapterReceiver(queueId, manualConsumer, _options, _batchFactory, _logger);
         }
 
-        public async Task QueueMessageBatchAsync<T>(Guid streamGuid, string streamNamespace, IEnumerable<T> events, Dictionary<string, object> requestContext)
+        public async Task QueueMessageBatchAsync<T>(Guid streamGuid, string streamNamespace, IEnumerable<T> events, StreamSequenceToken token, Dictionary<string, object> requestContext)
         {
             var queueId = _streamQueueMapper.GetQueueForStream(streamGuid, streamNamespace);
             
