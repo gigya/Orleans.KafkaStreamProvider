@@ -47,29 +47,25 @@
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
       <Private>False</Private>
     </Reference>
-    <Reference Include="Orleans, Version=1.0.9.8, Culture=neutral, PublicKeyToken=070f47935e3ed133, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\orleans\src\Orleans\bin\Debug\Orleans.dll</HintPath>
+    <Reference Include="Orleans, Version=1.0.9.16, Culture=neutral, PublicKeyToken=070f47935e3ed133, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Orleans.Core.1.0.9.16\lib\net45\Orleans.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="OrleansCounterControl, Version=1.0.9.8, Culture=neutral, PublicKeyToken=070f47935e3ed133, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\orleans\src\OrleansCounterControl\bin\Debug\OrleansCounterControl.exe</HintPath>
+    <Reference Include="OrleansCounterControl, Version=1.0.9.16, Culture=neutral, PublicKeyToken=070f47935e3ed133, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Orleans.CounterControl.1.0.9.16\lib\net45\OrleansCounterControl.exe</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="OrleansHost, Version=1.0.9.8, Culture=neutral, PublicKeyToken=070f47935e3ed133, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\orleans\src\OrleansHost\bin\Debug\OrleansHost.exe</HintPath>
+    <Reference Include="OrleansProviders, Version=1.0.9.16, Culture=neutral, PublicKeyToken=070f47935e3ed133, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Orleans.OrleansProviders.1.0.9.16\lib\net45\OrleansProviders.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="OrleansProviders, Version=1.0.9.8, Culture=neutral, PublicKeyToken=070f47935e3ed133, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\orleans\src\OrleansProviders\bin\Debug\OrleansProviders.dll</HintPath>
+    <Reference Include="OrleansRuntime, Version=1.0.9.16, Culture=neutral, PublicKeyToken=070f47935e3ed133, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Orleans.OrleansRuntime.1.0.9.16\lib\net45\OrleansRuntime.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="OrleansRuntime, Version=1.0.9.8, Culture=neutral, PublicKeyToken=070f47935e3ed133, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\orleans\src\OrleansRuntime\bin\Debug\OrleansRuntime.dll</HintPath>
-    </Reference>
-    <Reference Include="OrleansTestingHost, Version=1.0.9.8, Culture=neutral, PublicKeyToken=070f47935e3ed133, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\orleans\src\OrleansTestingHost\bin\Debug\OrleansTestingHost.dll</HintPath>
+    <Reference Include="OrleansTestingHost, Version=1.0.9.16, Culture=neutral, PublicKeyToken=070f47935e3ed133, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Orleans.TestingHost.1.0.9.16\lib\net45\OrleansTestingHost.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -138,6 +134,7 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
