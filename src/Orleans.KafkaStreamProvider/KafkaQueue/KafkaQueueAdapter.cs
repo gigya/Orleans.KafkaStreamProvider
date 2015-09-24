@@ -106,7 +106,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             var response = await Task.Run(() => _producer.SendMessageAsync(_options.TopicName, messageToSend, (short)_options.AckLevel, partition: partitionId));
 
             // This is ackLevel != 0 check
-            if (response != null)
+            if (response != null && !response.Contains(null))
             {
                 var responsesWithError =
                     response.Where(messageResponse => messageResponse.Error != (int) ErrorResponseCode.NoError);

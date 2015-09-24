@@ -11,7 +11,7 @@ Updated the StreamProvider to work with Orleans 1.0.9.8
 
 ## Overview
 The KafkaStreamProvider is a new implementation of a PersistentStreamProvider for Microsoft Orleans. 
-It works with a modified Kafka-Net library which is a native C# client for Apache Kafka (for more information see https://github.com/Gigya/kafka-net)
+It works with a modified Kafka-Net library which is a native C# client for Apache Kafka (for more information see https://github.com/gigya/KafkaNetClient)
 
 ## Installation
 To start working with the KafkaStreamProvider make sure you do the following steps:
