@@ -17,6 +17,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private const string NumOfQueuesParam = "NumOfQueues";
         private const string CacheSizeParam = "CacheSize";
         private const string CacheTimespanInSecondsParam = "CacheTimespan";
+        private const string CacheNumOfBucketsParam = "NumOfCacheBuckets";
         private const string ProduceBatchSizeParam = "ProduceBatchSize";
         private const string TimeToWaitForBatchInMsParam = "TimeToWaitForBatchInMs";
         private const string MaxBytesInMessageSetParam = "MaxBytesInMessageSet";
@@ -30,6 +31,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private const int DefaultNumOfQueues = 1;
         private const int DefaultCacheSize = 4096 * 4;
         private const int DefaultCacheTimespanInSeconds = 60;
+        private const int DefaultCacheNumOfBucketsParam = 10;
         private const int DefaultProduceBatchSize = 1000;
         private const int DefaultTimeToWaitForBatchInMs = 10;
         private const int DefaultMaxBytesInMessageSet = 4096 * 8;
@@ -37,7 +39,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private const int DefaultReceiveWaitTimeInMs = 100;
         private const int DefaultOffsetCommitInterval = 1;
         private const bool DefaultShouldInitWithLastOffset = true;
-        private const int DefaultMaxMessageSizeInBytes = 4096;
+        private const int DefaultMaxMessageSizeInBytes = 4096;        
 
         // Config values
         private readonly IEnumerable<Uri> _connectionStrings;
@@ -58,6 +60,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         public bool ShouldInitWithLastOffset { get; set; }
         public int MaxMessageSizeInBytes { get; set; }
         public int CacheTimespanInSeconds { get; set; }
+        public int CacheNumOfBuckets { get; set; }
 
         public KafkaStreamProviderOptions(IEnumerable<Uri> connectionStrings, string topicName, string consumerGroupName)
         {
@@ -81,6 +84,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             ShouldInitWithLastOffset = DefaultShouldInitWithLastOffset;
             MaxMessageSizeInBytes = DefaultMaxMessageSizeInBytes;
             CacheTimespanInSeconds = DefaultCacheTimespanInSeconds;
+            CacheNumOfBuckets = DefaultCacheNumOfBucketsParam;
         }
 
         public KafkaStreamProviderOptions(IProviderConfiguration config)
@@ -111,6 +115,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
                 config);
             CacheTimespanInSeconds = GetOptionalParamInt(CacheTimespanInSecondsParam, DefaultCacheTimespanInSeconds,
                 config);
+            CacheNumOfBuckets = GetOptionalParamInt(CacheNumOfBucketsParam, DefaultCacheNumOfBucketsParam, config);
         }
 
         private static string GetRequiredParam(string paramName, IProviderConfiguration config)

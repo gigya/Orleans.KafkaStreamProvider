@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using KafkaNet.Interfaces;
 using KafkaNet.Protocol;
+using Orleans.Providers.Streams.Common;
 using Orleans.Runtime;
 using Orleans.Streams;
 
@@ -122,17 +124,32 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             }
         }
 
-        public bool CommitOffset()
+        public bool CommitOffset(EventSequenceToken sequenceToCommit)
         {
-            var commitTask = Task.Run(() => _consumer.UpdateOrCreateOffset(_options.ConsumerGroupName, _lastOffset));
+            // TODO: This is a workaround until I make a pull request to get the sequence number
+            var offsetToCommit = ExtractOffsetFromSequenceToken(sequenceToCommit);
+
+            var commitTask = Task.Run(() => _consumer.UpdateOrCreateOffset(_options.ConsumerGroupName, offsetToCommit));
             commitTask.Wait(_options.ReceiveWaitTimeInMs);
 
-            if (!commitTask.IsCompleted) return false;
+            if (!commitTask.IsCompleted)
+            {
+                _logger.Info(
+                    "KafkaQueueAdapterReceiver - Commit offset operation has failed. ConsumerGroup is {0}, offset is {1}",
+                    _options.ConsumerGroupName, offsetToCommit);
+                return false;
+            }
 
             _logger.Verbose(
                 "KafkaQueueAdapterReceiver - Commited an offset to the ConsumerGroup. ConsumerGroup is {0}, offset is {1}",
-                _options.ConsumerGroupName, _lastOffset);
+                _options.ConsumerGroupName, offsetToCommit);
             return true;
+        }
+
+        private long ExtractOffsetFromSequenceToken(EventSequenceToken sequenceToken)
+        {
+            var resultString = Regex.Match(sequenceToken.ToString(), @"\d+").Value;
+            return long.Parse(resultString);
         }
 
         public async Task Shutdown(TimeSpan timeout)

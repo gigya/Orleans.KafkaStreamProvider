@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using KafkaNet;
+using KafkaNet.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Orleans;
 using Orleans.Runtime;
@@ -151,7 +153,7 @@ namespace Tester.StreamingTests
             var tokens = await consumer.GetReceivedTokens();
             var wantedToken = tokens[numToProduce - 2];
 
-            // Prodcing the new message
+            // Producing the new message
             int secnodNumToProduce = 2;
 
             for (int i = 1; i <= secnodNumToProduce; i++)
