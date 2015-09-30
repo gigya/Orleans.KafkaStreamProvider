@@ -7,7 +7,7 @@
     <StreamProviders>
       <Provider Type="Orleans.KafkaStreamProvider.PersistentStreams.KafkaStreamProvider"
                 Name="KafkaProvider"
-                ConsumerGroupName="TestConsumerGroupName"
+                ConsumerGroupName="RewindingTestConsumerGroupName"
                 ConnectionStrings="http://il1a-kafka-br01.gigya.net:9092;http://il1a-kafka-br02.gigya.net:9092;http://il1a-kafka-br03.gigya.net:9092"
                 TopicName="Jonathan.ab.RewindingNamespaceTest" NumQueues="1" CacheTimespan="5"/>
     </StreamProviders>

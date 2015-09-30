@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using KafkaNet;
 using KafkaNet.Model;
 using KafkaNet.Protocol;
+using Orleans.Providers.Streams.Common;
 using Orleans.Runtime;
 using Orleans.Streams;
 
@@ -57,10 +58,10 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 
         public IQueueAdapterReceiver CreateReceiver(QueueId queueId)
         {
-            return InnerReceiverCreation(queueId);
+            return InnerCreateReceiver(queueId);
         }
 
-        private KafkaQueueAdapterReceiver InnerReceiverCreation(QueueId queueId)
+        private KafkaQueueAdapterReceiver InnerCreateReceiver(QueueId queueId)
         {
             KafkaQueueAdapterReceiver receiverToReturn;
             if (_receivers.TryGetValue(queueId, out receiverToReturn)) return receiverToReturn;
@@ -79,9 +80,9 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             return receiverToReturn;
         }
 
-        public Func<bool> GetOffsetCommitFuncForQueue(QueueId queueId)
+        public Func<EventSequenceToken, bool> GetOffsetCommitFuncForQueue(QueueId queueId)
         {
-            var relevantReceiver = InnerReceiverCreation(queueId);
+            var relevantReceiver = InnerCreateReceiver(queueId);
             return relevantReceiver.CommitOffset;
         }
 
