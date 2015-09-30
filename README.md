@@ -1,13 +1,14 @@
 # Orleans.KafkaStreamProvider
 Kafka persistent stream provider for Microsoft Orleans
 
-## Version 0.8.5
+## Version 0.8.6
 
 ### What's new?
-Updated the StreamProvider to work with Orleans 1.0.9.8
+- Updated the StreamProvider to work with Orleans 1.0.9.16
+- Changed the cache of the KafkaStreamProvider to a timed based cache (See more under [Working with the timed based cache](#timedbaseCache).
 
 ## TBD
-- Support rewindable streams.
+- Fully support rewindable streams.
 
 ## Overview
 The KafkaStreamProvider is a new implementation of a PersistentStreamProvider for Microsoft Orleans. 
@@ -47,6 +48,20 @@ The [KafkaQueueAdapter](./src/Orleans.KafkaStreamProvider/KafkaQueue/KafkaQueueA
 #### Consuming Messages
 The [KafkaQueueAdapterReceiver](./src/Orleans.KafkaStreamProvider/KafkaQueue/KafkaQueueAdapterReceiver.cs) is responsible for fetching the messages from Kafka. For every queue (partition) a separate receiver is created that is exclusively responsible to fetch messages from it. The receiver manages the offset to fetch from and commits it to Kafka using the ConsumerGroupName so the silo has a persistent offset for each queue (partition) in the Topic.
 
+## <a name="timedbaseCache"></a>Working with the time based cache
+Since version 0.8.6 the KafkaStreamProvider works with a time based cache.
+This cache has a few key principles:
+- This cache will hold messages that arrived from Kafka for a configurable TimeSpan.
+- This cache has a maximum size
+- This cache is **guaranteed** to contain messages for the configurable time span. That means that even if there are no cursors on a certain message, the message will stay in the cache as long as it is in the TimeSpan limits.
+- The cache is being considerate of slow consumers and will wait for them to end consuming before removing the messages.
+
+Under these principles, the cache will be under pressure under the following conditions:
+- The cache is full, and removing the last message in order to add the new message will violate the timespan guarantee.
+- The cache is full, and removing the last message in order to add the new message will prevent a consumer to consume the message.
+
+The cache also get a callback function that will be called after a **configurable** number of removals from the cache. This callback is being used by the KafkaStreamProvider to commit the offsets and hence ensure that no messages will be lost in case of a sudden crash (pulled messages are stored in the cache, only when a message leaves the cache the KafkaQueueAdapterReceiver knows that it was consumed and was held in the cache the guaranteed timespan and therefore it can commit the offset).
+
 ## <a name="configurableValues"></a>Configurable Values
 These are the configurable values that the KafkaStreamProvider offers to its users, the first three are required while the others have default values:
 
@@ -61,8 +76,9 @@ These are the configurable values that the KafkaStreamProvider offers to its use
 - **MaxBytesInMessageSet**: The maximum size **in bytes** that a Kafka response can have. The size includes individual Kafka message headers and the response header. *Default value is 16384*.
 - **AckLevel**: Sets the wanted Ack level with the KafkaBroker. The Ack level can be 0, 1 or -1 . The ack level determines from how many brokers (replicas) does the producer (in our case the QueueAdpater) need to receive an Ack from that the produced message has been saved (0 for none, 1 for the leader only, and -1 for all of the replicas). You can read more about ack level here (http://kafka.apache.org/documentation.html#replication). *Default value is 1*
 - **ReceiveWaitTimeInMs** - The time the QueueAdapterReceiver will wait when fetching a batch of messages from Kafka. If the Receiver did not get any messages in the allotted time, it will return an empty batch and will try again the next time the PullingAgent asks for messages. *Default value is 100*.
-- **OffsetCommitInterval** - Determines after how many fetches from Kafka the QueueAdapterReceiver will commit its offset to Kafka. Fetches that did not return any messages are not accounted. *Default value is 1*.
+- **EDITED - OffsetCommitInterval** - Determines after how many removes from the time based cache the QueueAdapterReceiver will commit its offset to Kafka. *Default value is 1*.
 - **ShouldInitWithLastOffset** - Determines whether the Receiver should get its initial offset from the value saved at Kafka (according to the ConsumerGroupName) or just take the last offset from Kafka (the top of the queue). *Default value is True*
+- **NEW - CacheTimespan** - The timespan the cache will guarantee to keep.
 
 Additionally you have the default configuration options offered by Orleans to any PersistentStreamProvider which can be found here (under StreamProvider configuration): http://dotnet.github.io/orleans/Orleans-Streams/Streams-Extensibility. 
 
