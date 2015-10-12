@@ -31,7 +31,7 @@ namespace TestGrainInterfaces
     using System.Collections;
     
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class BatchProducerGrainFactory
     {
@@ -55,7 +55,7 @@ namespace TestGrainInterfaces
                 return BatchProducerGrainReference.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("TestGrainInterfaces.IBatchProducerGrain")]
@@ -163,7 +163,7 @@ namespace TestGrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("TestGrainInterfaces.IBatchProducerGrain", 1056993933)]
     internal class BatchProducerGrainMethodInvoker : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -246,7 +246,7 @@ namespace TestGrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class CustomEventConsumerGrainFactory<T>
     
@@ -271,7 +271,7 @@ namespace TestGrainInterfaces
                 return CustomEventConsumerGrainReference<T>.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("TestGrainInterfaces.ICustomEventConsumerGrain<T>")]
@@ -369,7 +369,7 @@ namespace TestGrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("TestGrainInterfaces.ICustomEventConsumerGrain<T>", 1173705989)]
     internal class CustomEventConsumerGrainMethodInvoker<T> : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -445,7 +445,7 @@ namespace TestGrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class CustomEventProducerGrainFactory<T>
     
@@ -470,7 +470,7 @@ namespace TestGrainInterfaces
                 return CustomEventProducerGrainReference<T>.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("TestGrainInterfaces.ICustomEventProducerGrain<T>")]
@@ -586,7 +586,7 @@ namespace TestGrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("TestGrainInterfaces.ICustomEventProducerGrain<T>", 979969149)]
     internal class CustomEventProducerGrainMethodInvoker<T> : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -674,7 +674,7 @@ namespace TestGrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class MultipleProducingProducerGrainFactory
     {
@@ -698,7 +698,7 @@ namespace TestGrainInterfaces
                 return MultipleProducingProducerGrainReference.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("TestGrainInterfaces.IMultipleProducingProducerGrain")]
@@ -806,7 +806,7 @@ namespace TestGrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("TestGrainInterfaces.IMultipleProducingProducerGrain", 271298961)]
     internal class MultipleProducingProducerGrainMethodInvoker : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -889,7 +889,7 @@ namespace TestGrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class DoSomethingWithMoreGrainFactory
     {
@@ -913,7 +913,7 @@ namespace TestGrainInterfaces
                 return DoSomethingWithMoreGrainReference.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("TestGrainInterfaces.IDoSomethingWithMoreGrain")]
@@ -1033,7 +1033,7 @@ namespace TestGrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("TestGrainInterfaces.IDoSomethingWithMoreGrain", 1194674781)]
     internal class DoSomethingWithMoreGrainMethodInvoker : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -1124,7 +1124,7 @@ namespace TestGrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class DoSomethingEmptyGrainFactory
     {
@@ -1148,7 +1148,7 @@ namespace TestGrainInterfaces
                 return DoSomethingEmptyGrainReference.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("TestGrainInterfaces.IDoSomethingEmptyGrain")]
@@ -1244,7 +1244,7 @@ namespace TestGrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("TestGrainInterfaces.IDoSomethingEmptyGrain", -391075291)]
     internal class DoSomethingEmptyGrainMethodInvoker : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -1319,7 +1319,7 @@ namespace TestGrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class DoSomethingEmptyWithMoreGrainFactory
     {
@@ -1343,7 +1343,7 @@ namespace TestGrainInterfaces
                 return DoSomethingEmptyWithMoreGrainReference.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("TestGrainInterfaces.IDoSomethingEmptyWithMoreGrain")]
@@ -1446,7 +1446,7 @@ namespace TestGrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("TestGrainInterfaces.IDoSomethingEmptyWithMoreGrain", 962951394)]
     internal class DoSomethingEmptyWithMoreGrainMethodInvoker : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -1553,7 +1553,7 @@ namespace TestGrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class DoSomethingWithMoreEmptyGrainFactory
     {
@@ -1577,7 +1577,7 @@ namespace TestGrainInterfaces
                 return DoSomethingWithMoreEmptyGrainReference.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("TestGrainInterfaces.IDoSomethingWithMoreEmptyGrain")]
@@ -1681,7 +1681,7 @@ namespace TestGrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("TestGrainInterfaces.IDoSomethingWithMoreEmptyGrain", 2141373979)]
     internal class DoSomethingWithMoreEmptyGrainMethodInvoker : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -1820,7 +1820,7 @@ namespace TestGrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class DoSomethingCombinedGrainFactory
     {
@@ -1844,7 +1844,7 @@ namespace TestGrainInterfaces
                 return DoSomethingCombinedGrainReference.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("TestGrainInterfaces.IDoSomethingCombinedGrain")]
@@ -1992,7 +1992,7 @@ namespace TestGrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("TestGrainInterfaces.IDoSomethingCombinedGrain", -514373012)]
     internal class DoSomethingCombinedGrainMethodInvoker : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -2234,6 +2234,201 @@ namespace TestGrainInterfaces
             }
         }
     }
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
+    public class TimedConsumerGrainFactory
+    {
+        
+
+                        [System.Obsolete("This method has been deprecated. Please use GrainFactory.GetGrain<ITimedConsumerGrain> instead.")]
+                        public static ITimedConsumerGrain GetGrain(System.Guid primaryKey)
+                        {
+                            return Cast(global::Orleans.CodeGeneration.GrainFactoryBase.MakeGrainReferenceInternal(typeof(ITimedConsumerGrain), primaryKey));
+                        }
+
+                        [System.Obsolete("This method has been deprecated. Please use GrainFactory.GetGrain<ITimedConsumerGrain> instead.")]
+                        public static ITimedConsumerGrain GetGrain(System.Guid primaryKey, string grainClassNamePrefix)
+                        {
+                            return Cast(global::Orleans.CodeGeneration.GrainFactoryBase.MakeGrainReferenceInternal(typeof(ITimedConsumerGrain), primaryKey, grainClassNamePrefix));
+                        }
+
+            public static ITimedConsumerGrain Cast(global::Orleans.Runtime.IAddressable grainRef)
+            {
+                
+                return TimedConsumerGrainReference.Cast(grainRef);
+            }
+        
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
+        [System.SerializableAttribute()]
+        [global::Orleans.CodeGeneration.GrainReferenceAttribute("TestGrainInterfaces.ITimedConsumerGrain")]
+        internal class TimedConsumerGrainReference : global::Orleans.Runtime.GrainReference, global::Orleans.Runtime.IAddressable, TestGrainInterfaces.ITimedConsumerGrain
+        {
+            
+
+            public static ITimedConsumerGrain Cast(global::Orleans.Runtime.IAddressable grainRef)
+            {
+                
+                return (ITimedConsumerGrain) global::Orleans.Runtime.GrainReference.CastInternal(typeof(ITimedConsumerGrain), (global::Orleans.Runtime.GrainReference gr) => { return new TimedConsumerGrainReference(gr);}, grainRef, 1522249479);
+            }
+            
+            protected internal TimedConsumerGrainReference(global::Orleans.Runtime.GrainReference reference) : 
+                    base(reference)
+            {
+            }
+            
+            protected internal TimedConsumerGrainReference(SerializationInfo info, StreamingContext context) : 
+                    base(info, context)
+            {
+            }
+            
+            protected override int InterfaceId
+            {
+                get
+                {
+                    return 1522249479;
+                }
+            }
+            
+            public override string InterfaceName
+            {
+                get
+                {
+                    return "TestGrainInterfaces.ITimedConsumerGrain";
+                }
+            }
+            
+            [global::Orleans.CodeGeneration.CopierMethodAttribute()]
+            public static object _Copier(object original)
+            {
+                TimedConsumerGrainReference input = ((TimedConsumerGrainReference)(original));
+                return ((TimedConsumerGrainReference)(global::Orleans.Runtime.GrainReference.CopyGrainReference(input)));
+            }
+            
+            [global::Orleans.CodeGeneration.SerializerMethodAttribute()]
+            public static void _Serializer(object original, global::Orleans.Serialization.BinaryTokenStreamWriter stream, System.Type expected)
+            {
+                TimedConsumerGrainReference input = ((TimedConsumerGrainReference)(original));
+                global::Orleans.Runtime.GrainReference.SerializeGrainReference(input, stream, expected);
+            }
+            
+            [global::Orleans.CodeGeneration.DeserializerMethodAttribute()]
+            public static object _Deserializer(System.Type expected, global::Orleans.Serialization.BinaryTokenStreamReader stream)
+            {
+                return TimedConsumerGrainReference.Cast(((global::Orleans.Runtime.GrainReference)(global::Orleans.Runtime.GrainReference.DeserializeGrainReference(expected, stream))));
+            }
+            
+            public override bool IsCompatible(int interfaceId)
+            {
+                return (interfaceId == this.InterfaceId);
+            }
+            
+            protected override string GetMethodName(int interfaceId, int methodId)
+            {
+                return TimedConsumerGrainMethodInvoker.GetMethodName(interfaceId, methodId);
+            }
+            
+            System.Threading.Tasks.Task<Orleans.Streams.StreamSubscriptionHandle<int>> TestGrainInterfaces.ITimedConsumerGrain.BecomeConsumer(System.Guid @streamId, string @streamNamespace, Orleans.Streams.StreamSequenceToken @token, System.TimeSpan @timeToConsume, string @providerToUse)
+            {
+
+                return base.InvokeMethodAsync<Orleans.Streams.StreamSubscriptionHandle<System.Int32>>(-286663252, new object[] {@streamId, @streamNamespace, @token, @timeToConsume, @providerToUse} );
+            }
+            
+            System.Threading.Tasks.Task TestGrainInterfaces.ITimedConsumerGrain.StopConsuming()
+            {
+
+                return base.InvokeMethodAsync<object>(1151053849, null );
+            }
+            
+            System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<int, Orleans.Streams.StreamSequenceToken>> TestGrainInterfaces.ITimedConsumerGrain.GetReceivedTokens()
+            {
+
+                return base.InvokeMethodAsync<System.Collections.Generic.Dictionary<System.Int32,Orleans.Streams.StreamSequenceToken>>(-1852203042, null );
+            }
+            
+            System.Threading.Tasks.Task<int> TestGrainInterfaces.ITimedConsumerGrain.GetNumberConsumed()
+            {
+
+                return base.InvokeMethodAsync<System.Int32>(2130169286, null );
+            }
+        }
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
+    [global::Orleans.CodeGeneration.MethodInvokerAttribute("TestGrainInterfaces.ITimedConsumerGrain", 1522249479)]
+    internal class TimedConsumerGrainMethodInvoker : global::Orleans.CodeGeneration.IGrainMethodInvoker
+    {
+        
+        int global::Orleans.CodeGeneration.IGrainMethodInvoker.InterfaceId
+        {
+            get
+            {
+                return 1522249479;
+            }
+        }
+        
+        global::System.Threading.Tasks.Task<object> global::Orleans.CodeGeneration.IGrainMethodInvoker.Invoke(global::Orleans.Runtime.IAddressable grain, int interfaceId, int methodId, object[] arguments)
+        {
+
+            try
+            {                    if (grain == null) throw new System.ArgumentNullException("grain");
+                switch (interfaceId)
+                {
+                    case 1522249479:  // ITimedConsumerGrain
+                        switch (methodId)
+                        {
+                            case -286663252: 
+                                return ((ITimedConsumerGrain)grain).BecomeConsumer((Guid)arguments[0], (String)arguments[1], (StreamSequenceToken)arguments[2], (TimeSpan)arguments[3], (String)arguments[4]).ContinueWith(t => {if (t.Status == System.Threading.Tasks.TaskStatus.Faulted) throw t.Exception; return (object)t.Result; });
+                            case 1151053849: 
+                                return ((ITimedConsumerGrain)grain).StopConsuming().ContinueWith(t => {if (t.Status == System.Threading.Tasks.TaskStatus.Faulted) throw t.Exception; return (object)null; });
+                            case -1852203042: 
+                                return ((ITimedConsumerGrain)grain).GetReceivedTokens().ContinueWith(t => {if (t.Status == System.Threading.Tasks.TaskStatus.Faulted) throw t.Exception; return (object)t.Result; });
+                            case 2130169286: 
+                                return ((ITimedConsumerGrain)grain).GetNumberConsumed().ContinueWith(t => {if (t.Status == System.Threading.Tasks.TaskStatus.Faulted) throw t.Exception; return (object)t.Result; });
+                            default: 
+                            throw new NotImplementedException("interfaceId="+interfaceId+",methodId="+methodId);
+                        }
+                    default:
+                        throw new System.InvalidCastException("interfaceId="+interfaceId);
+                }
+            }
+            catch(Exception ex)
+            {
+                var t = new System.Threading.Tasks.TaskCompletionSource<object>();
+                t.SetException(ex);
+                return t.Task;
+            }
+        }
+        
+        public static string GetMethodName(int interfaceId, int methodId)
+        {
+
+            switch (interfaceId)
+            {
+                
+                case 1522249479:  // ITimedConsumerGrain
+                    switch (methodId)
+                    {
+                        case -286663252:
+                            return "BecomeConsumer";
+                    case 1151053849:
+                            return "StopConsuming";
+                    case -1852203042:
+                            return "GetReceivedTokens";
+                    case 2130169286:
+                            return "GetNumberConsumed";
+                    
+                        default: 
+                            throw new NotImplementedException("interfaceId="+interfaceId+",methodId="+methodId);
+                    }
+
+                default:
+                    throw new System.InvalidCastException("interfaceId="+interfaceId);
+            }
+        }
+    }
 }
 namespace UnitTests.GrainInterfaces
 {
@@ -2250,7 +2445,7 @@ namespace UnitTests.GrainInterfaces
     using Orleans.Streams;
     
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class FaultableConsumerGrainFactory
     {
@@ -2274,7 +2469,7 @@ namespace UnitTests.GrainInterfaces
                 return FaultableConsumerGrainReference.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.IFaultableConsumerGrain")]
@@ -2382,7 +2577,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.IFaultableConsumerGrain", -1176703236)]
     internal class FaultableConsumerGrainMethodInvoker : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -2465,7 +2660,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class GenericGrainFactory<T, U>
     
@@ -2491,7 +2686,7 @@ namespace UnitTests.GrainInterfaces
                 return GenericGrainReference<T,U>.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.IGenericGrain<T,U>")]
@@ -2578,7 +2773,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.IGenericGrain<T,U>", 1634994201)]
     internal class GenericGrainMethodInvoker<T, U> : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -2647,7 +2842,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class SimpleGenericGrain1Factory<T>
     
@@ -2672,7 +2867,7 @@ namespace UnitTests.GrainInterfaces
                 return SimpleGenericGrain1Reference<T>.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.ISimpleGenericGrain1<T>")]
@@ -2776,7 +2971,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.ISimpleGenericGrain1<T>", 1260283565)]
     internal class SimpleGenericGrain1MethodInvoker<T> : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -2856,7 +3051,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class SimpleGenericGrainUFactory<U>
     
@@ -2881,7 +3076,7 @@ namespace UnitTests.GrainInterfaces
                 return SimpleGenericGrainUReference<U>.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.ISimpleGenericGrainU<U>")]
@@ -2985,7 +3180,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.ISimpleGenericGrainU<U>", -1572190367)]
     internal class SimpleGenericGrainUMethodInvoker<U> : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -3065,7 +3260,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class SimpleGenericGrain2Factory<T, U>
     
@@ -3091,7 +3286,7 @@ namespace UnitTests.GrainInterfaces
                 return SimpleGenericGrain2Reference<T,U>.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.ISimpleGenericGrain2<T,U>")]
@@ -3196,7 +3391,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.ISimpleGenericGrain2<T,U>", -684597085)]
     internal class SimpleGenericGrain2MethodInvoker<T, U> : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -3277,7 +3472,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class GenericGrainWithNoPropertiesFactory<T>
     
@@ -3302,7 +3497,7 @@ namespace UnitTests.GrainInterfaces
                 return GenericGrainWithNoPropertiesReference<T>.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.IGenericGrainWithNoProperties<T>")]
@@ -3382,7 +3577,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.IGenericGrainWithNoProperties<T>", 1337405522)]
     internal class GenericGrainWithNoPropertiesMethodInvoker<T> : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -3446,7 +3641,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class GrainWithNoPropertiesFactory
     {
@@ -3470,7 +3665,7 @@ namespace UnitTests.GrainInterfaces
                 return GrainWithNoPropertiesReference.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.IGrainWithNoProperties")]
@@ -3548,7 +3743,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.IGrainWithNoProperties", -1624077082)]
     internal class GrainWithNoPropertiesMethodInvoker : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -3611,7 +3806,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class GrainWithListFieldsFactory
     {
@@ -3635,7 +3830,7 @@ namespace UnitTests.GrainInterfaces
                 return GrainWithListFieldsReference.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.IGrainWithListFields")]
@@ -3719,7 +3914,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.IGrainWithListFields", -1210669940)]
     internal class GrainWithListFieldsMethodInvoker : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -3786,7 +3981,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class GenericGrainWithListFieldsFactory<T>
     
@@ -3811,7 +4006,7 @@ namespace UnitTests.GrainInterfaces
                 return GenericGrainWithListFieldsReference<T>.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.IGenericGrainWithListFields<T>")]
@@ -3897,7 +4092,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.IGenericGrainWithListFields<T>", -316450890)]
     internal class GenericGrainWithListFieldsMethodInvoker<T> : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -3965,7 +4160,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class GenericReader1Factory<T>
     
@@ -3990,7 +4185,7 @@ namespace UnitTests.GrainInterfaces
                 return GenericReader1Reference<T>.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.IGenericReader1<T>")]
@@ -4070,7 +4265,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.IGenericReader1<T>", 767537344)]
     internal class GenericReader1MethodInvoker<T> : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -4134,7 +4329,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class GenericWriter1Factory<T>
     
@@ -4159,7 +4354,7 @@ namespace UnitTests.GrainInterfaces
                 return GenericWriter1Reference<T>.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.IGenericWriter1<T>")]
@@ -4239,7 +4434,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.IGenericWriter1<T>", -134445539)]
     internal class GenericWriter1MethodInvoker<T> : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -4303,7 +4498,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class GenericReaderWriterGrain1Factory<T>
     
@@ -4328,7 +4523,7 @@ namespace UnitTests.GrainInterfaces
                 return GenericReaderWriterGrain1Reference<T>.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.IGenericReaderWriterGrain1<T>")]
@@ -4416,7 +4611,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.IGenericReaderWriterGrain1<T>", 1909583157)]
     internal class GenericReaderWriterGrain1MethodInvoker<T> : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -4516,7 +4711,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class GenericReader2Factory<TOne, TTwo>
     
@@ -4542,7 +4737,7 @@ namespace UnitTests.GrainInterfaces
                 return GenericReader2Reference<TOne,TTwo>.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.IGenericReader2<TOne,TTwo>")]
@@ -4629,7 +4824,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.IGenericReader2<TOne,TTwo>", 1685381360)]
     internal class GenericReader2MethodInvoker<TOne, TTwo> : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -4698,7 +4893,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class GenericWriter2Factory<TOne, TTwo>
     
@@ -4724,7 +4919,7 @@ namespace UnitTests.GrainInterfaces
                 return GenericWriter2Reference<TOne,TTwo>.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.IGenericWriter2<TOne,TTwo>")]
@@ -4811,7 +5006,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.IGenericWriter2<TOne,TTwo>", -405042587)]
     internal class GenericWriter2MethodInvoker<TOne, TTwo> : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -4880,7 +5075,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class GenericReaderWriterGrain2Factory<TOne, TTwo>
     
@@ -4906,7 +5101,7 @@ namespace UnitTests.GrainInterfaces
                 return GenericReaderWriterGrain2Reference<TOne,TTwo>.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.IGenericReaderWriterGrain2<TOne,TTwo>")]
@@ -5007,7 +5202,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.IGenericReaderWriterGrain2<TOne,TTwo>", 1911654391)]
     internal class GenericReaderWriterGrain2MethodInvoker<TOne, TTwo> : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -5124,7 +5319,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class GenericReader3Factory<TOne, TTwo, TThree>
     
@@ -5151,7 +5346,7 @@ namespace UnitTests.GrainInterfaces
                 return GenericReader3Reference<TOne,TTwo,TThree>.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.IGenericReader3<TOne,TTwo,TThree>")]
@@ -5246,7 +5441,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.IGenericReader3<TOne,TTwo,TThree>", -1357988267)]
     internal class GenericReader3MethodInvoker<TOne, TTwo, TThree> : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -5340,7 +5535,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class GenericWriter3Factory<TOne, TTwo, TThree>
     
@@ -5367,7 +5562,7 @@ namespace UnitTests.GrainInterfaces
                 return GenericWriter3Reference<TOne,TTwo,TThree>.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.IGenericWriter3<TOne,TTwo,TThree>")]
@@ -5462,7 +5657,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.IGenericWriter3<TOne,TTwo,TThree>", 1320810526)]
     internal class GenericWriter3MethodInvoker<TOne, TTwo, TThree> : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -5556,7 +5751,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class GenericReaderWriterGrain3Factory<TOne, TTwo, TThree>
     
@@ -5583,7 +5778,7 @@ namespace UnitTests.GrainInterfaces
                 return GenericReaderWriterGrain3Reference<TOne,TTwo,TThree>.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.IGenericReaderWriterGrain3<TOne,TTwo,TThree>")]
@@ -5699,7 +5894,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.IGenericReaderWriterGrain3<TOne,TTwo,TThree>", -689214647)]
     internal class GenericReaderWriterGrain3MethodInvoker<TOne, TTwo, TThree> : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -5873,7 +6068,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class GenericSelfManagedGrainFactory<T, U>
     
@@ -5899,7 +6094,7 @@ namespace UnitTests.GrainInterfaces
                 return GenericSelfManagedGrainReference<T,U>.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.IGenericSelfManagedGrain<T,U>")]
@@ -6004,7 +6199,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.IGenericSelfManagedGrain<T,U>", 1720327813)]
     internal class GenericSelfManagedGrainMethodInvoker<T, U> : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -6085,7 +6280,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class HubGrainFactory<TKey, T1, T2>
     
@@ -6112,7 +6307,7 @@ namespace UnitTests.GrainInterfaces
                 return HubGrainReference<TKey,T1,T2>.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.IHubGrain<TKey,T1,T2>")]
@@ -6194,7 +6389,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.IHubGrain<TKey,T1,T2>", 300696295)]
     internal class HubGrainMethodInvoker<TKey, T1, T2> : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -6260,7 +6455,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class EchoHubGrainFactory<TKey, TMessage>
     
@@ -6286,7 +6481,7 @@ namespace UnitTests.GrainInterfaces
                 return EchoHubGrainReference<TKey,TMessage>.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.IEchoHubGrain<TKey,TMessage>")]
@@ -6380,7 +6575,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.IEchoHubGrain<TKey,TMessage>", -1731827949)]
     internal class EchoHubGrainMethodInvoker<TKey, TMessage> : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -6469,7 +6664,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class EchoGenericChainGrainFactory<T>
     
@@ -6494,7 +6689,7 @@ namespace UnitTests.GrainInterfaces
                 return EchoGenericChainGrainReference<T>.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.IEchoGenericChainGrain<T>")]
@@ -6604,7 +6799,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.IEchoGenericChainGrain<T>", 345675939)]
     internal class EchoGenericChainGrainMethodInvoker<T> : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -6688,7 +6883,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class NonGenericBaseFactory
     {
@@ -6712,7 +6907,7 @@ namespace UnitTests.GrainInterfaces
                 return NonGenericBaseReference.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.INonGenericBase")]
@@ -6790,7 +6985,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.INonGenericBase", 2104871304)]
     internal class NonGenericBaseMethodInvoker : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -6853,7 +7048,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class Generic1ArgumentFactory<T>
     
@@ -6878,7 +7073,7 @@ namespace UnitTests.GrainInterfaces
                 return Generic1ArgumentReference<T>.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.IGeneric1Argument<T>")]
@@ -6958,7 +7153,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.IGeneric1Argument<T>", -340585198)]
     internal class Generic1ArgumentMethodInvoker<T> : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -7022,7 +7217,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class Generic2ArgumentsFactory<T, U>
     
@@ -7048,7 +7243,7 @@ namespace UnitTests.GrainInterfaces
                 return Generic2ArgumentsReference<T,U>.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.IGeneric2Arguments<T,U>")]
@@ -7129,7 +7324,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.IGeneric2Arguments<T,U>", 1208173962)]
     internal class Generic2ArgumentsMethodInvoker<T, U> : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -7194,7 +7389,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class DbGrainFactory<T>
     
@@ -7219,7 +7414,7 @@ namespace UnitTests.GrainInterfaces
                 return DbGrainReference<T>.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.IDbGrain<T>")]
@@ -7305,7 +7500,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.IDbGrain<T>", 808581941)]
     internal class DbGrainMethodInvoker<T> : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -7373,7 +7568,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class GenericPingSelfFactory<T>
     
@@ -7398,7 +7593,7 @@ namespace UnitTests.GrainInterfaces
                 return GenericPingSelfReference<T>.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.IGenericPingSelf<T>")]
@@ -7514,7 +7709,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.IGenericPingSelf<T>", -654198331)]
     internal class GenericPingSelfMethodInvoker<T> : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -7602,7 +7797,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class MultipleSubscriptionConsumerGrainFactory
     {
@@ -7626,7 +7821,7 @@ namespace UnitTests.GrainInterfaces
                 return MultipleSubscriptionConsumerGrainReference.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.IMultipleSubscriptionConsumerGrain")]
@@ -7740,7 +7935,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.IMultipleSubscriptionConsumerGrain", -1066298859)]
     internal class MultipleSubscriptionConsumerGrainMethodInvoker : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -7827,7 +8022,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class SampleStreaming_ProducerGrainFactory
     {
@@ -7851,7 +8046,7 @@ namespace UnitTests.GrainInterfaces
                 return SampleStreaming_ProducerGrainReference.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.ISampleStreaming_ProducerGrain")]
@@ -7959,7 +8154,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.ISampleStreaming_ProducerGrain", 1136982742)]
     internal class SampleStreaming_ProducerGrainMethodInvoker : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -8042,7 +8237,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class SampleStreaming_ConsumerGrainFactory
     {
@@ -8066,7 +8261,7 @@ namespace UnitTests.GrainInterfaces
                 return SampleStreaming_ConsumerGrainReference.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.ISampleStreaming_ConsumerGrain")]
@@ -8156,7 +8351,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.ISampleStreaming_ConsumerGrain", -124728426)]
     internal class SampleStreaming_ConsumerGrainMethodInvoker : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -8227,7 +8422,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class SampleStreaming_InlineConsumerGrainFactory
     {
@@ -8251,7 +8446,7 @@ namespace UnitTests.GrainInterfaces
                 return SampleStreaming_InlineConsumerGrainReference.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.ISampleStreaming_InlineConsumerGrain")]
@@ -8342,7 +8537,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.ISampleStreaming_InlineConsumerGrain", -2090853829)]
     internal class SampleStreaming_InlineConsumerGrainMethodInvoker : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -8437,7 +8632,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class SimpleGenericGrainFactory<T>
     
@@ -8462,7 +8657,7 @@ namespace UnitTests.GrainInterfaces
                 return SimpleGenericGrainReference<T>.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.ISimpleGenericGrain<T>")]
@@ -8560,7 +8755,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.ISimpleGenericGrain<T>", -1882632188)]
     internal class SimpleGenericGrainMethodInvoker<T> : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -8636,7 +8831,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class SomeGrainFactory
     {
@@ -8660,7 +8855,7 @@ namespace UnitTests.GrainInterfaces
                 return SomeGrainReference.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.ISomeGrain")]
@@ -8738,7 +8933,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.ISomeGrain", -914758024)]
     internal class SomeGrainMethodInvoker : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -8801,7 +8996,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class SimpleGrainFactory
     {
@@ -8825,7 +9020,7 @@ namespace UnitTests.GrainInterfaces
                 return SimpleGrainReference.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.ISimpleGrain")]
@@ -8933,7 +9128,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.ISimpleGrain", 1638410893)]
     internal class SimpleGrainMethodInvoker : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -9016,7 +9211,7 @@ namespace UnitTests.GrainInterfaces
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class SimpleObserverableGrainFactory
     {
@@ -9040,7 +9235,7 @@ namespace UnitTests.GrainInterfaces
                 return SimpleObserverableGrainReference.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.ISimpleObserverableGrain")]
@@ -9163,7 +9358,7 @@ global::Orleans.CodeGeneration.GrainFactoryBase.CheckGrainObserverParamInternal(
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.ISimpleObserverableGrain", -1750443332)]
     internal class SimpleObserverableGrainMethodInvoker : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -9290,7 +9485,7 @@ global::Orleans.CodeGeneration.GrainFactoryBase.CheckGrainObserverParamInternal(
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class SimpleGrainObserverFactory
     {
@@ -9315,7 +9510,7 @@ global::Orleans.CodeGeneration.GrainFactoryBase.CheckGrainObserverParamInternal(
             return global::Orleans.Runtime.GrainReference.DeleteObjectReference(reference);
         }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.ISimpleGrainObserver")]
@@ -9393,7 +9588,7 @@ global::Orleans.CodeGeneration.GrainFactoryBase.CheckGrainObserverParamInternal(
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.ISimpleGrainObserver", -1394652141)]
     internal class SimpleGrainObserverMethodInvoker : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -9456,7 +9651,7 @@ global::Orleans.CodeGeneration.GrainFactoryBase.CheckGrainObserverParamInternal(
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class ObserverGrainFactory
     {
@@ -9480,7 +9675,7 @@ global::Orleans.CodeGeneration.GrainFactoryBase.CheckGrainObserverParamInternal(
                 return ObserverGrainReference.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.IObserverGrain")]
@@ -9565,7 +9760,7 @@ global::Orleans.CodeGeneration.GrainFactoryBase.CheckGrainObserverParamInternal(
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.IObserverGrain", -378267896)]
     internal class ObserverGrainMethodInvoker : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -9632,7 +9827,7 @@ global::Orleans.CodeGeneration.GrainFactoryBase.CheckGrainObserverParamInternal(
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class SimplePersistentGrainFactory
     {
@@ -9656,7 +9851,7 @@ global::Orleans.CodeGeneration.GrainFactoryBase.CheckGrainObserverParamInternal(
                 return SimplePersistentGrainReference.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.ISimplePersistentGrain")]
@@ -9777,7 +9972,7 @@ global::Orleans.CodeGeneration.GrainFactoryBase.CheckGrainObserverParamInternal(
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.ISimplePersistentGrain", 1227585576)]
     internal class SimplePersistentGrainMethodInvoker : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -9904,7 +10099,7 @@ global::Orleans.CodeGeneration.GrainFactoryBase.CheckGrainObserverParamInternal(
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     public class LivenessTestGrainFactory
     {
@@ -9928,7 +10123,7 @@ global::Orleans.CodeGeneration.GrainFactoryBase.CheckGrainObserverParamInternal(
                 return LivenessTestGrainReference.Cast(grainRef);
             }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
         [System.SerializableAttribute()]
         [global::Orleans.CodeGeneration.GrainReferenceAttribute("UnitTests.GrainInterfaces.ILivenessTestGrain")]
@@ -10036,7 +10231,7 @@ global::Orleans.CodeGeneration.GrainFactoryBase.CheckGrainObserverParamInternal(
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.MethodInvokerAttribute("UnitTests.GrainInterfaces.ILivenessTestGrain", -1840629153)]
     internal class LivenessTestGrainMethodInvoker : global::Orleans.CodeGeneration.IGrainMethodInvoker
@@ -10129,7 +10324,7 @@ namespace TestGrainInterfacesSerializers
     using System.Runtime.InteropServices;
     
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.5")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Orleans-CodeGenerator", "1.0.9.13")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
     [global::Orleans.CodeGeneration.RegisterSerializerAttribute()]
     internal class OutsiderSerialization
