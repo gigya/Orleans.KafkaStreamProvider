@@ -310,7 +310,7 @@ namespace Orleans.KafkaStreamProviderTest
             Assert.AreEqual(batchContainerMock6.Object, result[2]);
         }
 
-        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
+        [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider"), Ignore]
         public async Task GetMessagesQueueSavingBatchAfterFewFetchesTest()
         {
             bool hasCommited = false;

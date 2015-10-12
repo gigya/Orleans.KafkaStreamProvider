@@ -7,9 +7,9 @@
     <StreamProviders>
       <Provider Type="Orleans.KafkaStreamProvider.PersistentStreams.KafkaStreamProvider"
                 Name="KafkaProvider"
-                ConsumerGroupName="TestConsumerGroupName"
+                ConsumerGroupName="RewindingTestConsumerGroupName"
                 ConnectionStrings="http://il1a-kafka-br01.gigya.net:9092;http://il1a-kafka-br02.gigya.net:9092;http://il1a-kafka-br03.gigya.net:9092"
-                TopicName="Jonathan.ab.KafkaStreamProviderTestsNew" NumQueues="1"/>
+                TopicName="Jonathan.ab.RewindingNamespaceTest" NumQueues="1" CacheTimespan="5"/>
     </StreamProviders>
     <SeedNode Address="localhost" Port="22222"/>
     <Messaging ResponseTimeout="30s"/>
@@ -23,5 +23,3 @@
     <Statistics MetricsTableWriteInterval="30s" PerfCounterWriteInterval="30s" LogWriteInterval="300s" WriteLogStatisticsToTable="true" StatisticsCollectionLevel="Info"/>
   </Defaults>
 </OrleansConfiguration>
-
-

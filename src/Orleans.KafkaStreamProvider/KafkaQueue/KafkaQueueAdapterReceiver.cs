@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using KafkaNet.Interfaces;
 using KafkaNet.Protocol;
+using Orleans.Providers.Streams.Common;
 using Orleans.Runtime;
 using Orleans.Streams;
 
@@ -17,7 +19,6 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private readonly IKafkaBatchFactory _factory;
         private readonly Logger _logger;
         private readonly KafkaStreamProviderOptions _options;
-        private int _numOfFetches;
 
         public QueueId Id { get; private set; }
 
@@ -107,19 +108,8 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 
                 if (batches.Count > 0)
                 {
-                    _lastOffset += batches.Count;
-
-                    // Committing the offset            
-                    _currentCommitTask = CommitIfNecessary();
-
-                    await _currentCommitTask;
-                    if (_currentCommitTask.IsFaulted && _currentCommitTask.Exception != null)
-                    {
-                        _logger.Info("KafkaQueueAdapterReceiver - There was an error comitting the offset to the ConsumerGroup. ConsumerGroup is {0}, offset is {1}", _options.ConsumerGroupName, _lastOffset);
-                        throw _currentCommitTask.Exception;
-                    }
-
-                    _currentCommitTask = null;                    
+                    _logger.Verbose("KafkaQueueAdapterReceiver - Pulled {0} messages for queue number {1}", batches.Count, Id.GetNumericId());
+                    _lastOffset += batches.Count;                
                 }               
 
                 return batches;
@@ -129,27 +119,37 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
                 // This case the next message in the queue is too big for us to read, so we skip it
                 _logger.Info("KafkaQueueAdapterReceiver - A message in the Kafka queue was too big to pull, skipping over it. offset was {0}", _lastOffset);
                 _lastOffset++;
-                _numOfFetches++;
 
                 return new List<IBatchContainer>();
             }
         }
 
-        private async Task CommitIfNecessary()
+        public bool CommitOffset(EventSequenceToken sequenceToCommit)
         {
-            _numOfFetches++;
-            if (_numOfFetches < _options.OffsetCommitInterval) return;
-            
-            var commitTask = Task.Run(() => _consumer.UpdateOrCreateOffset(_options.ConsumerGroupName, _lastOffset));
-            await Task.WhenAny(commitTask, Task.Delay(_options.ReceiveWaitTimeInMs));
+            // TODO: This is a workaround until I make a pull request to get the sequence number
+            var offsetToCommit = ExtractOffsetFromSequenceToken(sequenceToCommit);
 
-            if (commitTask.IsCompleted)
+            var commitTask = Task.Run(() => _consumer.UpdateOrCreateOffset(_options.ConsumerGroupName, offsetToCommit));
+            commitTask.Wait(_options.ReceiveWaitTimeInMs);
+
+            if (!commitTask.IsCompleted)
             {
-                _numOfFetches = 0;
-                _logger.Verbose(
-                    "KafkaQueueAdapterReceiver - Commited an offset to the ConsumerGroup. ConsumerGroup is {0}, offset is {1}",
-                    _options.ConsumerGroupName, _lastOffset);
-            }            
+                _logger.Info(
+                    "KafkaQueueAdapterReceiver - Commit offset operation has failed. ConsumerGroup is {0}, offset is {1}",
+                    _options.ConsumerGroupName, offsetToCommit);
+                return false;
+            }
+
+            _logger.Verbose(
+                "KafkaQueueAdapterReceiver - Commited an offset to the ConsumerGroup. ConsumerGroup is {0}, offset is {1}",
+                _options.ConsumerGroupName, offsetToCommit);
+            return true;
+        }
+
+        private long ExtractOffsetFromSequenceToken(EventSequenceToken sequenceToken)
+        {
+            var resultString = Regex.Match(sequenceToken.ToString(), @"\d+").Value;
+            return long.Parse(resultString);
         }
 
         public async Task Shutdown(TimeSpan timeout)
