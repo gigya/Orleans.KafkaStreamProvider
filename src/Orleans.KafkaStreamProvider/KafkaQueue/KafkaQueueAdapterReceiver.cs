@@ -32,7 +32,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             if (consumer == null) throw new ArgumentNullException("consumer");
             if (factory == null) throw new ArgumentNullException("factory");
             if (options == null) throw new ArgumentNullException("options");
-            if (logger == null) throw new ArgumentNullException("options");
+            if (logger == null) throw new ArgumentNullException("logger");
 
             _options = options;
             Id = queueId;
@@ -124,7 +124,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             }
         }
 
-        public bool CommitOffset(EventSequenceToken sequenceToCommit)
+        private bool CommitOffset(EventSequenceToken sequenceToCommit)
         {
             // TODO: This is a workaround until I make a pull request to get the sequence number
             var offsetToCommit = ExtractOffsetFromSequenceToken(sequenceToCommit);
@@ -146,6 +146,24 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             return true;
         }
 
+        private async Task CommitOffset(long offsetToCommit)
+        {
+            var commitTask = Task.Run(() => _consumer.UpdateOrCreateOffset(_options.ConsumerGroupName, offsetToCommit));
+            await Task.WhenAny(commitTask, Task.Delay(_options.ReceiveWaitTimeInMs));
+
+            if (!commitTask.IsCompleted)
+            {
+                _logger.Info(
+                    "KafkaQueueAdapterReceiver - Commit offset operation has failed. ConsumerGroup is {0}, offset is {1}",
+                    _options.ConsumerGroupName, offsetToCommit);
+                throw new Exception();
+            }
+
+            _logger.Verbose(
+                "KafkaQueueAdapterReceiver - Commited an offset to the ConsumerGroup. ConsumerGroup is {0}, offset is {1}",
+                _options.ConsumerGroupName, offsetToCommit);            
+        }
+
         private long ExtractOffsetFromSequenceToken(EventSequenceToken sequenceToken)
         {
             var resultString = Regex.Match(sequenceToken.ToString(), @"\d+").Value;
@@ -159,6 +177,16 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
                 await Task.WhenAny(_currentCommitTask, Task.Delay(timeout));
                 _currentCommitTask = null;
                 _logger.Verbose("KafkaQueueAdapterReceiver - The receiver had finished a commit and was shutted down");
+            }
+        }
+
+        public async Task MessagesDeliveredAsync(IList<IBatchContainer> messages)
+        {            
+            // Finding the higest offset
+            if (messages.Any())
+            {
+                var highestOffset = messages.Max(b => (b.SequenceToken as EventSequenceToken).GetSequenceNumber());
+                await CommitOffset(highestOffset);
             }
         }
     }

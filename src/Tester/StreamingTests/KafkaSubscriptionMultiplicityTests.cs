@@ -26,7 +26,8 @@ namespace Tester.StreamingTests
         public KafkaSubscriptionMultiplicityTests()
             : base(new TestingSiloOptions
             {
-                StartFreshOrleans = true,
+                StartFreshOrleans = false,
+                StartSecondary = false,
                 SiloConfigFile = new FileInfo("OrleansConfigurationForStreamingUnitTests.xml"),
             })
         {

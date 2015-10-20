@@ -12,8 +12,6 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
         private readonly int _cacheSize;
         private readonly int _cacheNumOfBuckets;
         private readonly Logger _logger;
-        private readonly Func<QueueId, Func<EventSequenceToken, bool>> _deletionCallbackAcquirer;
-        private readonly int _deletionCallbackInterval;
         private readonly ConcurrentDictionary<QueueId, IQueueCache> _caches;
 
         public TimedQueueAdapterCache(IQueueAdapterFactory factory, TimeSpan cacheTimeSpan, int cacheSize, int cacheNumOfBuckets, Logger logger)
@@ -27,22 +25,8 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
             _caches = new ConcurrentDictionary<QueueId, IQueueCache>();
         }
 
-        public TimedQueueAdapterCache(IQueueAdapterFactory factory, TimeSpan cacheTimeSpan, int cacheSize, int cacheNumOfBuckets,
-            Func<QueueId, Func<EventSequenceToken, bool>> deletionCallbackAcquirer, int deletionCallbackInterval, Logger logger)
-            : this(factory, cacheTimeSpan, cacheSize, cacheNumOfBuckets, logger)
-        {
-            _deletionCallbackAcquirer = deletionCallbackAcquirer;
-            _deletionCallbackInterval = deletionCallbackInterval;
-        }
-
         public IQueueCache CreateQueueCache(QueueId queueId)
-        {
-            if (_deletionCallbackAcquirer != null)
-            {
-                var deletionCallback = _deletionCallbackAcquirer(queueId);
-                return _caches.AddOrUpdate(queueId, id => new TimedQueueCache(id, _cacheTimeSpan, _cacheSize, _cacheNumOfBuckets, deletionCallback, _deletionCallbackInterval, _logger), (id, queueCache) => queueCache);
-            }
-
+        {                            
             return _caches.AddOrUpdate(queueId, id => new TimedQueueCache(id, _cacheTimeSpan,_cacheSize, _cacheNumOfBuckets, _logger), (id, queueCache) => queueCache);
         }
 
