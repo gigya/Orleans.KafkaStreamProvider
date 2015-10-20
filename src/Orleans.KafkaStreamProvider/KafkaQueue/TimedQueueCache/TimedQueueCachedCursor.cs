@@ -107,5 +107,13 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
             return string.Format("<TimedQueueCacheCursor: Element={0}, SequenceToken={1}>",
                 NextElement != null ? NextElement.Value.Batch.ToString() : "null", SequenceToken != null ? SequenceToken.ToString() : "null");
         }
+
+        public void Refresh()
+        {
+            if (!IsSet)
+            {
+                _cache.InitializeCursor(this, SequenceToken);
+            }
+        }
     }
 }
