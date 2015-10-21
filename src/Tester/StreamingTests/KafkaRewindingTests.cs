@@ -40,7 +40,7 @@ namespace Tester.StreamingTests
         {
             // Because we don't start a fresh orleans (until orleans will get their sh*t together) it is crucial in this test set
             // That the cache will always be empty, so we wait a bit between tests until it removes everything from the cache
-            Task.Delay(TimeSpan.FromSeconds(5)).Wait();
+            Task.Delay(TimeSpan.FromSeconds(5.5)).Wait();
         }
 
         [TestMethod]
