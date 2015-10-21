@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Orleans.TestingHost;
@@ -19,7 +20,8 @@ namespace Tester.StreamingTests
         public KafkaRewindingTests()
             : base( new TestingSiloOptions()
             {
-                StartFreshOrleans = true,
+                StartFreshOrleans = false,
+                StartSecondary = false,
                 SiloConfigFile = new FileInfo("OrleansConfigurationForRewinding.xml"),
             })
         {
@@ -31,6 +33,14 @@ namespace Tester.StreamingTests
         public static void MyClassCleanup()
         {
             StopAllSilos();
+        }
+
+        [TestInitialize]
+        public void TestInit()
+        {
+            // Because we don't start a fresh orleans (until orleans will get their sh*t together) it is crucial in this test set
+            // That the cache will always be empty, so we wait a bit between tests until it removes everything from the cache
+            Task.Delay(TimeSpan.FromSeconds(5.5)).Wait();
         }
 
         [TestMethod]

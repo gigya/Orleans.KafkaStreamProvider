@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using KafkaNet.Protocol;
 using Orleans.Providers.Streams.Common;
+using Orleans.Runtime;
 using Orleans.Serialization;
 using Orleans.Streams;
 
@@ -15,7 +16,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private readonly List<object> _events;
         private readonly Dictionary<string, object> _requestContext;
 
-        public Dictionary<string, object> RequestContext
+        public Dictionary<string, object> BatchRequestContext
         {
             get { return _requestContext; }
         }
@@ -86,6 +87,16 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             kafkaBatch._sequenceToken = new EventSequenceToken(sequenceId);
 
             return kafkaBatch;
+        }
+
+        public bool ImportRequestContext()
+        {
+            if (_requestContext != null)
+            {                
+                RequestContext.Import(_requestContext);
+                return true;
+            }
+            return false;
         }
     }
 }

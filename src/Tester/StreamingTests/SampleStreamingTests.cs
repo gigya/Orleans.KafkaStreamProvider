@@ -47,9 +47,10 @@ namespace Tester.StreamingTests
 
         public SampleStreamingTests()
             : base(new TestingSiloOptions
-            {
-                StartFreshOrleans = true,
-                SiloConfigFile = new FileInfo("OrleansConfigurationForStreamingUnitTests.xml"),
+            {                
+                StartFreshOrleans = false,
+                StartSecondary = false,
+                SiloConfigFile = new FileInfo("OrleansConfigurationForStreamingUnitTests.xml")                
             })
         {
         }

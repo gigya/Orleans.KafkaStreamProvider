@@ -1,13 +1,10 @@
 ﻿using System;
-using System.CodeDom;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using KafkaNet;
 using KafkaNet.Model;
 using KafkaNet.Protocol;
-using Orleans.Providers.Streams.Common;
 using Orleans.Runtime;
 using Orleans.Streams;
 
@@ -21,7 +18,6 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private readonly Logger _logger;
         private readonly KafkaStreamProviderOptions _options;
         private readonly Producer _producer;
-        private readonly ConcurrentDictionary<QueueId, KafkaQueueAdapterReceiver> _receivers;
 
         public bool IsRewindable { get { return true; } }
 
@@ -51,39 +47,20 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             var broker = new BrokerRouter(kafkaOptions);
             _producer = new Producer(broker) { BatchDelayTime = TimeSpan.FromMilliseconds(_options.TimeToWaitForBatchInMs), BatchSize = _options.ProduceBatchSize };
             _gateway = new ProtocolGateway(kafkaOptions);
-            _receivers = new ConcurrentDictionary<QueueId, KafkaQueueAdapterReceiver>();
 
             _logger.Info("KafkaQueueAdapter - Created a KafkaQueueAdapter");
         }
 
         public IQueueAdapterReceiver CreateReceiver(QueueId queueId)
         {
-            return InnerCreateReceiver(queueId);
-        }
-
-        private KafkaQueueAdapterReceiver InnerCreateReceiver(QueueId queueId)
-        {
-            KafkaQueueAdapterReceiver receiverToReturn;
-            if (_receivers.TryGetValue(queueId, out receiverToReturn)) return receiverToReturn;
-
             var partitionId = (int)queueId.GetNumericId();
             var clientName = Environment.MachineName + AppDomain.CurrentDomain.FriendlyName;
-            _logger.Info("KafkaQueueAdapter - Creating a KafkaQueueAdapterReceiver for partition {0} in topic {1}", partitionId, _options.TopicName);
 
             // Creating a receiver
             var manualConsumer = new ManualConsumer(partitionId, _options.TopicName, _gateway, clientName, _options.MaxBytesInMessageSet);
-            receiverToReturn = new KafkaQueueAdapterReceiver(queueId, manualConsumer, _options, _batchFactory, _logger);
-
-            // Adding the dictionary and returning value
-            _receivers.TryAdd(queueId, receiverToReturn);
+            var receiverToReturn = new KafkaQueueAdapterReceiver(queueId, manualConsumer, _options, _batchFactory, _logger);
 
             return receiverToReturn;
-        }
-
-        public Func<EventSequenceToken, bool> GetOffsetCommitFuncForQueue(QueueId queueId)
-        {
-            var relevantReceiver = InnerCreateReceiver(queueId);
-            return relevantReceiver.CommitOffset;
         }
 
         public async Task QueueMessageBatchAsync<T>(Guid streamGuid, string streamNamespace, IEnumerable<T> events, StreamSequenceToken token, Dictionary<string, object> requestContext)
@@ -92,9 +69,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             
             var partitionId = (int)queueId.GetNumericId();
 
-            _logger.Verbose("KafkaQueueAdapter - For StreamId: {0}, StreamNamespcae:{1} using partition {2}", streamGuid, streamNamespace, partitionId);
-
-            // Creating a message for each event, to support eventually connecting the sequence token with the kafka offset
+            _logger.Verbose("KafkaQueueAdapter - For StreamId: {0}, StreamNamespace:{1} using partition {2}", streamGuid, streamNamespace, partitionId);
 
             var payload = _batchFactory.ToKafkaMessage(streamGuid, streamNamespace, events, requestContext);
             if (payload == null)
@@ -110,22 +85,35 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             if (response != null && !response.Contains(null))
             {
                 var responsesWithError =
-                    response.Where(messageResponse => messageResponse.Error != (int) ErrorResponseCode.NoError);
+                    response.Where(messageResponse => messageResponse.Error != (int) ErrorResponseCode.NoError).ToList();
+               
+                if (responsesWithError.Any())
+                {
+                    List<Exception> allResponsesExceptions = new List<Exception>();
 
-                // Checking all the responses
-                foreach (var messageResponse in responsesWithError)
-                {                    
-                    _logger.Info(
-                        "KafkaQueueAdapter - Error sending message through kafka client, the error code is {0}, message offset is {1}",
-                        messageResponse.Error, messageResponse.Offset);
-
-                    throw new KafkaApplicationException(
-                        "Failed at producing the message with offset {0} for queue {1} in topic {2}", messageResponse.Offset,
-                        queueId, _options.TopicName)
+                    // Checking all the responses
+                    foreach (var messageResponse in responsesWithError)
                     {
-                        ErrorCode = messageResponse.Error,
-                        Source = "KafkaStreamProvider"
-                    };
+                        _logger.Info(
+                            "KafkaQueueAdapter - Error sending message through kafka client, the error code is {0}, message offset is {1}",
+                            messageResponse.Error, messageResponse.Offset);
+
+                        var newException = new KafkaApplicationException(
+                            "Failed at producing the message with offset {0} for queue {1} in topic {2}",
+                            messageResponse.Offset,
+                            queueId, _options.TopicName)
+                        {
+                            ErrorCode = messageResponse.Error,
+                            Source = "KafkaStreamProvider"
+                        };
+                        allResponsesExceptions.Add(newException);
+                    }
+
+                    // Aggregating the exceptions, and putting them inside a KafkaStreamProviderException
+                    AggregateException exceptions = new AggregateException(allResponsesExceptions);
+                    KafkaStreamProviderException exceptionToThrow =
+                        new KafkaStreamProviderException("Producing message failed for one or more requests", exceptions);
+                    throw exceptionToThrow;
                 }
             }
         }
