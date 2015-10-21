@@ -85,22 +85,35 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             if (response != null && !response.Contains(null))
             {
                 var responsesWithError =
-                    response.Where(messageResponse => messageResponse.Error != (int) ErrorResponseCode.NoError);
+                    response.Where(messageResponse => messageResponse.Error != (int) ErrorResponseCode.NoError).ToList();
+               
+                if (responsesWithError.Any())
+                {
+                    List<Exception> allResponsesExceptions = new List<Exception>();
 
-                // Checking all the responses
-                foreach (var messageResponse in responsesWithError)
-                {                    
-                    _logger.Info(
-                        "KafkaQueueAdapter - Error sending message through kafka client, the error code is {0}, message offset is {1}",
-                        messageResponse.Error, messageResponse.Offset);
-
-                    throw new KafkaApplicationException(
-                        "Failed at producing the message with offset {0} for queue {1} in topic {2}", messageResponse.Offset,
-                        queueId, _options.TopicName)
+                    // Checking all the responses
+                    foreach (var messageResponse in responsesWithError)
                     {
-                        ErrorCode = messageResponse.Error,
-                        Source = "KafkaStreamProvider"
-                    };
+                        _logger.Info(
+                            "KafkaQueueAdapter - Error sending message through kafka client, the error code is {0}, message offset is {1}",
+                            messageResponse.Error, messageResponse.Offset);
+
+                        var newException = new KafkaApplicationException(
+                            "Failed at producing the message with offset {0} for queue {1} in topic {2}",
+                            messageResponse.Offset,
+                            queueId, _options.TopicName)
+                        {
+                            ErrorCode = messageResponse.Error,
+                            Source = "KafkaStreamProvider"
+                        };
+                        allResponsesExceptions.Add(newException);
+                    }
+
+                    // Aggregating the exceptions, and putting them inside a KafkaStreamProviderException
+                    AggregateException exceptions = new AggregateException(allResponsesExceptions);
+                    KafkaStreamProviderException exceptionToThrow =
+                        new KafkaStreamProviderException("Producing message failed for one or more requests", exceptions);
+                    throw exceptionToThrow;
                 }
             }
         }

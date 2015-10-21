@@ -23,7 +23,7 @@ namespace Orleans.KafkaStreamProviderTest
         public KafkaQueueAdapterUnitTests()
         {
             Mock<Logger> loggerMock = new Mock<Logger>();
-            var connectionStrings = new List<Uri> {new Uri("http://il1a-vm15-kafka1.gigya.net:9092")};
+            var connectionStrings = new List<Uri> {new Uri("http://10.201.15.11:9092")};
             var topicName = "Jonathan.ab.KafkaStreamProviderTestsNew";
             var consumerGroupName = "TestConsumerGroupName";
 

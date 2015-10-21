@@ -124,28 +124,6 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             }
         }
 
-        private bool CommitOffset(EventSequenceToken sequenceToCommit)
-        {
-            // TODO: This is a workaround until I make a pull request to get the sequence number
-            var offsetToCommit = ExtractOffsetFromSequenceToken(sequenceToCommit);
-
-            var commitTask = Task.Run(() => _consumer.UpdateOrCreateOffset(_options.ConsumerGroupName, offsetToCommit));
-            commitTask.Wait(_options.ReceiveWaitTimeInMs);
-
-            if (!commitTask.IsCompleted)
-            {
-                _logger.Info(
-                    "KafkaQueueAdapterReceiver - Commit offset operation has failed. ConsumerGroup is {0}, offset is {1}",
-                    _options.ConsumerGroupName, offsetToCommit);
-                return false;
-            }
-
-            _logger.Verbose(
-                "KafkaQueueAdapterReceiver - Commited an offset to the ConsumerGroup. ConsumerGroup is {0}, offset is {1}",
-                _options.ConsumerGroupName, offsetToCommit);
-            return true;
-        }
-
         private async Task CommitOffset(long offsetToCommit)
         {
             var commitTask = Task.Run(() => _consumer.UpdateOrCreateOffset(_options.ConsumerGroupName, offsetToCommit));
@@ -153,21 +131,21 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 
             if (!commitTask.IsCompleted)
             {
-                _logger.Info(
+                var innerException = commitTask.IsFaulted
+                    ? (Exception) commitTask.Exception
+                    : new TimeoutException("Commit operation timed out");
+
+                var newException = new KafkaStreamProviderException("Commit offset operation has failed", innerException);
+
+                _logger.Error((int)KafkaErrorCodes.KafkaApplicationError, String.Format(
                     "KafkaQueueAdapterReceiver - Commit offset operation has failed. ConsumerGroup is {0}, offset is {1}",
-                    _options.ConsumerGroupName, offsetToCommit);
-                throw new Exception();
+                    _options.ConsumerGroupName, offsetToCommit), newException);
+                throw new KafkaStreamProviderException();
             }
 
             _logger.Verbose(
                 "KafkaQueueAdapterReceiver - Commited an offset to the ConsumerGroup. ConsumerGroup is {0}, offset is {1}",
                 _options.ConsumerGroupName, offsetToCommit);            
-        }
-
-        private long ExtractOffsetFromSequenceToken(EventSequenceToken sequenceToken)
-        {
-            var resultString = Regex.Match(sequenceToken.ToString(), @"\d+").Value;
-            return long.Parse(resultString);
         }
 
         public async Task Shutdown(TimeSpan timeout)
