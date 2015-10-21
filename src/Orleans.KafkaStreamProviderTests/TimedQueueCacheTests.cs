@@ -87,20 +87,20 @@ namespace Orleans.KafkaStreamProviderTest
             Mock<IBatchContainer> batchMock1 = new Mock<IBatchContainer>();
             Mock<IBatchContainer> batchMock2 = new Mock<IBatchContainer>();
             Mock<IBatchContainer> batchMock3 = new Mock<IBatchContainer>();
-            Mock<IBatchContainer> batchMock4 = new Mock<IBatchContainer>();
-            Mock<IBatchContainer> batchMock5 = new Mock<IBatchContainer>();
 
             List<IBatchContainer> msgs = new List<IBatchContainer>() { batchMock1.Object, batchMock2.Object, batchMock3.Object };
-            List<IBatchContainer> msgs2 = new List<IBatchContainer>() {batchMock4.Object, batchMock5.Object};
 
             var cache = new TimedQueueCache(_defaultId, TimeSpan.FromSeconds(1), _defaultCacheSize, _defaultCacheBucketNum, _logger);
             cache.AddToCache(msgs);
 
             Task.Delay(TimeSpan.FromSeconds(2)).Wait();
 
-            cache.AddToCache(msgs2);
+            IList<IBatchContainer> outContainers = new List<IBatchContainer>();
 
-            Assert.AreEqual(2, cache.Size);                       
+            cache.TryPurgeFromCache(out outContainers);
+
+            Assert.AreEqual(0, cache.Size);
+            Assert.AreEqual(3, outContainers.Count);
         }
 
         [TestMethod]
@@ -337,115 +337,6 @@ namespace Orleans.KafkaStreamProviderTest
             Assert.AreEqual(cursor.GetCurrent(out placeholder), batchMock5.Object, "Didn't get the first object");
             Assert.IsTrue(cursor.MoveNext(), "Couldn't move next on cursor");
             Assert.AreEqual(cursor.GetCurrent(out placeholder), batchMock6.Object, "Didn't get the second object");
-        }
-
-        [TestMethod]
-        public void DeletionCallbackIsCalledTestToken()
-        {
-
-            Guid streamGuid = Guid.NewGuid();
-            string streamNamespace = "TestTimedCache";
-
-            Guid otherGuid = Guid.NewGuid();
-            string otherNamespace = "Other";
-
-            DeletionObserver observer = new DeletionObserver();
-
-            Mock<IBatchContainer> batchMock1 = GenerateBatchContainerMock(streamGuid, streamNamespace, 1);
-            Mock<IBatchContainer> batchMock2 = GenerateBatchContainerMock(otherGuid, streamNamespace, 2);
-            Mock<IBatchContainer> batchMock3 = GenerateBatchContainerMock(streamGuid, otherNamespace, 3);
-            Mock<IBatchContainer> batchMock4 = GenerateBatchContainerMock(otherGuid, otherNamespace, 4);
-            Mock<IBatchContainer> batchMock5 = GenerateBatchContainerMock(streamGuid, streamNamespace, 5);
-            Mock<IBatchContainer> batchMock6 = GenerateBatchContainerMock(streamGuid, streamNamespace, 6);
-
-            List<IBatchContainer> msgs = new List<IBatchContainer>() { batchMock1.Object, batchMock2.Object, batchMock3.Object, batchMock4.Object, batchMock5.Object };
-            List<IBatchContainer> msgs2 = new List<IBatchContainer>() {batchMock6.Object};
-
-            var cache = new TimedQueueCache(_defaultId, TimeSpan.FromSeconds(1), _defaultCacheSize, _defaultCacheBucketNum, observer.NotifiedDeletion, 5, _logger);
-            cache.AddToCache(msgs);
-
-            Task.Delay(TimeSpan.FromSeconds(1.5)).Wait();
-
-            cache.AddToCache(msgs2);
-
-            Assert.AreEqual(1, cache.Size);
-            Assert.AreEqual(1, observer.TimesCalled);
-        }
-
-        [TestMethod]
-        public void DeletionCallbackIsCalledAfterFewRemovalsTestToken()
-        {
-
-            Guid streamGuid = Guid.NewGuid();
-            string streamNamespace = "TestTimedCache";
-
-            Guid otherGuid = Guid.NewGuid();
-            string otherNamespace = "Other";
-
-            DeletionObserver observer = new DeletionObserver();
-
-            Mock<IBatchContainer> batchMock1 = GenerateBatchContainerMock(streamGuid, streamNamespace, 1);
-            Mock<IBatchContainer> batchMock2 = GenerateBatchContainerMock(otherGuid, streamNamespace, 2);
-            Mock<IBatchContainer> batchMock3 = GenerateBatchContainerMock(streamGuid, otherNamespace, 3);
-            Mock<IBatchContainer> batchMock4 = GenerateBatchContainerMock(otherGuid, otherNamespace, 4);
-            Mock<IBatchContainer> batchMock5 = GenerateBatchContainerMock(streamGuid, streamNamespace, 5);
-            Mock<IBatchContainer> batchMock6 = GenerateBatchContainerMock(streamGuid, streamNamespace, 6);
-
-            List<IBatchContainer> msgs = new List<IBatchContainer>() { batchMock1.Object, batchMock2.Object, batchMock3.Object};
-            List<IBatchContainer> msgs2 = new List<IBatchContainer>(){ batchMock4.Object, batchMock5.Object };
-            List<IBatchContainer> msgs3 = new List<IBatchContainer>() { batchMock6.Object };
-
-            var cache = new TimedQueueCache(_defaultId, TimeSpan.FromSeconds(1), _defaultCacheSize, _defaultCacheBucketNum, observer.NotifiedDeletion, 5, _logger);
-            cache.AddToCache(msgs);
-
-            Task.Delay(TimeSpan.FromSeconds(1.5)).Wait();
-
-            cache.AddToCache(msgs2);
-
-            Task.Delay(TimeSpan.FromSeconds(1.5)).Wait();
-            Assert.AreEqual(0, observer.TimesCalled);
-
-            cache.AddToCache(msgs3);
-
-            Assert.AreEqual(1, cache.Size);
-            Assert.AreEqual(1, observer.TimesCalled);
-        }
-
-        [TestMethod]
-        public void DeletionCallbackIsCalledTwoTimesAfterFewRemovalsTestToken()
-        {
-            Guid streamGuid = Guid.NewGuid();
-            string streamNamespace = "TestTimedCache";
-
-            Guid otherGuid = Guid.NewGuid();
-            string otherNamespace = "Other";
-
-            DeletionObserver observer = new DeletionObserver();
-
-            Mock<IBatchContainer> batchMock1 = GenerateBatchContainerMock(streamGuid, streamNamespace, 1);
-            Mock<IBatchContainer> batchMock2 = GenerateBatchContainerMock(otherGuid, streamNamespace, 2);
-            Mock<IBatchContainer> batchMock3 = GenerateBatchContainerMock(streamGuid, otherNamespace, 3);
-            Mock<IBatchContainer> batchMock4 = GenerateBatchContainerMock(otherGuid, otherNamespace, 4);
-            Mock<IBatchContainer> batchMock5 = GenerateBatchContainerMock(streamGuid, streamNamespace, 5);
-
-            List<IBatchContainer> msgs = new List<IBatchContainer>() { batchMock1.Object, batchMock2.Object};
-            List<IBatchContainer> msgs2 = new List<IBatchContainer>() { batchMock3.Object, batchMock4.Object };
-            List<IBatchContainer> msgs3 = new List<IBatchContainer>() { batchMock5.Object };
-
-            var cache = new TimedQueueCache(_defaultId, TimeSpan.FromSeconds(1), _defaultCacheSize, _defaultCacheBucketNum, observer.NotifiedDeletion, 2, _logger);
-            cache.AddToCache(msgs);
-
-            Task.Delay(TimeSpan.FromSeconds(1.5)).Wait();
-
-            cache.AddToCache(msgs2);
-
-            Task.Delay(TimeSpan.FromSeconds(1.5)).Wait();
-            Assert.AreEqual(1, observer.TimesCalled);
-
-            cache.AddToCache(msgs3);
-
-            Assert.AreEqual(1, cache.Size);
-            Assert.AreEqual(2, observer.TimesCalled);
         }
 
         private Mock<IBatchContainer> GenerateBatchContainerMock(Guid streamGuid, string streamNamespace, int sequenceNumber)

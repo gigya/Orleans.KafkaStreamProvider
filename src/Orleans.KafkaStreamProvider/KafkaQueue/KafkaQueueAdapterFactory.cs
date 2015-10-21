@@ -34,7 +34,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             _streamQueueMapper = new HashRingBasedStreamQueueMapper(_options.NumOfQueues, providerName);
             _logger = logger;
             _adapter = new KafkaQueueAdapter(_streamQueueMapper, _options, providerName, new KafkaBatchFactory(), _logger);
-            _adapterCache = new TimedQueueAdapterCache(this, TimeSpan.FromSeconds(_options.CacheTimespanInSeconds), _options.CacheSize, _options.CacheNumOfBuckets, _adapter.GetOffsetCommitFuncForQueue, _options.OffsetCommitInterval, logger);            
+            _adapterCache = new TimedQueueAdapterCache(this, TimeSpan.FromSeconds(_options.CacheTimespanInSeconds), _options.CacheSize, _options.CacheNumOfBuckets, logger);            
         }
 
         public Task<IQueueAdapter> CreateAdapter()

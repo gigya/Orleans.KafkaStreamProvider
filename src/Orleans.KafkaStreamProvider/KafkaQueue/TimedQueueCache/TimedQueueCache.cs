@@ -195,7 +195,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
             return cursor;
         }
 
-        private void InitializeCursor(TimedQueueCacheCursor cursor, StreamSequenceToken sequenceToken)
+        internal void InitializeCursor(TimedQueueCacheCursor cursor, StreamSequenceToken sequenceToken)
         {
             Log(_logger, "TimedQueueCache for QueueId:{0}, InitializeCursor: {1} to sequenceToken {2}", Id.ToString(), cursor, sequenceToken);
 
@@ -244,9 +244,9 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
             // First we find a bucket where the node is in
             var sequenceBucket =
                 _cacheCursorHistogram.First(
-                    buck =>
-                        !sequenceToken.Newer(buck.NewestMember.Value.SequenceToken) && 
-                        !sequenceToken.Older(buck.OldestMember.Value.SequenceToken));
+                    bucket =>
+                        !sequenceToken.Newer(bucket.NewestMember.Value.SequenceToken) &&
+                        !sequenceToken.Older(bucket.OldestMember.Value.SequenceToken));
             
             // Now that we have the bucket, we iterate on the members there starting from the newest in the bucket
             LinkedListNode<TimedQueueCacheItem> node = sequenceBucket.NewestMember;
@@ -381,14 +381,11 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
             cacheBucket.NewestMember = newNode;
 
             _cachedMessages.AddFirst(newNode);
-
-            // Removing messages from the cache
-            RemoveMessagesFromCache();
         }
 
-        private void RemoveMessagesFromCache()
+        private List<IBatchContainer> RemoveMessagesFromCache()
         {
-            EventSequenceToken lastRemovedMessageSequenceToken = null;
+            List<IBatchContainer> removedMessages = new List<IBatchContainer>();
 
             // If it's a size issue, then we have to remove at least one message immediately 
             // (No need to check for last bucket, cause if there was an issue the cache would be under pressure)
@@ -396,8 +393,11 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
             {
                 Log(_logger, "TimedQueueCache for QueueId:{0}, Add: last  message because of size", Id.ToString());
 
-                // Removing the last message in case its the last message in a bucket also causes the buckets removal
-                lastRemovedMessageSequenceToken = RemoveLastMessage();
+                // Removing the last message in case its the last message in a bucket also causes the buckets removal                
+                var lastRemovedMessage = RemoveLastMessage();
+
+                // Adding to the removed messages
+                removedMessages.Add(lastRemovedMessage);
             }
 
             // Now we are looking for old messages that needs to go away 
@@ -408,18 +408,36 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
                 Log(_logger, "TimedQueueCache for QueueId:{0}, Add: last  message because of time expiration", Id.ToString());
                 
                 // Removing the last message in case its the last message in a bucket also causes the buckets removal
-                lastRemovedMessageSequenceToken = RemoveLastMessage();
+                var removedBatchContainer = RemoveLastMessage();
+                removedMessages.Add(removedBatchContainer);
             }
 
-            // Checking if we need to call the deletionCallback
-            if (_deletionCallback != null && _numOfRemovals >= _callbackInterval)
+            return removedMessages;
+        }
+
+        private IBatchContainer RemoveLastMessage()
+        {
+            var removedBatchContainer = LastItem.Batch;
+
+            // Removing the last message
+            _cachedMessages.RemoveLast();
+            _numOfRemovals++;
+
+            // Some bucket updating
+            var bucket = _cacheCursorHistogram[0]; // same as:  var bucket = last.Value.CacheBucket;
+            bucket.UpdateNumItems(-1);
+
+            if (bucket.NumCurrentItems == 0)
             {
-                if (!_deletionCallback(lastRemovedMessageSequenceToken))
-                    _logger.Info(
-                        "TimedQueueCache for QueueId:{0}, Add: Callback function assigned to cache failed. Function is {1}",
-                        Id.ToString(), _deletionCallback.ToString());
-                _numOfRemovals = 0;
+                _logger.Info("TimedQueueCache for QueueId:{0}, RemoveLastMessage: Last bucket is empty, removing it", Id.ToString());
+                _cacheCursorHistogram.RemoveAt(0);
             }
+            else
+            {
+                _cacheCursorHistogram[0].OldestMemberTimestamp = LastItem.Timestamp;
+            }
+
+            return removedBatchContainer;
         }
 
         private TimedQueueCacheBucket GetOrCreateBucket()
@@ -447,35 +465,16 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
 
             return cacheBucket;
         }
-
-        private EventSequenceToken RemoveLastMessage()
-        {
-            var lastMessageSequenceToken = (EventSequenceToken)LastItem.SequenceToken;
-
-            // Removing the last message
-            _cachedMessages.RemoveLast();
-            _numOfRemovals++;
-
-            // Some bucket updating
-            var bucket = _cacheCursorHistogram[0]; // same as:  var bucket = last.Value.CacheBucket;
-            bucket.UpdateNumItems(-1);
-            
-            if (bucket.NumCurrentItems == 0)
-            {
-                _logger.Info("TimedQueueCache for QueueId:{0}, RemoveLastMessage: Last bucket is empty, removing it", Id.ToString());
-                _cacheCursorHistogram.RemoveAt(0);
-            }
-            else
-            {
-                _cacheCursorHistogram[0].OldestMemberTimestamp = LastItem.Timestamp;
-            }
-
-            return lastMessageSequenceToken;
-        }
        
         internal static void Log(Logger logger, string format, params object[] args)
         {
             logger.Verbose(format,  args);         
+        }
+
+        public bool TryPurgeFromCache(out IList<IBatchContainer> purgedItems)
+        {
+            purgedItems = RemoveMessagesFromCache();
+            return true;
         }
     }
 }
