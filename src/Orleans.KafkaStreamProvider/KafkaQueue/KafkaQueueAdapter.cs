@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using KafkaNet;
 using KafkaNet.Model;
 using KafkaNet.Protocol;
+using Metrics;
 using Orleans.Runtime;
 using Orleans.Streams;
 
@@ -19,6 +20,11 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private readonly KafkaStreamProviderOptions _options;
         private readonly Producer _producer;
 
+        // Metrics
+        private readonly static Meter MeterProducedMessagesPerSecond = Metric.Meter("Produced Messages Per Second", Unit.Events);
+        private static readonly Histogram HistogramProducedMessageSize = Metric.Histogram("Produced Message Size", Unit.Events);
+        private static readonly Timer TimerTimeToProduceMessage = Metric.Timer("Time To Produce Message", Unit.Custom("Produces"));
+    
         public bool IsRewindable { get { return true; } }
 
         public string Name { get; private set; }
@@ -28,7 +34,8 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             get { return StreamProviderDirection.ReadWrite; }
         }
 
-        public KafkaQueueAdapter(HashRingBasedStreamQueueMapper queueMapper, KafkaStreamProviderOptions options, string providerName, IKafkaBatchFactory batchFactory, Logger logger)
+        public KafkaQueueAdapter(HashRingBasedStreamQueueMapper queueMapper, KafkaStreamProviderOptions options,
+            string providerName, IKafkaBatchFactory batchFactory, Logger logger)
         {
             if (options == null) throw new ArgumentNullException("options");
             if (batchFactory == null) throw new ArgumentNullException("batchFactory");
@@ -43,9 +50,16 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             _logger = logger;
 
             // Creating a producer
-            KafkaOptions kafkaOptions = new KafkaOptions(_options.ConnectionStrings.ToArray()){Log = new KafkaLogBridge(logger)};
+            KafkaOptions kafkaOptions = new KafkaOptions(_options.ConnectionStrings.ToArray())
+            {
+                Log = new KafkaLogBridge(logger)
+            };
             var broker = new BrokerRouter(kafkaOptions);
-            _producer = new Producer(broker) { BatchDelayTime = TimeSpan.FromMilliseconds(_options.TimeToWaitForBatchInMs), BatchSize = _options.ProduceBatchSize };
+            _producer = new Producer(broker)
+            {
+                BatchDelayTime = TimeSpan.FromMilliseconds(_options.TimeToWaitForBatchInMs),
+                BatchSize = _options.ProduceBatchSize
+            };
             _gateway = new ProtocolGateway(kafkaOptions);
 
             _logger.Info("KafkaQueueAdapter - Created a KafkaQueueAdapter");
@@ -71,15 +85,23 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 
             _logger.Verbose("KafkaQueueAdapter - For StreamId: {0}, StreamNamespace:{1} using partition {2}", streamGuid, streamNamespace, partitionId);
 
-            var payload = _batchFactory.ToKafkaMessage(streamGuid, streamNamespace, events, requestContext);
+            var enumeratedEvents = events.ToList();
+            var payload = _batchFactory.ToKafkaMessage(streamGuid, streamNamespace, enumeratedEvents.AsEnumerable(), requestContext);
             if (payload == null)
             {
                 _logger.Info("The batch factory returned a faulty message, the message was not sent");
                 return;
             }
 
-            var messageToSend = new List<Message> {payload};            
-            var response = await Task.Run(() => _producer.SendMessageAsync(_options.TopicName, messageToSend, (short)_options.AckLevel, partition: partitionId));
+            var messageToSend = new List<Message> {payload};
+
+            IEnumerable<ProduceResponse> response;
+
+            using (TimerTimeToProduceMessage.NewContext())
+            {
+                response = await Task.Run(() =>
+                                _producer.SendMessageAsync(_options.TopicName, messageToSend, (short) _options.AckLevel, partition: partitionId));
+            }
 
             // This is ackLevel != 0 check
             if (response != null && !response.Contains(null))
@@ -116,6 +138,9 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
                     throw exceptionToThrow;
                 }
             }
+            
+            HistogramProducedMessageSize.Update(enumeratedEvents.Count(), queueId.ToString());
+            MeterProducedMessagesPerSecond.Mark(queueId.ToString(), 1);
         }
     }
 }

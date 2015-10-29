@@ -165,7 +165,6 @@ namespace Orleans.KafkaStreamProviderTest
             var cache = new TimedQueueCache(_defaultId, TimeSpan.FromSeconds(1), msgs.Count, _defaultCacheBucketNum, _logger);
             cache.AddToCache(msgs);
 
-            Exception placeholder;
             var cursor = cache.GetCacheCursor(streamGuid, streamNamespace, batchMock1.Object.SequenceToken);
 
             Task.Delay(TimeSpan.FromSeconds(2)).Wait();
@@ -188,7 +187,6 @@ namespace Orleans.KafkaStreamProviderTest
             var cache = new TimedQueueCache(_defaultId, TimeSpan.FromSeconds(1), msgs.Count, _defaultCacheBucketNum, _logger);
             cache.AddToCache(msgs);
 
-            Exception placeholder;
             var cursor = cache.GetCacheCursor(streamGuid, streamNamespace, batchMock2.Object.SequenceToken);
 
             Task.Delay(TimeSpan.FromSeconds(2)).Wait();
