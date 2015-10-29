@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using KafkaNet;
-using KafkaNet.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Orleans;
 using Orleans.Runtime;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Metrics;
 using Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache;
 using Orleans.Providers;
 using Orleans.Providers.Streams.Common;
@@ -29,7 +30,9 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 
             // Creating an options object with all the config values
             _options = new KafkaStreamProviderOptions(config);
-            
+
+            Metric.Config.WithHttpEndpoint(string.Format("http://localhost:{0}/", _options.MetricsPort));                
+
             _providerName = providerName;
             _streamQueueMapper = new HashRingBasedStreamQueueMapper(_options.NumOfQueues, providerName);
             _logger = logger;

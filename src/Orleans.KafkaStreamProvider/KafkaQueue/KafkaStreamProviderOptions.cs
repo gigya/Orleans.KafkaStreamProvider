@@ -26,6 +26,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private const string OffsetCommitIntervalParam = "OffsetCommitInterval";
         private const string ShouldInitWithLastOffsetParam = "ShouldInitWithLastOffsetParam";
         private const string MaxMessageSizeInBytesParam = "MaxMessageSize";
+        private const string MetricsPortParam = "MetricsPort";
 
         // Default values
         private const int DefaultNumOfQueues = 1;
@@ -39,7 +40,8 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private const int DefaultReceiveWaitTimeInMs = 100;
         private const int DefaultOffsetCommitInterval = 1;
         private const bool DefaultShouldInitWithLastOffset = true;
-        private const int DefaultMaxMessageSizeInBytes = 4096;        
+        private const int DefaultMaxMessageSizeInBytes = 4096;
+        private const int DefaultMetricsPort = 20490;        
 
         // Config values
         private readonly IEnumerable<Uri> _connectionStrings;
@@ -61,6 +63,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         public int MaxMessageSizeInBytes { get; set; }
         public int CacheTimespanInSeconds { get; set; }
         public int CacheNumOfBuckets { get; set; }
+        public int MetricsPort { get; set; }
 
         public KafkaStreamProviderOptions(IEnumerable<Uri> connectionStrings, string topicName, string consumerGroupName)
         {
@@ -85,6 +88,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             MaxMessageSizeInBytes = DefaultMaxMessageSizeInBytes;
             CacheTimespanInSeconds = DefaultCacheTimespanInSeconds;
             CacheNumOfBuckets = DefaultCacheNumOfBucketsParam;
+            MetricsPort = DefaultMetricsPort;
         }
 
         public KafkaStreamProviderOptions(IProviderConfiguration config)
@@ -116,6 +120,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             CacheTimespanInSeconds = GetOptionalParamInt(CacheTimespanInSecondsParam, DefaultCacheTimespanInSeconds,
                 config);
             CacheNumOfBuckets = GetOptionalParamInt(CacheNumOfBucketsParam, DefaultCacheNumOfBucketsParam, config);
+            MetricsPort = GetOptionalParamInt(MetricsPortParam, DefaultMetricsPort, config);
         }
 
         private static string GetRequiredParam(string paramName, IProviderConfiguration config)
