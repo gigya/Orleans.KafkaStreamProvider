@@ -43,8 +43,8 @@
     <AssemblyOriginatorKeyFile>..\Orleans.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="KafkaNetClient, Version=1.0.0.4, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\KafkaNetClient.1.0.0.4\lib\net45\KafkaNetClient.dll</HintPath>
+    <Reference Include="KafkaNetClient">
+      <HintPath>..\packages\KafkaNetClient.1.0.1.5\lib\net45\KafkaNetClient.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
