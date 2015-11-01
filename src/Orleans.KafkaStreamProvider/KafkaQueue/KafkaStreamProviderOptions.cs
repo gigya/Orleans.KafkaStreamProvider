@@ -27,6 +27,9 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private const string ShouldInitWithLastOffsetParam = "ShouldInitWithLastOffsetParam";
         private const string MaxMessageSizeInBytesParam = "MaxMessageSize";
         private const string MetricsPortParam = "MetricsPort";
+        private const string IncludeMetricsParam = "IncludeMetrics";
+        private const string UsingExternalMetricsParam = "IncludeMetrics";
+
 
         // Default values
         private const int DefaultNumOfQueues = 1;
@@ -41,7 +44,9 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private const int DefaultOffsetCommitInterval = 1;
         private const bool DefaultShouldInitWithLastOffset = true;
         private const int DefaultMaxMessageSizeInBytes = 4096;
-        private const int DefaultMetricsPort = 20490;        
+        private const int DefaultMetricsPort = 20490;
+        private const bool DefaultIncludeMetrics = true;
+        private const bool DefaultUsingExternalMetrics = false;
 
         // Config values
         private readonly IEnumerable<Uri> _connectionStrings;
@@ -64,6 +69,8 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         public int CacheTimespanInSeconds { get; set; }
         public int CacheNumOfBuckets { get; set; }
         public int MetricsPort { get; set; }
+        public bool IncludeMetrics { get; set; }
+        public bool UsingExternalMetrics { get; set; }
 
         public KafkaStreamProviderOptions(IEnumerable<Uri> connectionStrings, string topicName, string consumerGroupName)
         {
@@ -89,6 +96,8 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             CacheTimespanInSeconds = DefaultCacheTimespanInSeconds;
             CacheNumOfBuckets = DefaultCacheNumOfBucketsParam;
             MetricsPort = DefaultMetricsPort;
+            IncludeMetrics = DefaultIncludeMetrics;
+            UsingExternalMetrics = DefaultUsingExternalMetrics;
         }
 
         public KafkaStreamProviderOptions(IProviderConfiguration config)
@@ -121,6 +130,8 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
                 config);
             CacheNumOfBuckets = GetOptionalParamInt(CacheNumOfBucketsParam, DefaultCacheNumOfBucketsParam, config);
             MetricsPort = GetOptionalParamInt(MetricsPortParam, DefaultMetricsPort, config);
+            IncludeMetrics = GetOptionalParamBool(IncludeMetricsParam, DefaultIncludeMetrics, config);
+            UsingExternalMetrics = GetOptionalParamBool(UsingExternalMetricsParam, DefaultUsingExternalMetrics, config);
         }
 
         private static string GetRequiredParam(string paramName, IProviderConfiguration config)

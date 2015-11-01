@@ -20,11 +20,11 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private readonly KafkaStreamProviderOptions _options;
 
         // Metrics
-        private static readonly Meter MeterConsumedMessagesPerSecond = Metric.Meter("Consumed Messages Per Second", Unit.Events);
-        private static readonly Histogram HistogramConsumedMessagesBatchSizes = Metric.Histogram("Consumed Messages Batch Sizes", Unit.Events);
-        private static readonly Counter CounterActiveReceivers = Metric.Counter("Active Receivers", Unit.Custom("Receivers"));
-        private static readonly Timer TimerTimeToGetMessageFromKafka = Metric.Timer("Time To Get Message From Kafka", Unit.Custom("Fetches"));
-        private static readonly Timer TimerTimeToCommitOffset = Metric.Timer("Time To Commit Offset", Unit.Custom("Commits"));
+        private static readonly Meter MeterConsumedMessagesPerSecond = Metric.Context("KafkaStreamProvider").Meter("Consumed Messages Per Second", Unit.Events);
+        private static readonly Histogram HistogramConsumedMessagesBatchSizes = Metric.Context("KafkaStreamProvider").Histogram("Consumed Messages Batch Sizes", Unit.Events);
+        private static readonly Counter CounterActiveReceivers = Metric.Context("KafkaStreamProvider").Counter("Active Receivers", Unit.Custom("Receivers"));
+        private static readonly Timer TimerTimeToGetMessageFromKafka = Metric.Context("KafkaStreamProvider").Timer("Time To Get Message From Kafka", Unit.Custom("Fetches"));
+        private static readonly Timer TimerTimeToCommitOffset = Metric.Context("KafkaStreamProvider").Timer("Time To Commit Offset", Unit.Custom("Commits"));
 
         public QueueId Id { get; private set; }
 

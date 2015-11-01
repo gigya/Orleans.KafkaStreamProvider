@@ -20,7 +20,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private IQueueAdapterCache _adapterCache;
         private string _providerName;
         private Logger _logger;
-        private KafkaQueueAdapter _adapter;
+        private KafkaQueueAdapter _adapter;        
 
         public void Init(IProviderConfiguration config, string providerName, Logger logger)
         {
@@ -31,7 +31,17 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             // Creating an options object with all the config values
             _options = new KafkaStreamProviderOptions(config);
 
-            Metric.Config.WithHttpEndpoint(string.Format("http://localhost:{0}/", _options.MetricsPort));                
+                        
+            // TODO: put configurable value to determin if we have metrics from an external process
+            if (!_options.UsingExternalMetrics)
+            {
+                Metric.Config.WithHttpEndpoint(string.Format("http://localhost:{0}/", _options.MetricsPort));
+            }
+
+            if (!_options.IncludeMetrics)
+            {
+                Metric.Context("KafkaStreamProvider").Advanced.CompletelyDisableMetrics();
+            }
 
             _providerName = providerName;
             _streamQueueMapper = new HashRingBasedStreamQueueMapper(_options.NumOfQueues, providerName);
