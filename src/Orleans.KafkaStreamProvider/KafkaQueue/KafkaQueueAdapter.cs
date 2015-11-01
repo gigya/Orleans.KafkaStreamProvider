@@ -21,9 +21,9 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private readonly Producer _producer;
 
         // Metrics
-        private readonly static Meter MeterProducedMessagesPerSecond = Metric.Meter("Produced Messages Per Second", Unit.Events);
-        private static readonly Histogram HistogramProducedMessageSize = Metric.Histogram("Produced Message Size", Unit.Events);
-        private static readonly Timer TimerTimeToProduceMessage = Metric.Timer("Time To Produce Message", Unit.Custom("Produces"));
+        private readonly static Meter MeterProducedMessagesPerSecond = Metric.Context("KafkaStreamProvider").Meter("Produced Messages Per Second", Unit.Events);
+        private static readonly Histogram HistogramProducedMessageSize = Metric.Context("KafkaStreamProvider").Histogram("Produced Message Size", Unit.Events);
+        private static readonly Timer TimerTimeToProduceMessage = Metric.Context("KafkaStreamProvider").Timer("Time To Produce Message", Unit.Custom("Produces"));
     
         public bool IsRewindable { get { return true; } }
 

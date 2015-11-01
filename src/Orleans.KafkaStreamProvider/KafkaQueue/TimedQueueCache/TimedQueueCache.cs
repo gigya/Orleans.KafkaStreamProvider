@@ -81,9 +81,9 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
         private int _numOfCursorsCausingPressure;
 
         // Metrics
-        private static readonly Meter MeterCacheEvacuationsPerSecond = Metric.Meter("Cache Evacuations Per Second", Unit.Items);
-        private static readonly Counter CounterMessagesInCache = Metric.Counter("Messages In Cache", Unit.Items);
-        private static readonly Counter CounterNumberOfCursorsCausingPressure = Metric.Counter("Cursors causing pressure", Unit.Items);
+        private static readonly Meter MeterCacheEvacuationsPerSecond = Metric.Context("KafkaStreamProvider").Meter("Cache Evacuations Per Second", Unit.Items);
+        private static readonly Counter CounterMessagesInCache = Metric.Context("KafkaStreamProvider").Counter("Messages In Cache", Unit.Items);
+        private static readonly Counter CounterNumberOfCursorsCausingPressure = Metric.Context("KafkaStreamProvider").Counter("Cursors causing pressure", Unit.Items);
 
         public QueueId Id { get; private set; }
 
