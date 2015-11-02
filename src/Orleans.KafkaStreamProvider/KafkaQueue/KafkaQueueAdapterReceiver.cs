@@ -21,7 +21,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 
         // Metrics
         private static readonly Meter MeterConsumedMessagesPerSecond = Metric.Context("KafkaStreamProvider").Meter("Consumed Messages Per Second", Unit.Events);
-        private static readonly Histogram HistogramConsumedMessagesPerSecond = Metric.Context("KafkaStreamProvider").Histogram("Consumed Messages Per Second", Unit.Custom("Messages"));
+        private static readonly Histogram HistogramConsumedMessagesPerFetch = Metric.Context("KafkaStreamProvider").Histogram("Consumed Messages Per Fetch", Unit.Custom("Messages"));
         private static readonly Counter CounterActiveReceivers = Metric.Context("KafkaStreamProvider").Counter("Active Receivers", Unit.Custom("Receivers"));
         private static readonly Timer TimerTimeToGetMessageFromKafka = Metric.Context("KafkaStreamProvider").Timer("Time To Get Message From Kafka", Unit.Custom("Fetches"));
         private static readonly Timer TimerTimeToCommitOffset = Metric.Context("KafkaStreamProvider").Timer("Time To Commit Offset", Unit.Custom("Commits"));
@@ -132,7 +132,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 
                 // Taking a bit of metrics
                 MeterConsumedMessagesPerSecond.Mark(Id.ToString(), 1);
-                HistogramConsumedMessagesPerSecond.Update(batches.Count, Id.ToString());
+                HistogramConsumedMessagesPerFetch.Update(batches.Count, Id.ToString());
 
                 return batches;
             }
