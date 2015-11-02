@@ -70,6 +70,7 @@ namespace Tester.StreamingTests
         }
 
         [TestMethod]
+        [Ignore]
         public async Task InfiniteTest()
         {
             logger.Info("************************ InfiniteTest ************************");
