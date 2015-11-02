@@ -17,6 +17,7 @@ namespace Tester.StreamingTests
         private static readonly TimeSpan Timeout = TimeSpan.FromSeconds(45);
         private readonly string _streamProviderName;
         private readonly Logger _logger;
+        private readonly Random r;
 
         public BatchProducingTestRunner(string streamProviderName, Logger logger)
         {
@@ -24,6 +25,7 @@ namespace Tester.StreamingTests
 
             _streamProviderName = streamProviderName;
             _logger = logger;   
+            r = new Random();
         }
 
         public async Task SimpleBatchTesting()
@@ -183,6 +185,45 @@ namespace Tester.StreamingTests
             await TestingUtils.WaitUntilAsync(lastTry => CheckCounter(sum, consumer, lastTry), Timeout);
 
             await consumer.StopConsuming();
+        }
+
+        public async Task InfiniteTest()
+        {            
+            var batchSizes = new List<int> { 10, 15, 20 };
+            var sendDelays = new List<int> { 10, 50, 100 };
+            var streamGuids = new List<Guid> {Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()};
+            var streamNamespace = new List<string>
+            {
+                "InfiniteTestStream1",
+                "InfiniteTestStream2",
+                "InfiniteTestStream3",
+                "InfiniteTestStream4"
+            };
+
+            List<IBatchProducerGrain> producers = new List<IBatchProducerGrain>();
+            List<ISampleStreaming_ConsumerGrain> consumers = new List<ISampleStreaming_ConsumerGrain>();
+
+            for (int i = 0; i < streamGuids.Count; i++)
+            {
+                var producer = GrainClient.GrainFactory.GetGrain<IBatchProducerGrain>(Guid.NewGuid());
+                var consumer = GrainClient.GrainFactory.GetGrain<ISampleStreaming_ConsumerGrain>(Guid.NewGuid());
+
+                await consumer.BecomeConsumer(streamGuids[i], streamNamespace[i], _streamProviderName);
+                await producer.BecomeProducer(streamGuids[i], streamNamespace[i], _streamProviderName);
+
+                producers.Add(producer);
+                consumers.Add(consumer);
+            }            
+
+            while (true)
+            {
+                var producer = producers[r.Next(0, producers.Count - 1)];
+                var batchSize = batchSizes[r.Next(0, batchSizes.Count - 1)];
+                await producer.Produce(batchSize);
+
+                var timeToWait = TimeSpan.FromMilliseconds(sendDelays[r.Next(0, sendDelays.Count - 1)]);
+                await Task.Delay(timeToWait);
+            }
         }
 
         private async Task<bool> CheckCounter(IBatchProducerGrain producer, IMultipleSubscriptionConsumerGrain consumer,

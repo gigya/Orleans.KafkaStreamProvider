@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using KafkaNet.Interfaces;
 using KafkaNet.Protocol;
+using Metrics;
 using Orleans.Providers.Streams.Common;
 using Orleans.Runtime;
 using Orleans.Streams;
@@ -14,19 +14,25 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
     public class KafkaQueueAdapterReceiver : IQueueAdapterReceiver
     {
         private Task _currentCommitTask;
-        private long _lastOffset;
         private readonly IManualConsumer _consumer;
         private readonly IKafkaBatchFactory _factory;
         private readonly Logger _logger;
         private readonly KafkaStreamProviderOptions _options;
 
+        // Metrics
+        private static readonly Meter MeterConsumedMessagesPerSecond = Metric.Context("KafkaStreamProvider").Meter("Consumed Messages Per Second", Unit.Events);
+        private static readonly Histogram HistogramConsumedMessagesBatchSize = Metric.Context("KafkaStreamProvider").Histogram("Consumed Messages Batch Size", Unit.Events);
+        private static readonly Counter CounterActiveReceivers = Metric.Context("KafkaStreamProvider").Counter("Active Receivers", Unit.Custom("Receivers"));
+        private static readonly Timer TimerTimeToGetMessageFromKafka = Metric.Context("KafkaStreamProvider").Timer("Time To Get Message From Kafka", Unit.Custom("Fetches"));
+        private static readonly Timer TimerTimeToCommitOffset = Metric.Context("KafkaStreamProvider").Timer("Time To Commit Offset", Unit.Custom("Commits"));
+
         public QueueId Id { get; private set; }
 
-        public long CurrentOffset { get { return _lastOffset; } }
+        public long CurrentOffset { get; private set; }
 
         public KafkaQueueAdapterReceiver(QueueId queueId, IManualConsumer consumer, KafkaStreamProviderOptions options,
             IKafkaBatchFactory factory, Logger logger)
-        {
+        {            
             // input checks
             if (queueId == null) throw new ArgumentNullException("queueId");
             if (consumer == null) throw new ArgumentNullException("consumer");
@@ -49,13 +55,13 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             {
                 if (_options.ShouldInitWithLastOffset)
                 {
-                    _lastOffset = await Task.Run(() => _consumer.FetchLastOffset());
-                    _logger.Verbose("KafkaQueueAdapterReceiver - Initialized with latest offset. Offset is {0}", _lastOffset);
+                    CurrentOffset = await Task.Run(() => _consumer.FetchLastOffset());
+                    _logger.Verbose("KafkaQueueAdapterReceiver - Initialized with latest offset. Offset is {0}", CurrentOffset);
                 }
                 else
                 {
-                    _lastOffset = await Task.Run(() => _consumer.FetchOffset(_options.ConsumerGroupName));
-                    _logger.Verbose("KafkaQueueAdapterReceiver - Initialized with ConsumerGroupOffset offset. ConsumerGroup is {0} Offset is {1}", _options.ConsumerGroupName, _lastOffset);
+                    CurrentOffset = await Task.Run(() => _consumer.FetchOffset(_options.ConsumerGroupName));
+                    _logger.Verbose("KafkaQueueAdapterReceiver - Initialized with ConsumerGroupOffset offset. ConsumerGroup is {0} Offset is {1}", _options.ConsumerGroupName, CurrentOffset);
                 }                    
             }
             catch (KafkaApplicationException ex)
@@ -73,52 +79,68 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 
             if (shouldCreate)
             {
-                _lastOffset = await Task.Run(() => _consumer.FetchLastOffset());
-                await Task.Run(() => _consumer.UpdateOrCreateOffset(_options.ConsumerGroupName, _lastOffset));
-                _logger.Verbose("KafkaQueueAdapterReceiver - Offset was not found for ConsumerGroup {0}, saved the latest offset for the ConsumerGroup. Offset is {1}", _options.ConsumerGroupName, _lastOffset);
+                CurrentOffset = await Task.Run(() => _consumer.FetchLastOffset());
+                await Task.Run(() => _consumer.UpdateOrCreateOffset(_options.ConsumerGroupName, CurrentOffset));
+                _logger.Verbose("KafkaQueueAdapterReceiver - Offset was not found for ConsumerGroup {0}, saved the latest offset for the ConsumerGroup. Offset is {1}", _options.ConsumerGroupName, CurrentOffset);
             }
+
+            CounterActiveReceivers.Increment();
         }
 
         public async Task<IList<IBatchContainer>> GetQueueMessagesAsync(int maxCount)
         {            
             try
-            {            
-                var task = _consumer.FetchMessages(maxCount, _lastOffset);
+            {
+                Task<IEnumerable<Message>> fetchingTask;
+                IList<IBatchContainer> batches = new List<IBatchContainer>();
 
-                await Task.Run(() => Task.WaitAny(task, Task.Delay(_options.ReceiveWaitTimeInMs)));
-              
+                using (TimerTimeToGetMessageFromKafka.NewContext(Id.ToString()))
+                {
+                    fetchingTask = _consumer.FetchMessages(maxCount, CurrentOffset);
+
+                    await Task.Run(() => Task.WaitAny(fetchingTask, Task.Delay(_options.ReceiveWaitTimeInMs)));
+                }
+
                 // Checking that the task completed successfully
-                if (!task.IsCompleted)
+                if (!fetchingTask.IsCompleted)
                 {
-                    _logger.Verbose("KafkaQueueAdapterReceiver - Fetching operation was not completed, tried to fetch {0} messages from offest {1}", maxCount, _lastOffset);
-                    return new List<IBatchContainer>();
+                    _logger.Verbose(
+                        "KafkaQueueAdapterReceiver - Fetching operation was not completed, tried to fetch {0} messages from offest {1}",
+                        maxCount, CurrentOffset);
+                    return batches;
                 }
-                if (task.IsFaulted && task.Exception != null)
+                if (fetchingTask.IsFaulted && fetchingTask.Exception != null)
                 {
-                    _logger.Info("KafkaQueueAdapterReceiver - Fetching messages from kafka failed, tried to fetch {0} messages from offest {1}", maxCount, _lastOffset);
-                    throw task.Exception;
+                    _logger.Info(
+                        "KafkaQueueAdapterReceiver - Fetching messages from kafka failed, tried to fetch {0} messages from offest {1}",
+                        maxCount, CurrentOffset);
+                    throw fetchingTask.Exception;
                 }
-                if (task.Result == null)
+                if (fetchingTask.Result == null)
                 {
-                    return new List<IBatchContainer>();
+                    return batches;
                 }
+                
+                var messages = fetchingTask.Result.ToList();
+                batches = messages.Select(m => _factory.FromKafkaMessage(m, m.Meta.Offset)).ToList();
 
-                var messages = task.Result.ToList();
-                var batches = messages.Select(m => _factory.FromKafkaMessage(m, m.Meta.Offset)).ToList();
+                // No batches, we are done here..
+                if (batches.Count <= 0) return batches;
 
-                if (batches.Count > 0)
-                {
-                    _logger.Verbose("KafkaQueueAdapterReceiver - Pulled {0} messages for queue number {1}", batches.Count, Id.GetNumericId());
-                    _lastOffset += batches.Count;                
-                }               
+                _logger.Verbose("KafkaQueueAdapterReceiver - Pulled {0} messages for queue number {1}", batches.Count, Id.GetNumericId());
+                CurrentOffset += batches.Count;
+
+                // Taking a bit of metrics
+                MeterConsumedMessagesPerSecond.Mark(Id.ToString(), 1);                    
+                HistogramConsumedMessagesBatchSize.Update(batches.Count, Id.ToString());
 
                 return batches;
             }
             catch (BufferUnderRunException)
             {
                 // This case the next message in the queue is too big for us to read, so we skip it
-                _logger.Info("KafkaQueueAdapterReceiver - A message in the Kafka queue was too big to pull, skipping over it. offset was {0}", _lastOffset);
-                _lastOffset++;
+                _logger.Info("KafkaQueueAdapterReceiver - A message in the Kafka queue was too big to pull, skipping over it. offset was {0}", CurrentOffset);
+                CurrentOffset++;
 
                 return new List<IBatchContainer>();
             }
@@ -126,8 +148,14 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 
         private async Task CommitOffset(long offsetToCommit)
         {
-            var commitTask = Task.Run(() => _consumer.UpdateOrCreateOffset(_options.ConsumerGroupName, offsetToCommit));
-            await Task.WhenAny(commitTask, Task.Delay(_options.ReceiveWaitTimeInMs));
+            Task commitTask;
+
+            using (TimerTimeToCommitOffset.NewContext())
+            {
+                commitTask =
+                    Task.Run(() => _consumer.UpdateOrCreateOffset(_options.ConsumerGroupName, offsetToCommit));
+                await Task.WhenAny(commitTask, Task.Delay(_options.ReceiveWaitTimeInMs));
+            }
 
             if (!commitTask.IsCompleted)
             {
@@ -156,11 +184,13 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
                 _currentCommitTask = null;
                 _logger.Verbose("KafkaQueueAdapterReceiver - The receiver had finished a commit and was shutted down");
             }
+
+            CounterActiveReceivers.Decrement();
         }
 
         public async Task MessagesDeliveredAsync(IList<IBatchContainer> messages)
         {            
-            // Finding the higest offset
+            // Finding the highest offset
             if (messages.Any())
             {
                 var highestOffset = messages.Max(b => (b.SequenceToken as EventSequenceToken).GetSequenceNumber());

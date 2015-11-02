@@ -68,5 +68,13 @@ namespace Tester.StreamingTests
             logger.Info("************************ BatchTestMultipleProducers ************************");
             await _runner.BatchTestMultipleProducers(10, 10);
         }
+
+        [TestMethod]
+        [Ignore]
+        public async Task InfiniteTest()
+        {
+            logger.Info("************************ InfiniteTest ************************");
+            await _runner.InfiniteTest();
+        }
     }
 }

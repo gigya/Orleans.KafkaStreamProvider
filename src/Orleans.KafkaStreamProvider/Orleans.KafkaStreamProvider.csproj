@@ -34,6 +34,10 @@
       <HintPath>..\packages\KafkaNetClient.1.0.1.5\lib\net45\KafkaNetClient.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Metrics, Version=0.2.16.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Metrics.NET.0.2.16\lib\net45\Metrics.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Orleans, Version=1.0.10.2, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Orleans.Core.1.0.10.2\lib\net45\Orleans.dll</HintPath>
       <Private>True</Private>
