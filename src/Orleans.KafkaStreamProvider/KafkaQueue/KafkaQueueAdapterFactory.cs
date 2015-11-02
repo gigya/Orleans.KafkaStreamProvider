@@ -30,9 +30,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 
             // Creating an options object with all the config values
             _options = new KafkaStreamProviderOptions(config);
-
-                        
-            // TODO: put configurable value to determin if we have metrics from an external process
+                       
             if (!_options.UsingExternalMetrics)
             {
                 Metric.Config.WithHttpEndpoint(string.Format("http://localhost:{0}/", _options.MetricsPort));
