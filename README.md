@@ -57,6 +57,26 @@ Under these principles, the cache will be under pressure under the following con
 - The cache is full, and removing the last message in order to add the new message will violate the timespan guarantee.
 - The cache is full, and removing the last message in order to add the new message will prevent a consumer to consume the message.
 
+## Metrics
+The KafkaStreamProvider is taking metrics of the activity that is being run inside it. You can view the metrics on your localhost on the metrics port (a configurable value).
+
+The current metrics are:
+- Meters
+ - Number of kafka messages produced per second
+ - Number of kafka messages consumed per second 
+ - Cache evacuations per second
+- Counter
+ - Active receivers
+ - Messages in cache
+ - Number of cursors that are causing pressure
+- Histograms
+ - Produced messges batch size
+ - Number of consumed messages per fetch
+- Timers
+ - Time to produce message
+ - Time to consume messages
+ - Time to commit offset
+
 ## <a name="configurableValues"></a>Configurable Values
 These are the configurable values that the KafkaStreamProvider offers to its users, the first three are required while the others have default values:
 
@@ -73,6 +93,9 @@ These are the configurable values that the KafkaStreamProvider offers to its use
 - **ReceiveWaitTimeInMs** - The time the QueueAdapterReceiver will wait when fetching a batch of messages from Kafka. If the Receiver did not get any messages in the allotted time, it will return an empty batch and will try again the next time the PullingAgent asks for messages. *Default value is 100*.
 - **ShouldInitWithLastOffset** - Determines whether the Receiver should get its initial offset from the value saved at Kafka (according to the ConsumerGroupName) or just take the last offset from Kafka (the top of the queue). *Default value is True*
 - **CacheTimespan** - The timespan the cache will guarantee to keep.
+- **MetricsPort** - The port for the Metrics to show its data on. *Default value is 20490*
+- **IncludeMetrics** - A boolean that determins whether to take metrics for the KafkaStreamProvider or not. *Default value is True*
+- **UsingExternalMetrics** - A boolean that tells the KafakStreamProvider whether the metrics where already initialized in an external app that is using KafkaStreamProvider. *Default value is false*
 
 Additionally you have the default configuration options offered by Orleans to any PersistentStreamProvider which can be found here (under StreamProvider configuration): http://dotnet.github.io/orleans/Orleans-Streams/Streams-Extensibility. 
 
