@@ -163,7 +163,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             // Finding the higest offset
             if (messages.Any())
             {
-                var highestOffset = messages.Max(b => (b.SequenceToken as EventSequenceToken).GetSequenceNumber());
+                var highestOffset = messages.Max(b => (b.SequenceToken as EventSequenceToken).SequenceNumber);
                 await CommitOffset(highestOffset);
             }
         }
