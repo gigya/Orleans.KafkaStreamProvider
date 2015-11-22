@@ -236,12 +236,6 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
             // Since we do not support finding a sequence of type x.y where y > 0, we round the token down
             var flooredToken = FloorSequenceToken(sequenceToken);
 
-            // Getting the possible next token (relevant only to EventSequenceToken)
-            //var possibleNextToken = GetPossibleNextEventSequenceToken(sequenceToken);           
-
-            //var tokenTooNewForCache = possibleNextToken != null ? sequenceToken.Newer(FirstItem.SequenceToken) && !sequenceToken.Older(possibleNextToken)
-            //                                                    : sequenceToken.Newer(FirstItem.SequenceToken);
-
             if (flooredToken.Newer(FirstItem.SequenceToken)) // sequenceId is too new to be in cache
             {
                 Log(_logger, "TimedQueueCache for QueueId:{0}, initializing with newer token", Id.ToString());
