@@ -46,7 +46,6 @@ namespace Tester.StreamingTests
                 await firstProducer.Produce();
             }
 
-
             await
                 TestingUtils.WaitUntilAsync(lastTry => CheckCounters(numToProduce, consumer,  lastTry),
                     TimeSpan.FromSeconds(30));
@@ -61,6 +60,91 @@ namespace Tester.StreamingTests
                 consumer.BecomeConsumer(firstStream, streamNamespace, wantedToken, TimeSpan.Zero, _streamProviderName);
 
             await TestingUtils.WaitUntilAsync(lastTry => CheckCounters(numToProduce + 3, consumer, lastTry), TimeSpan.FromSeconds(30));
+        }
+
+        public async Task SubscribingWithOldSequenceTokenAfterBatchSendingOnlyOneBatch()
+        {
+            // get producer and consumer
+            var firstProducer = GrainClient.GrainFactory.GetGrain<IBatchProducerGrain>(Guid.NewGuid());
+            var consumer = GrainClient.GrainFactory.GetGrain<ITimedConsumerGrain>(Guid.NewGuid());
+
+            Guid firstStream = Guid.NewGuid();
+
+            string streamNamespace = "RewindingTestNamespace";
+
+            // subscribing to different streams on the same namespace
+            await consumer.BecomeConsumer(firstStream, streamNamespace, null, TimeSpan.Zero, _streamProviderName);
+
+            // time to produce
+            await firstProducer.BecomeProducer(firstStream, streamNamespace, _streamProviderName);
+
+            // Starting to produce!
+            int numToProduce = 1;
+            int batchToProduce = 5;
+
+            for (int i = 1; i <= numToProduce; i++)
+            {
+                await firstProducer.Produce(batchToProduce);
+            }
+
+            await
+                TestingUtils.WaitUntilAsync(lastTry => CheckCounters(numToProduce * batchToProduce, consumer, lastTry),
+                    TimeSpan.FromSeconds(30));
+
+            await consumer.StopConsuming();
+
+            // Resubscribing with token
+            var tokens = await consumer.GetReceivedTokens();
+            var wantedToken = tokens[batchToProduce - 2];
+
+            await
+                consumer.BecomeConsumer(firstStream, streamNamespace, wantedToken, TimeSpan.Zero, _streamProviderName);
+
+            await TestingUtils.WaitUntilAsync(lastTry => CheckCounters((numToProduce * batchToProduce * 2), consumer, lastTry), TimeSpan.FromSeconds(30));
+        }
+
+        public async Task SubscribingWithOldSequenceTokenAfterBatchSending()
+        {
+            // get producer and consumer
+            var firstProducer = GrainClient.GrainFactory.GetGrain<IBatchProducerGrain>(Guid.NewGuid());
+            var consumer = GrainClient.GrainFactory.GetGrain<ITimedConsumerGrain>(Guid.NewGuid());
+
+            Guid firstStream = Guid.NewGuid();
+
+            string streamNamespace = "RewindingTestNamespace";
+
+            // subscribing to different streams on the same namespace
+            await consumer.BecomeConsumer(firstStream, streamNamespace, null, TimeSpan.Zero, _streamProviderName);
+
+            // time to produce
+            await firstProducer.BecomeProducer(firstStream, streamNamespace, _streamProviderName);
+
+            // Starting to produce!
+            int numToProduce = 1;
+            int batchToProduce = 5;
+
+            for (int i = 1; i <= numToProduce; i++)
+            {
+                await firstProducer.Produce(batchToProduce);
+            }
+
+            await
+                TestingUtils.WaitUntilAsync(lastTry => CheckCounters(numToProduce * batchToProduce, consumer, lastTry),
+                    TimeSpan.FromSeconds(30));
+
+            await consumer.StopConsuming();
+
+            // Resubscribing with token
+            var tokens = await consumer.GetReceivedTokens();
+            var wantedToken = tokens[batchToProduce - 2];
+
+            // Producing just one more tiny message
+            await firstProducer.Produce(1);
+
+            await
+                consumer.BecomeConsumer(firstStream, streamNamespace, wantedToken, TimeSpan.Zero, _streamProviderName);
+
+            await TestingUtils.WaitUntilAsync(lastTry => CheckCounters((numToProduce * batchToProduce * 2) + 1, consumer, lastTry), TimeSpan.FromSeconds(30));
         }
 
         public async Task SubscribingWithTooOldSequenceToken()
