@@ -86,7 +86,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             _logger.Verbose("KafkaQueueAdapter - For StreamId: {0}, StreamNamespace:{1} using partition {2}", streamGuid, streamNamespace, partitionId);
 
             var enumeratedEvents = events.ToList();
-            var payload = _batchFactory.ToKafkaMessage(streamGuid, streamNamespace, enumeratedEvents.AsEnumerable(), requestContext);
+            var payload = _batchFactory.ToKafkaMessage(streamGuid, streamNamespace, enumeratedEvents.AsEnumerable(), requestContext);            
             if (payload == null)
             {
                 _logger.Info("The batch factory returned a faulty message, the message was not sent");
