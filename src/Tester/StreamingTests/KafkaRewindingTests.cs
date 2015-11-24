@@ -70,5 +70,19 @@ namespace Tester.StreamingTests
             logger.Info("************************ SubscribingMultipleConsumersDifferentTokens *********************************");
             await _runner.SubscribingMultipleConsumersDifferentTokens();
         }
+
+        [TestMethod]
+        public async Task SubscribingWithOldSequenceTokenAfterBatchSending()
+        {
+            logger.Info("************************ SubscribingWithOldSequenceTokenAfterBatchSending *********************************");
+            await _runner.SubscribingWithOldSequenceTokenAfterBatchSending();
+        }
+
+        [TestMethod]
+        public async Task SubscribingWithOldSequenceTokenAfterBatchSendingOnlyOneBatch()
+        {
+            logger.Info("************************ SubscribingWithOldSequenceTokenAfterBatchSending *********************************");
+            await _runner.SubscribingWithOldSequenceTokenAfterBatchSendingOnlyOneBatch();
+        }     
     }
 }
