@@ -27,6 +27,8 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 
         public StreamSequenceToken SequenceToken { get { return _sequenceToken; } }
 
+        public DateTime Timestamp { get; private set; }
+
         private KafkaBatchContainer(Guid streamId, string streamNamespace, List<object> events, Dictionary<string, object> requestContext)
         {
             if (events == null) throw new ArgumentNullException("events", "Message contains no events");
@@ -35,6 +37,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             StreamNamespace = streamNamespace;
             _events = events;
             _requestContext = requestContext;
+            Timestamp = DateTime.UtcNow;
         }
 
         private KafkaBatchContainer(Guid streamId, string streamNamespace, object singleEvent, Dictionary<string, object> requestContext)
@@ -45,6 +48,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             StreamNamespace = streamNamespace;
             _events = new List<object>(1){singleEvent};
             _requestContext = requestContext;
+            Timestamp = DateTime.UtcNow;
         }
         
         public IEnumerable<Tuple<T, StreamSequenceToken>> GetEvents<T>()

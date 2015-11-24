@@ -381,8 +381,9 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
                 Batch = batch,
                 SequenceToken = sequenceToken,
                 CacheBucket = cacheBucket,
-                Timestamp = DateTime.UtcNow
             };
+
+            item.Timestamp = GetTimestampForItem(batch);
 
             var newNode = new LinkedListNode<TimedQueueCacheItem>(item);
 
@@ -401,6 +402,13 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
             _cachedMessages.AddFirst(newNode);
 
             CounterMessagesInCache.Increment(Id.ToString(), 1);
+        }
+
+        private DateTime GetTimestampForItem(IBatchContainer batch)
+        {
+            // Here we check if the batch is a kafka stream 
+            var batchAsKafkaBatch = (KafkaBatchContainer) batch;
+            return batchAsKafkaBatch == null ? DateTime.Now : batchAsKafkaBatch.Timestamp;
         }
 
         private List<IBatchContainer> RemoveMessagesFromCache()
