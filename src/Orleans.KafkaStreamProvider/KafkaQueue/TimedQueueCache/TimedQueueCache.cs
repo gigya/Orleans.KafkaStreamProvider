@@ -231,17 +231,20 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
                 LinkedListNode<TimedQueueCacheItem> firstMessage = _cachedMessages.First;
                 ResetCursor(cursor, ((EventSequenceToken)firstMessage.Value.SequenceToken).NextSequenceNumber());
                 return;
-            }
+            }            
 
-            if (sequenceToken.Newer(FirstItem.SequenceToken)) // sequenceId is too new to be in cache
+            // Since we do not support finding a sequence of type x.y where y > 0, we round the token down
+            var flooredToken = FloorSequenceToken(sequenceToken);
+
+            if (flooredToken.Newer(FirstItem.SequenceToken)) // sequenceId is too new to be in cache
             {
                 Log(_logger, "TimedQueueCache for QueueId:{0}, initializing with newer token", Id.ToString());
-                ResetCursor(cursor, sequenceToken);
+                ResetCursor(cursor, flooredToken);
                 return;
             }
             
             // Check to see if offset is too old to be in cache
-            if (sequenceToken.Older(LastItem.SequenceToken))
+            if (flooredToken.Older(LastItem.SequenceToken))
             {
                 // We don't throw cache misses, we are more tolerant. Starting the cursor 
                 // from the last message and logging the incident
@@ -251,7 +254,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
             }
 
             // Now the requested sequenceToken is set and is also within the limits of the cache.
-            var node = FindNodeBySequenceToken(sequenceToken);
+            var node = FindNodeBySequenceToken(flooredToken);
 
             // return cursor from start.
             SetCursor(cursor, node);
@@ -275,9 +278,12 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
                 if (node.Next == null) 
                     break;
 
-                // if sequenceId is between the two, take the higher
+                // if sequenceId is between the two, take the lower
                 if (node.Next.Value.SequenceToken.Older(sequenceToken))
+                {
+                    node = node.Next;
                     break;
+                }                    
 
                 node = node.Next;
             }
@@ -505,6 +511,16 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
         {
             purgedItems = RemoveMessagesFromCache();
             return true;
+        }
+
+        private StreamSequenceToken FloorSequenceToken(StreamSequenceToken token)
+        {
+            if (!(token is EventSequenceToken)) return token;                        
+            EventSequenceToken tokenAsEventSequenceToken = (EventSequenceToken) token;
+            if (tokenAsEventSequenceToken.EventIndex == 0) return token;
+            
+            EventSequenceToken flooredToken = new EventSequenceToken(tokenAsEventSequenceToken.SequenceNumber);
+            return flooredToken;
         }
     }
 }
