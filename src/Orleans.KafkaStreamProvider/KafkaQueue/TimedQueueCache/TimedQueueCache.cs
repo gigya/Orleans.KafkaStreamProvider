@@ -462,7 +462,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
 
             if (bucket.NumCurrentItems == 0)
             {
-                _logger.Info("TimedQueueCache for QueueId:{0}, RemoveLastMessage: Last bucket is empty, removing it", Id.ToString());
+                Log(_logger, "TimedQueueCache for QueueId:{0}, RemoveLastMessage: Last bucket is empty, removing it", Id.ToString());
                 _cacheCursorHistogram.RemoveAt(0);
             }
             else
