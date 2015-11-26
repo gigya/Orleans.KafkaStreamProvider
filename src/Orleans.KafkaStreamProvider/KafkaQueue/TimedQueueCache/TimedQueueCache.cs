@@ -413,7 +413,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
         private DateTime GetTimestampForItem(IBatchContainer batch)
         {
             // Here we check if the batch is a kafka stream 
-            var batchAsKafkaBatch = (KafkaBatchContainer) batch;
+            var batchAsKafkaBatch = batch as KafkaBatchContainer;
             return batchAsKafkaBatch == null ? DateTime.Now : batchAsKafkaBatch.Timestamp;
         }
 
