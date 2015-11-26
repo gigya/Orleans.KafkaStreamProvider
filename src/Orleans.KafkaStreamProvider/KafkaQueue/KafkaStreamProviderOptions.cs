@@ -24,11 +24,11 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private const string AckLevelParam = "AckLevel";
         private const string ReceiveWaitTimeInMsParam = "ReceiveWaitTimeInMs";
         private const string OffsetCommitIntervalParam = "OffsetCommitInterval";
-        private const string ShouldInitWithLastOffsetParam = "ShouldInitWithLastOffsetParam";
+        private const string ShouldInitWithLastOffsetParam = "ShouldInitWithLastOffset";
         private const string MaxMessageSizeInBytesParam = "MaxMessageSize";
         private const string MetricsPortParam = "MetricsPort";
         private const string IncludeMetricsParam = "IncludeMetrics";
-        private const string UsingExternalMetricsParam = "IncludeMetrics";
+        private const string UsingExternalMetricsParam = "UsingExternalMetrics";
 
 
         // Default values
