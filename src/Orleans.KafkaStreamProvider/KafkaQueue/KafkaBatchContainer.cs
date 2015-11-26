@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using KafkaNet.Protocol;
 using Orleans.Providers.Streams.Common;
@@ -27,7 +28,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 
         public StreamSequenceToken SequenceToken { get { return _sequenceToken; } }
 
-        public DateTime Timestamp { get; private set; }
+        public string Timestamp { get; private set; }
 
         private KafkaBatchContainer(Guid streamId, string streamNamespace, List<object> events, Dictionary<string, object> requestContext)
         {
@@ -37,7 +38,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             StreamNamespace = streamNamespace;
             _events = events;
             _requestContext = requestContext;
-            Timestamp = DateTime.UtcNow;
+            Timestamp = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
         }
 
         private KafkaBatchContainer(Guid streamId, string streamNamespace, object singleEvent, Dictionary<string, object> requestContext)
@@ -48,7 +49,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             StreamNamespace = streamNamespace;
             _events = new List<object>(1){singleEvent};
             _requestContext = requestContext;
-            Timestamp = DateTime.UtcNow;
+            Timestamp = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
         }
         
         public IEnumerable<Tuple<T, StreamSequenceToken>> GetEvents<T>()
