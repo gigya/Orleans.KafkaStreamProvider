@@ -38,7 +38,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             StreamNamespace = streamNamespace;
             _events = events;
             _requestContext = requestContext;
-            Timestamp = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
+            Timestamp = DateTime.UtcNow.ToString("O");
         }
 
         private KafkaBatchContainer(Guid streamId, string streamNamespace, object singleEvent, Dictionary<string, object> requestContext)
