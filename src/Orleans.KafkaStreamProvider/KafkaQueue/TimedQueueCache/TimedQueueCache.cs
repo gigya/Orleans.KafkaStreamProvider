@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Metrics;
 using Metrics.Core;
@@ -414,7 +415,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
         {
             // Here we check if the batch is a kafka stream 
             var batchAsKafkaBatch = batch as KafkaBatchContainer;
-            return batchAsKafkaBatch == null ? DateTime.UtcNow : DateTime.Parse(batchAsKafkaBatch.Timestamp);
+            return batchAsKafkaBatch == null ? DateTime.UtcNow : DateTime.ParseExact(batchAsKafkaBatch.Timestamp, "O", CultureInfo.InvariantCulture);
         }
 
         private List<IBatchContainer> RemoveMessagesFromCache()
