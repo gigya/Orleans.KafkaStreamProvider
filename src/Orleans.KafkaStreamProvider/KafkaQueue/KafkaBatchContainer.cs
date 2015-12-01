@@ -49,7 +49,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             StreamNamespace = streamNamespace;
             _events = new List<object>(1){singleEvent};
             _requestContext = requestContext;
-            Timestamp = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
+            Timestamp = DateTime.UtcNow.ToString("O");
         }
         
         public IEnumerable<Tuple<T, StreamSequenceToken>> GetEvents<T>()
