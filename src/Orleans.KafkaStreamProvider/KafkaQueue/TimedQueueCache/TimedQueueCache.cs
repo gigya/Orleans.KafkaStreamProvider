@@ -415,7 +415,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
         {
             // Here we check if the batch is a kafka stream 
             var batchAsKafkaBatch = batch as KafkaBatchContainer;
-            return batchAsKafkaBatch == null ? DateTime.UtcNow : DateTime.ParseExact(batchAsKafkaBatch.Timestamp, "O", CultureInfo.InvariantCulture);
+            return batchAsKafkaBatch == null ? DateTime.UtcNow : DateTime.ParseExact(batchAsKafkaBatch.Timestamp, "O", CultureInfo.InvariantCulture).ToUniversalTime();
         }
 
         private List<IBatchContainer> RemoveMessagesFromCache()
