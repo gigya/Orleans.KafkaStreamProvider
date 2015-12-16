@@ -12,8 +12,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
         private readonly int _cacheSize;
         private readonly int _cacheNumOfBuckets;
         private readonly Logger _logger;
-        private readonly ConcurrentDictionary<QueueId, IQueueCache> _caches;
-
+        
         public TimedQueueAdapterCache(IQueueAdapterFactory factory, TimeSpan cacheTimeSpan, int cacheSize, int cacheNumOfBuckets, Logger logger)
         {
             if (cacheTimeSpan == TimeSpan.Zero)
@@ -22,12 +21,11 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
             _cacheSize = cacheSize;
             _cacheNumOfBuckets = cacheNumOfBuckets;
             _logger = logger;
-            _caches = new ConcurrentDictionary<QueueId, IQueueCache>();
         }
 
         public IQueueCache CreateQueueCache(QueueId queueId)
-        {                            
-            return _caches.AddOrUpdate(queueId, id => new TimedQueueCache(id, _cacheTimeSpan,_cacheSize, _cacheNumOfBuckets, _logger), (id, queueCache) => queueCache);
+        {
+            return new TimedQueueCache(queueId, _cacheTimeSpan, _cacheSize, _cacheNumOfBuckets, _logger);
         }
 
         public int Size
