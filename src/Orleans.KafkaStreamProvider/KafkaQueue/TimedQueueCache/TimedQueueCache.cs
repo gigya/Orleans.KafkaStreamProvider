@@ -131,6 +131,20 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
             _bucketTimeSpan = TimeSpan.FromMilliseconds(cacheTimespan.TotalMilliseconds / numOfBuckets);            
         }
 
+        ~TimedQueueCache()
+        {
+            // We are using the destructor to update the TimedQueueCache Metrics (currently this is the only point where we can do this)
+            if (CounterMessagesInCache != null && _cachedMessages != null)
+            {
+                CounterMessagesInCache.Decrement(_cachedMessages.Count);
+            }
+
+            if (CounterNumberOfCursorsCausingPressure != null)
+            {
+                CounterNumberOfCursorsCausingPressure.Decrement(_numOfCursorsCausingPressure);
+            }
+        }
+
         public bool IsUnderPressure()
         {
             // empty cache
