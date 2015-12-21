@@ -133,15 +133,24 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
 
         ~TimedQueueCache()
         {
+            if (Id == null) return;;
+
             // We are using the destructor to update the TimedQueueCache Metrics (currently this is the only point where we can do this)
             if (CounterMessagesInCache != null && _cachedMessages != null)
             {
-                CounterMessagesInCache.Decrement(_cachedMessages.Count);
+                int numOfMessages = _cachedMessages.Count;
+
+                if (_logger != null)
+                {
+                    Log(_logger, "TimedQueueCache for QueueId:{0}, Destroying the cache with {1} messages", Id.ToString(), numOfMessages);
+                }
+
+                CounterMessagesInCache.Decrement(Id.ToString(), numOfMessages);
             }
 
             if (CounterNumberOfCursorsCausingPressure != null)
             {
-                CounterNumberOfCursorsCausingPressure.Decrement(_numOfCursorsCausingPressure);
+                CounterNumberOfCursorsCausingPressure.Decrement(Id.ToString(), _numOfCursorsCausingPressure);
             }
         }
 
