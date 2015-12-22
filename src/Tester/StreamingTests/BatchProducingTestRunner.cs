@@ -38,19 +38,17 @@ namespace Tester.StreamingTests
             var streamNamespace = "BatchTestStream";
 
             await consumer.BecomeConsumer(streamGuid, streamNamespace, _streamProviderName);
-
             await proudcer.BecomeProducer(streamGuid, streamNamespace, _streamProviderName);
 
-            await proudcer.StartPeriodicBatchProducing(batchSize);
-            
-            await Task.Delay(TimeSpan.FromSeconds(3));
-
-            await proudcer.StopPeriodicBatchProducing();
+            int numOfMessages = 10;
+            for (int i = 0; i < numOfMessages; i++)
+            {
+                await proudcer.Produce(batchSize);
+            }
             
             _logger.Info("Producer produced {0} messages", await proudcer.GetNumberProduced());
 
             await TestingUtils.WaitUntilAsync(lastTry => CheckCounter(proudcer, consumer, lastTry), Timeout);
-
             await consumer.StopConsuming();
         }
 
@@ -67,11 +65,8 @@ namespace Tester.StreamingTests
             var secondHandler = await consumer.BecomeConsumer(streamGuid, streamNamespace, _streamProviderName);
 
             await proudcer.BecomeProducer(streamGuid, streamNamespace, _streamProviderName);
-
             await proudcer.StartPeriodicBatchProducing(batchSize);
-
             await Task.Delay(TimeSpan.FromSeconds(3));
-
             await proudcer.StopPeriodicBatchProducing();
 
             _logger.Info("Producer produced {0} messages", await proudcer.GetNumberProduced());
@@ -121,14 +116,11 @@ namespace Tester.StreamingTests
             var proudcer = GrainClient.GrainFactory.GetGrain<IBatchProducerGrain>(Guid.NewGuid());
             var consumer = GrainClient.GrainFactory.GetGrain<ISampleStreaming_ConsumerGrain>(Guid.NewGuid());
             var batchSize = 1000;
-
             var streamGuid = Guid.NewGuid();
             var streamNamespace = "BatchTestStream";
 
             await consumer.BecomeConsumer(streamGuid, streamNamespace, _streamProviderName);
-
             await proudcer.BecomeProducer(streamGuid, streamNamespace, _streamProviderName);
-
             await proudcer.StartPeriodicBatchProducing(batchSize);
 
             await Task.Delay(TimeSpan.FromSeconds(3));
@@ -138,7 +130,6 @@ namespace Tester.StreamingTests
             _logger.Info("Producer produced {0} messages", await proudcer.GetNumberProduced());
 
             await TestingUtils.WaitUntilAsync(lastTry => CheckCounter(proudcer, consumer, lastTry), Timeout);
-
             await consumer.StopConsuming();
         }
 
