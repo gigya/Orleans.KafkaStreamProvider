@@ -19,7 +19,7 @@ To start working with the KafkaStreamProvider make sure you do the following ste
 1. Install Kafka on a machine (or cluster) which you have access to.
 2. Create a Topic in Kafka with a certain name. Make sure this partition has at least as many partitions as the number of queues desired for your KafkaStreamProvider (for more information about that, check out [Usage of Kafka](#usageOfKafka))
 3. Add to the Silo configuration the a new stream provider with the necessary parameters and the optional ones (if you wish). you can see what is configurable in KafkaStreamProvider under [Configurable Values](#configurableValues).
-4. In order to make the Tester project run its tests successfully, you will have to configure the configuration files in the Tester project to work with the Kafka cluster you created.
+4. In order to make the Tester project run its tests successfully, you will have to configure the configuration files in the Tester project to work with the Kafka cluster you created (replace the XXXXX in "ConnectionStrings" to a valid address).
 
 For Example:
 
