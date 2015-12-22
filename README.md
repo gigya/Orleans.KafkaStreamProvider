@@ -1,7 +1,7 @@
 # Orleans.KafkaStreamProvider
 Kafka persistent stream provider for Microsoft Orleans
 
-## Version 0.9.5
+## Version 1.0.0
 
 ## Overview
 The KafkaStreamProvider is a new implementation of a PersistentStreamProvider for Microsoft Orleans. 
