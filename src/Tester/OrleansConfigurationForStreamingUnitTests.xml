@@ -8,7 +8,7 @@
       <Provider Type="Orleans.KafkaStreamProvider.PersistentStreams.KafkaStreamProvider"
                 Name="KafkaProvider"
                 ConsumerGroupName="TestConsumerGroupName"
-                ConnectionStrings="XXXXX"
+                ConnectionStrings="http://kafka1:9092;http://kafka2:9092"
                 TopicName="Jonathan.ab.KafkaStreamProviderTestsNew" NumOfQueues="4"/>
     </StreamProviders>
     <SeedNode Address="localhost" Port="22222"/>
