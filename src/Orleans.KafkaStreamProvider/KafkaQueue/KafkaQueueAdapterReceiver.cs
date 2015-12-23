@@ -104,7 +104,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
                 // Checking that the task completed successfully
                 if (!fetchingTask.IsCompleted)
                 {
-                    _logger.Verbose(
+                    _logger.Warn((int)KafkaErrorCodes.KafkaStreamProviderBase,
                         "KafkaQueueAdapterReceiver - Fetching operation was not completed, tried to fetch {0} messages from offest {1}",
                         maxCount, CurrentOffset);
                     return batches;
@@ -194,7 +194,9 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             if (messages.Any())
             {
                 var highestOffset = messages.Max(b => (b.SequenceToken as EventSequenceToken).SequenceNumber);
-                await CommitOffset(highestOffset);
+
+                // We increment the highest offest since the offest commit represents the next message to be handled.
+                await CommitOffset(highestOffset + 1);
             }
         }
     }
