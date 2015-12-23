@@ -111,9 +111,9 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
                 }
                 if (fetchingTask.IsFaulted && fetchingTask.Exception != null)
                 {
-                    _logger.Info(
-                        "KafkaQueueAdapterReceiver - Fetching messages from kafka failed, tried to fetch {0} messages from offest {1}",
-                        maxCount, CurrentOffset);
+                    _logger.Warn((int)KafkaErrorCodes.KafkaStreamProviderBase,
+                        "KafkaQueueAdapterReceiver - Fetching messages from kafka failed, tried to fetch {0} messages from offest {1} in queue {2}",
+                        maxCount, CurrentOffset, Id.ToString());
                     throw fetchingTask.Exception;
                 }
                 if (fetchingTask.Result == null)
@@ -194,7 +194,8 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             if (messages.Any())
             {
                 var highestOffset = messages.Max(b => (b.SequenceToken as EventSequenceToken).SequenceNumber);
-                await CommitOffset(highestOffset);
+                // We take the highest offset and we raise it by 1, because the highest offset here belongs to a message we already handled
+                await CommitOffset(highestOffset + 1);
             }
         }
     }
