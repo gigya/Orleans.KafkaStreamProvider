@@ -25,14 +25,25 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private static readonly Counter CounterActiveReceivers = Metric.Context("KafkaStreamProvider").Counter("Active Receivers", Unit.Custom("Receivers"));
         private static readonly Timer TimerTimeToGetMessageFromKafka = Metric.Context("KafkaStreamProvider").Timer("Time To Get Message From Kafka", Unit.Custom("Fetches"));
         private static readonly Timer TimerTimeToCommitOffset = Metric.Context("KafkaStreamProvider").Timer("Time To Commit Offset", Unit.Custom("Commits"));
+        private readonly Counter _counterCurrentOffset;
 
         public QueueId Id { get; private set; }
 
-        public long CurrentOffset { get; private set; }
+        private long _currentOffset;
+
+        public long CurrentOffset
+        {
+            get { return _currentOffset; }
+            private set
+            {
+                _currentOffset = value;
+                _counterCurrentOffset?.Increment(value - _currentOffset);
+            }
+        }
 
         public KafkaQueueAdapterReceiver(QueueId queueId, IManualConsumer consumer, KafkaStreamProviderOptions options,
             IKafkaBatchFactory factory, Logger logger)
-        {            
+        {
             // input checks
             if (queueId == null) throw new ArgumentNullException("queueId");
             if (consumer == null) throw new ArgumentNullException("consumer");
@@ -40,6 +51,8 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             if (options == null) throw new ArgumentNullException("options");
             if (logger == null) throw new ArgumentNullException("logger");
 
+            _counterCurrentOffset = Metric.Context("KafkaStreamProvider").Counter($"CurrentOffset queueId:({queueId.GetNumericId()})", unit:  Unit.Custom("Log"));
+       
             _options = options;
             Id = queueId;
             _consumer = consumer;
@@ -62,7 +75,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
                 {
                     CurrentOffset = await Task.Run(() => _consumer.FetchOffset(_options.ConsumerGroupName));
                     _logger.Verbose("KafkaQueueAdapterReceiver - Initialized with ConsumerGroupOffset offset. ConsumerGroup is {0} Offset is {1}", _options.ConsumerGroupName, CurrentOffset);
-                }                    
+                }
             }
             catch (KafkaApplicationException ex)
             {
@@ -88,7 +101,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         }
 
         public async Task<IList<IBatchContainer>> GetQueueMessagesAsync(int maxCount)
-        {            
+        {
             try
             {
                 Task<IEnumerable<Message>> fetchingTask;
@@ -120,7 +133,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
                 {
                     return batches;
                 }
-                
+
                 var messages = fetchingTask.Result.ToList();
                 batches = messages.Select(m => _factory.FromKafkaMessage(m, m.Meta.Offset)).ToList();
 
@@ -160,7 +173,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             if (!commitTask.IsCompleted)
             {
                 var innerException = commitTask.IsFaulted
-                    ? (Exception) commitTask.Exception
+                    ? (Exception)commitTask.Exception
                     : new TimeoutException("Commit operation timed out");
 
                 var newException = new KafkaStreamProviderException("Commit offset operation has failed", innerException);
@@ -173,7 +186,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 
             _logger.Verbose(
                 "KafkaQueueAdapterReceiver - Commited an offset to the ConsumerGroup. ConsumerGroup is {0}, offset is {1}",
-                _options.ConsumerGroupName, offsetToCommit);            
+                _options.ConsumerGroupName, offsetToCommit);
         }
 
         public async Task Shutdown(TimeSpan timeout)
@@ -185,11 +198,12 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
                 _logger.Verbose("KafkaQueueAdapterReceiver - The receiver had finished a commit and was shutted down");
             }
 
+
             CounterActiveReceivers.Decrement();
         }
 
         public async Task MessagesDeliveredAsync(IList<IBatchContainer> messages)
-        {            
+        {
             // Finding the highest offset
             if (messages.Any())
             {
