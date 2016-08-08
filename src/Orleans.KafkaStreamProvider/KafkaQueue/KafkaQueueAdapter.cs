@@ -116,7 +116,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
                     // Checking all the responses
                     foreach (var messageResponse in responsesWithError)
                     {
-                        _logger.Info(
+                        _logger.Warn((int)KafkaErrorCodes.KafkaStreamProviderBase,
                             "KafkaQueueAdapter - Error sending message through kafka client, the error code is {0}, message offset is {1}",
                             messageResponse.Error, messageResponse.Offset);
 
