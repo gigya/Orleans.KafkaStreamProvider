@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using Orleans.Providers.Streams.Common;
 using Orleans.Runtime;
 using Orleans.Streams;
 
