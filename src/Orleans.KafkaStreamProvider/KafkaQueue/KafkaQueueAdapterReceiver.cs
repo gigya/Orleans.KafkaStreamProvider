@@ -124,7 +124,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
                 }
                 if (fetchingTask.IsFaulted && fetchingTask.Exception != null)
                 {
-                    _logger.Info(
+                    _logger.Warn((int)KafkaErrorCodes.KafkaStreamProviderBase,
                         "KafkaQueueAdapterReceiver - Fetching messages from kafka failed, tried to fetch {0} messages from offest {1}",
                         maxCount, CurrentOffset);
                     throw fetchingTask.Exception;
@@ -152,7 +152,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             catch (BufferUnderRunException)
             {
                 // This case the next message in the queue is too big for us to read, so we skip it
-                _logger.Info("KafkaQueueAdapterReceiver - A message in the Kafka queue was too big to pull, skipping over it. offset was {0}", CurrentOffset);
+                _logger.Error((int)KafkaErrorCodes.KafkaStreamProviderBase, $"KafkaQueueAdapterReceiver - A message in the Kafka queue was too big to pull, skipping over it. offset was {CurrentOffset}");
                 CurrentOffset++;
 
                 return new List<IBatchContainer>();
