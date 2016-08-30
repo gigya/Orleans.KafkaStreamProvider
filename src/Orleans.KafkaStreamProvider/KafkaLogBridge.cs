@@ -23,7 +23,7 @@ namespace Orleans.KafkaStreamProvider
 
         public KafkaLogBridge(Logger orleansLogger)
         {
-            if (orleansLogger == null) throw new ArgumentNullException("orleansLogger");
+            if (orleansLogger == null) throw new ArgumentNullException(nameof(orleansLogger));
 
             _orleansLogger = orleansLogger;
         }

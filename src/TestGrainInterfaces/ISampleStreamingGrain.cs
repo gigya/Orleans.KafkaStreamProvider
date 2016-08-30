@@ -40,14 +40,22 @@ namespace UnitTests.GrainInterfaces
         Task ClearNumberProduced();
         Task Produce();
     }
-
-    public interface ISampleStreaming_ConsumerGrain : IGrainWithGuidKey
+		
+    public interface ISampleStreaming_ConsumerGrain : IConsumerGrain
     {
         Task BecomeConsumer(Guid streamId, string streamNamespace, string providerToUse);
 
         Task StopConsuming();
-
+    }
+	
+    public interface IConsumerGrain: IGrainWithGuidKey
+    {
         Task<int> GetNumberConsumed();
+    }
+
+    public interface IImplicitConsumerGrain : IConsumerGrain
+    {
+
     }
 
     public interface ISampleStreaming_InlineConsumerGrain : ISampleStreaming_ConsumerGrain

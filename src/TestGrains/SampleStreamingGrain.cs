@@ -182,6 +182,52 @@ namespace UnitTests.Grains
         }
     }
 
+
+    [ImplicitStreamSubscription(StreamNamespace)]
+    public class ImplicitConsumerGrain : Grain, IImplicitConsumerGrain, IAsyncObserver<int>
+    {
+        public const string StreamNamespace= "ImplicitConsumerGrain";
+        internal int numConsumedItems=0;
+        internal Logger logger;
+        private StreamSubscriptionHandle<int> consumerHandle;
+
+        public override async Task OnActivateAsync()
+        {
+            logger = GetLogger("SampleStreaming_ConsumerGrain " + IdentityString);
+            logger.Info("OnActivateAsync");
+
+            IStreamProvider streamProvider = GetStreamProvider("KafkaProvider");
+            IAsyncStream<int> stream = streamProvider.GetStream<int>(this.GetPrimaryKey(), StreamNamespace);
+            consumerHandle = await stream.SubscribeAsync(this, lastToken);
+        }
+
+        private StreamSequenceToken lastToken=null;
+
+        public Task<int> GetNumberConsumed()
+        {
+            return Task.FromResult(numConsumedItems);
+        }
+
+        public Task OnNextAsync(int item, StreamSequenceToken token)
+        {
+            lastToken = token;
+            logger.Info($"Received an event {item}");
+            numConsumedItems++;
+            return TaskDone.Done;
+        }
+
+        public Task OnCompletedAsync()
+        {
+            return TaskDone.Done;
+        }
+
+        public Task OnErrorAsync(Exception ex)
+        {
+            return TaskDone.Done;
+        }
+    }
+
+
     public class SampleStreaming_InlineConsumerGrain : Grain, ISampleStreaming_InlineConsumerGrain
     {
         private IAsyncObservable<int> consumer;

@@ -6,9 +6,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Orleans;
 using Orleans.Runtime;
 using Orleans.Streams;
-using Orleans.TestingHost;
+using Orleans.TestingHost.Utils;
 using TestGrainInterfaces;
 using UnitTests.GrainInterfaces;
+using UnitTests.Grains;
 
 namespace Tester.StreamingTests
 {
@@ -133,6 +134,25 @@ namespace Tester.StreamingTests
             await consumer.StopConsuming();
         }
 
+        public async Task BatchTestLoadTestingWithImplicitSubscription()
+        {
+            var guid = Guid.NewGuid();
+            var producer = GrainClient.GrainFactory.GetGrain<IBatchProducerGrain>(guid);
+
+            var streamGuid = Guid.NewGuid();
+            await producer.BecomeProducer(streamGuid, ImplicitConsumerGrain.StreamNamespace, _streamProviderName);
+
+            var batchSize = 10;
+            await producer.StartPeriodicBatchProducing(batchSize);
+
+            await Task.Delay(TimeSpan.FromSeconds(3));
+            await producer.StopPeriodicBatchProducing();
+            _logger.Info("Producer produced {0} messages", await producer.GetNumberProduced());
+
+            var consumer = GrainClient.GrainFactory.GetGrain<IImplicitConsumerGrain>(streamGuid);
+            await TestingUtils.WaitUntilAsync(lastTry => CheckCounter(producer, consumer, lastTry), Timeout);
+        }
+
         public async Task BatchTestMultipleProducers(int numProducers, int batchSize)
         {
             List<IBatchProducerGrain> producersList = new List<IBatchProducerGrain>(numProducers);
@@ -229,7 +249,7 @@ namespace Tester.StreamingTests
             return await CheckCounter(numProduced, numConsumed, assertIsTrue);
         }
 
-        private async Task<bool> CheckCounter(int numProduced, ISampleStreaming_ConsumerGrain consumer, bool assertIsTrue)
+        private async Task<bool> CheckCounter(int numProduced, IConsumerGrain consumer, bool assertIsTrue)
         {
             var numConsumed = await consumer.GetNumberConsumed();
 
@@ -266,7 +286,7 @@ namespace Tester.StreamingTests
             return Task.FromResult(true);
         }        
 
-        private async Task<bool> CheckCounter(IBatchProducerGrain producer, ISampleStreaming_ConsumerGrain consumer, bool assertIsTrue)
+        private async Task<bool> CheckCounter(IBatchProducerGrain producer, IConsumerGrain consumer, bool assertIsTrue)
         {
             var numProduced = await producer.GetNumberProduced();
             var numConsumed = await consumer.GetNumberConsumed();

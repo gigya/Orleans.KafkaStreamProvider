@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Orleans.Runtime;
 using Orleans.TestingHost;
 using UnitTests.Tester;
 
@@ -16,6 +17,7 @@ namespace Tester.StreamingTests
         private const string KafkaStreamProviderName = "KafkaProvider";                 // must match what is in OrleansConfigurationForStreamingUnitTests.xml
 
         private readonly RewindingTestRunner _runner;
+        private static TestingSiloHost _host;
 
         public KafkaRewindingTests()
             : base( new TestingSiloOptions()
@@ -26,13 +28,14 @@ namespace Tester.StreamingTests
             })
         {
             _runner = new RewindingTestRunner(KafkaStreamProviderName, logger);
+            _host = this;
         }
 
         // Use ClassCleanup to run code after all tests in a class have run
         [ClassCleanup]
         public static void MyClassCleanup()
         {
-            StopAllSilos();
+            _host.StopAllSilos();
         }
 
         [TestInitialize]

@@ -26,7 +26,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private static readonly Timer TimerTimeToGetMessageFromKafka = Metric.Context("KafkaStreamProvider").Timer("Time To Get Message From Kafka", Unit.Custom("Fetches"));
         private static readonly Timer TimerTimeToCommitOffset = Metric.Context("KafkaStreamProvider").Timer("Time To Commit Offset", Unit.Custom("Commits"));
 
-        public QueueId Id { get; private set; }
+        public QueueId Id { get; }
 
         public long CurrentOffset { get; private set; }
 
@@ -34,11 +34,11 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             IKafkaBatchFactory factory, Logger logger)
         {            
             // input checks
-            if (queueId == null) throw new ArgumentNullException("queueId");
-            if (consumer == null) throw new ArgumentNullException("consumer");
-            if (factory == null) throw new ArgumentNullException("factory");
-            if (options == null) throw new ArgumentNullException("options");
-            if (logger == null) throw new ArgumentNullException("logger");
+            if (queueId == null) throw new ArgumentNullException(nameof(queueId));
+            if (consumer == null) throw new ArgumentNullException(nameof(consumer));
+            if (factory == null) throw new ArgumentNullException(nameof(factory));
+            if (options == null) throw new ArgumentNullException(nameof(options));
+            if (logger == null) throw new ArgumentNullException(nameof(logger));
 
             _options = options;
             Id = queueId;
@@ -55,12 +55,12 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             {
                 if (_options.ShouldInitWithLastOffset)
                 {
-                    CurrentOffset = await Task.Run(() => _consumer.FetchLastOffset());
+                    CurrentOffset = await _consumer.FetchLastOffset();
                     _logger.Verbose("KafkaQueueAdapterReceiver - Initialized with latest offset. Offset is {0}", CurrentOffset);
                 }
                 else
                 {
-                    CurrentOffset = await Task.Run(() => _consumer.FetchOffset(_options.ConsumerGroupName));
+                    CurrentOffset = await _consumer.FetchOffset(_options.ConsumerGroupName);
                     _logger.Verbose("KafkaQueueAdapterReceiver - Initialized with ConsumerGroupOffset offset. ConsumerGroup is {0} Offset is {1}", _options.ConsumerGroupName, CurrentOffset);
                 }                    
             }
@@ -79,8 +79,8 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 
             if (shouldCreate)
             {
-                CurrentOffset = await Task.Run(() => _consumer.FetchLastOffset());
-                await Task.Run(() => _consumer.UpdateOrCreateOffset(_options.ConsumerGroupName, CurrentOffset));
+                CurrentOffset = await _consumer.FetchLastOffset();
+                await _consumer.UpdateOrCreateOffset(_options.ConsumerGroupName, CurrentOffset);
                 _logger.Verbose("KafkaQueueAdapterReceiver - Offset was not found for ConsumerGroup {0}, saved the latest offset for the ConsumerGroup. Offset is {1}", _options.ConsumerGroupName, CurrentOffset);
             }
 
@@ -98,7 +98,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
                 {
                     fetchingTask = _consumer.FetchMessages(maxCount, CurrentOffset);
 
-                    await Task.Run(() => Task.WaitAny(fetchingTask, Task.Delay(_options.ReceiveWaitTimeInMs)));
+                    await Task.WhenAny(fetchingTask, Task.Delay(_options.ReceiveWaitTimeInMs));
                 }
 
                 // Checking that the task completed successfully
@@ -152,8 +152,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 
             using (TimerTimeToCommitOffset.NewContext())
             {
-                commitTask =
-                    Task.Run(() => _consumer.UpdateOrCreateOffset(_options.ConsumerGroupName, offsetToCommit));
+                commitTask = _consumer.UpdateOrCreateOffset(_options.ConsumerGroupName, offsetToCommit);
                 await Task.WhenAny(commitTask, Task.Delay(_options.ReceiveWaitTimeInMs));
             }
 
