@@ -81,13 +81,15 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
         private int _numOfCursorsCausingPressure;
 
         // Metrics
-        private static readonly Meter MeterCacheEvacuationsPerSecond = Metric.Context("KafkaStreamProvider").Meter("Cache Evacuations Per Second", Unit.Items);
-        private static readonly Counter CounterMessagesInCache = Metric.Context("KafkaStreamProvider").Counter("Messages In Cache", Unit.Items);
-        private static readonly Counter CounterNumberOfCursorsCausingPressure = Metric.Context("KafkaStreamProvider").Counter("Cursors causing pressure", Unit.Items);
+        private readonly Meter _meterCacheEvacuationsPerSecond;
+        private readonly Counter _counterMessagesInCache;
+        private readonly Counter _counterNumberOfCursorsCausingPressure;
 
         public QueueId Id { get; }
 
         public int Size => _cachedMessages.Count;
+        
+		public int MaxAddCount => _maxNumberToAdd;
 
         internal TimedQueueCacheItem FirstItem => _cachedMessages.First.Value;
 
@@ -95,6 +97,10 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
 
         public TimedQueueCache(QueueId queueId, TimeSpan cacheTimespan, int cacheSize, int numOfBuckets, Logger logger)
         {
+            _counterMessagesInCache = Metric.Context("KafkaStreamProvider").Counter($"Messages In Cache queueId:({queueId.GetNumericId()})", Unit.Items);
+            _meterCacheEvacuationsPerSecond = Metric.Context("KafkaStreamProvider").Meter($"Cache Evacuations Per Second queueId:({queueId.GetNumericId()})", Unit.Items);
+            _counterNumberOfCursorsCausingPressure = Metric.Context("KafkaStreamProvider").Counter($"Cursors causing pressure queueId:({queueId.GetNumericId()})", Unit.Items);
+
             Id = queueId;
             _cachedMessages = new LinkedList<TimedQueueCacheItem>();
 
@@ -104,8 +110,8 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
             _maxCacheSize = cacheSize;
             _cacheHistogramMaxBucketSize = Math.Max(_maxCacheSize / numOfBuckets, 1);
             _maxNumberToAdd = _cacheHistogramMaxBucketSize;
-            _cacheTimeSpan = cacheTimespan;            
-            _bucketTimeSpan = TimeSpan.FromMilliseconds(cacheTimespan.TotalMilliseconds / numOfBuckets);            
+            _cacheTimeSpan = cacheTimespan;
+            _bucketTimeSpan = TimeSpan.FromMilliseconds(cacheTimespan.TotalMilliseconds / numOfBuckets);
         }
 
         ~TimedQueueCache()
@@ -113,7 +119,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
             if (Id == null) return;
 
             // We are using the destructor to update the TimedQueueCache Metrics (currently this is the only point where we can do this)
-            if (CounterMessagesInCache != null && _cachedMessages != null)
+            if (_counterMessagesInCache != null && _cachedMessages != null)
             {
                 int numOfMessages = _cachedMessages.Count;
 
@@ -122,13 +128,16 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
                     Log(_logger, "TimedQueueCache for QueueId:{0}, Destroying the cache with {1} messages", Id.ToString(), numOfMessages);
                 }
 
-                CounterMessagesInCache.Decrement(Id.ToString(), numOfMessages);
+                _counterMessagesInCache.Decrement(Id.ToString(), numOfMessages);
             }
 
-            CounterNumberOfCursorsCausingPressure?.Decrement(Id.ToString(), _numOfCursorsCausingPressure);
+            if (_counterNumberOfCursorsCausingPressure != null)
+            {
+                _counterNumberOfCursorsCausingPressure.Decrement(Id.ToString(), _numOfCursorsCausingPressure);
+            }
         }
-
-         /// <summary>
+		
+        /// <summary>
         /// Because our bucket sizes our inconsistent (they are also dependant to time),
         /// we need to make sure that the cache doesn't take more messages than it can. 
         /// see the function CalculateMessagesToAdd 
@@ -137,21 +146,21 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
         {
             return _maxNumberToAdd;
         }
-
+		
         public bool IsUnderPressure()
         {
             // empty cache
             if (_cachedMessages.Count == 0)
             {
-                CounterNumberOfCursorsCausingPressure.Decrement(Id.ToString(), _numOfCursorsCausingPressure);
-                _numOfCursorsCausingPressure = 0;                
+                _counterNumberOfCursorsCausingPressure.Decrement(Id.ToString(), _numOfCursorsCausingPressure);
+                _numOfCursorsCausingPressure = 0;
                 return false;
             }
 
             // no cursors yet - zero consumers basically yet.
             if (_cacheCursorHistogram.Count == 0)
             {
-                CounterNumberOfCursorsCausingPressure.Decrement(Id.ToString(), _numOfCursorsCausingPressure);
+                _counterNumberOfCursorsCausingPressure.Decrement(Id.ToString(), _numOfCursorsCausingPressure);
                 _numOfCursorsCausingPressure = 0;
                 return false;
             }
@@ -159,7 +168,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
             // If the cache still has room, no problem of adding 
             if (Size < _maxCacheSize)
             {
-                CounterNumberOfCursorsCausingPressure.Decrement(Id.ToString(), _numOfCursorsCausingPressure);
+                _counterNumberOfCursorsCausingPressure.Decrement(Id.ToString(), _numOfCursorsCausingPressure);
                 _numOfCursorsCausingPressure = 0;
                 CalculateMessagesToAdd();
                 return false;
@@ -172,15 +181,15 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
             var currentCacheTimespan = DateTime.UtcNow - _cacheCursorHistogram[0].NewestMemberTimestamp;
             if (numCursorsInLastBucket > 0 || currentCacheTimespan <= _cacheTimeSpan)
             {
-                CounterNumberOfCursorsCausingPressure.Increment(Id.ToString(), numCursorsInLastBucket - _numOfCursorsCausingPressure);
+                _counterNumberOfCursorsCausingPressure.Increment(Id.ToString(), numCursorsInLastBucket - _numOfCursorsCausingPressure);
                 _numOfCursorsCausingPressure = numCursorsInLastBucket;
                 return true;
             }
 
             // Cache is full yet we can add messages, calculating how many messages we can put
-            CounterNumberOfCursorsCausingPressure.Decrement(Id.ToString(), _numOfCursorsCausingPressure);
+            _counterNumberOfCursorsCausingPressure.Decrement(Id.ToString(), _numOfCursorsCausingPressure);
             _numOfCursorsCausingPressure = 0;
-            
+
             CalculateMessagesToAdd();
             return false;
         }
@@ -199,7 +208,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
         {
             if (msgs == null) throw new ArgumentNullException(nameof(msgs));
 
-            Log(_logger, "TimedQueueCache for QueueId:{0}, AddToCache: added {1} items to cache.", Id.ToString(), msgs.Count);            
+            Log(_logger, "TimedQueueCache for QueueId:{0}, AddToCache: added {1} items to cache.", Id.ToString(), msgs.Count);
 
             foreach (var message in msgs)
             {
@@ -240,7 +249,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
                 LinkedListNode<TimedQueueCacheItem> firstMessage = _cachedMessages.First;
                 ResetCursor(cursor, ((EventSequenceToken)firstMessage.Value.SequenceToken).NextSequenceNumber());
                 return;
-            }            
+            }
 
             // Since we do not support finding a sequence of type x.y where y > 0, we round the token down
             var flooredToken = FloorSequenceToken(sequenceToken);
@@ -251,7 +260,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
                 ResetCursor(cursor, flooredToken);
                 return;
             }
-            
+
             // Check to see if offset is too old to be in cache
             if (flooredToken.Older(LastItem.SequenceToken))
             {
@@ -270,21 +279,21 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
         }
 
         private LinkedListNode<TimedQueueCacheItem> FindNodeBySequenceToken(StreamSequenceToken sequenceToken)
-        {                      
+        {
             // First we find a bucket where the node is in
             var sequenceBucket =
                 _cacheCursorHistogram.First(
                     bucket =>
                         !sequenceToken.Newer(bucket.NewestMember.Value.SequenceToken) &&
                         !sequenceToken.Older(bucket.OldestMember.Value.SequenceToken));
-            
+
             // Now that we have the bucket, we iterate on the members there starting from the newest in the bucket
             LinkedListNode<TimedQueueCacheItem> node = sequenceBucket.NewestMember;
             while (node != null && node.Value.SequenceToken.Newer(sequenceToken))
             {
                 // did we get to the end?
                 // node is the last message in the cache
-                if (node.Next == null) 
+                if (node.Next == null)
                     break;
 
                 // if sequenceId is between the two, take the lower
@@ -292,7 +301,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
                 {
                     node = node.Next;
                     break;
-                }                    
+                }
 
                 node = node.Next;
             }
@@ -354,7 +363,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
             Log(_logger, "TimedQueueCache for QueueId:{0}, UpdateCursor: {0} to item {1}", Id.ToString(), cursor, item.Value.Batch);
 
             // remove from previous bucket
-            cursor.NextElement.Value.CacheBucket.UpdateNumCursors(-1); 
+            cursor.NextElement.Value.CacheBucket.UpdateNumCursors(-1);
             cursor.Set(item);
 
             // add to next bucket
@@ -368,7 +377,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
             cursor.Set(item);
 
             // add to bucket
-            cursor.NextElement.Value.CacheBucket.UpdateNumCursors(1);  
+            cursor.NextElement.Value.CacheBucket.UpdateNumCursors(1);
         }
 
         internal void ResetCursor(TimedQueueCacheCursor cursor, StreamSequenceToken token)
@@ -416,7 +425,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
 
             _cachedMessages.AddFirst(newNode);
 
-            CounterMessagesInCache.Increment(Id.ToString(), 1);
+            _counterMessagesInCache.Increment(Id.ToString(), 1);
         }
 
         private DateTime GetTimestampForItem(IBatchContainer batch)
@@ -449,7 +458,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
                    (DateTime.UtcNow - LastItem.Timestamp) > _cacheTimeSpan)
             {
                 Log(_logger, "TimedQueueCache for QueueId:{0}, Add: last  message because of time expiration", Id.ToString());
-                
+
                 // Removing the last message in case its the last message in a bucket also causes the buckets removal
                 var removedBatchContainer = RemoveLastMessage();
                 removedMessages.Add(removedBatchContainer);
@@ -479,8 +488,8 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
                 _cacheCursorHistogram[0].OldestMemberTimestamp = LastItem.Timestamp;
             }
 
-            MeterCacheEvacuationsPerSecond.Mark(Id.ToString(), 1);
-            CounterMessagesInCache.Decrement(Id.ToString(), 1);
+            _meterCacheEvacuationsPerSecond.Mark(Id.ToString(), 1);
+            _counterMessagesInCache.Decrement(Id.ToString(), 1);
 
             return removedBatchContainer;
         }
@@ -510,10 +519,10 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
 
             return cacheBucket;
         }
-       
+
         internal static void Log(Logger logger, string format, params object[] args)
         {
-            logger.Verbose(format,  args);         
+            logger.Verbose(format, args);
         }
 
         public bool TryPurgeFromCache(out IList<IBatchContainer> purgedItems)
@@ -524,10 +533,10 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
 
         private StreamSequenceToken FloorSequenceToken(StreamSequenceToken token)
         {
-            if (!(token is EventSequenceToken)) return token;                        
-            EventSequenceToken tokenAsEventSequenceToken = (EventSequenceToken) token;
+            if (!(token is EventSequenceToken)) return token;
+            EventSequenceToken tokenAsEventSequenceToken = (EventSequenceToken)token;
             if (tokenAsEventSequenceToken.EventIndex == 0) return token;
-            
+
             EventSequenceToken flooredToken = new EventSequenceToken(tokenAsEventSequenceToken.SequenceNumber);
             return flooredToken;
         }
