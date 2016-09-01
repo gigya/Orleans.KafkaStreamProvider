@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Orleans;
 using Orleans.Runtime;
 using Orleans.TestingHost;
+using Orleans.TestingHost.Utils;
 using TestGrainInterfaces;
 using UnitTests.GrainInterfaces;
 

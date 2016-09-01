@@ -16,22 +16,19 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private readonly List<object> _events;
         private readonly Dictionary<string, object> _requestContext;
 
-        public Dictionary<string, object> BatchRequestContext
-        {
-            get { return _requestContext; }
-        }
+        public Dictionary<string, object> BatchRequestContext => _requestContext;
 
-        public Guid StreamGuid { get; private set; }
+        public Guid StreamGuid { get; }
 
-        public string StreamNamespace { get; private set; }
+        public string StreamNamespace { get; }
 
-        public StreamSequenceToken SequenceToken { get { return _sequenceToken; } }
+        public StreamSequenceToken SequenceToken => _sequenceToken;
 
         public string Timestamp { get; private set; }
 
         private KafkaBatchContainer(Guid streamId, string streamNamespace, List<object> events, Dictionary<string, object> requestContext)
         {
-            if (events == null) throw new ArgumentNullException("events", "Message contains no events");
+            if (events == null) throw new ArgumentNullException(nameof(events), "Message contains no events");
 
             StreamGuid = streamId;
             StreamNamespace = streamNamespace;
@@ -42,7 +39,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 
         private KafkaBatchContainer(Guid streamId, string streamNamespace, object singleEvent, Dictionary<string, object> requestContext)
         {
-            if (singleEvent == null) throw new ArgumentNullException("singleEvent");
+            if (singleEvent == null) throw new ArgumentNullException(nameof(singleEvent));
 
             StreamGuid = streamId;
             StreamNamespace = streamNamespace;

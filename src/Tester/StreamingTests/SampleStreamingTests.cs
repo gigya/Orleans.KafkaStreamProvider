@@ -26,7 +26,9 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Orleans;
+using Orleans.Runtime;
 using Orleans.TestingHost;
+using Orleans.TestingHost.Utils;
 using UnitTests.GrainInterfaces;
 using UnitTests.Tester;
 
@@ -45,6 +47,8 @@ namespace Tester.StreamingTests
         private Guid _streamId;
         private string _streamProvider;
 
+        private static TestingSiloHost _host;
+
         public SampleStreamingTests()
             : base(new TestingSiloOptions
             {                
@@ -53,13 +57,14 @@ namespace Tester.StreamingTests
                 SiloConfigFile = new FileInfo("OrleansConfigurationForStreamingUnitTests.xml")                
             })
         {
+            _host = this;
         }
 
         // Use ClassCleanup to run code after all tests in a class have run
         [ClassCleanup]
         public static void MyClassCleanup()
         {
-            StopAllSilos();
+            _host.StopAllSilos();
         }
 
         [TestCleanup]

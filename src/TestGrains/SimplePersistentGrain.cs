@@ -22,22 +22,15 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR TH
 */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Collections;
 using Orleans;
-using Orleans.CodeGeneration;
 using Orleans.Providers;
-using Orleans.Runtime;
 using UnitTests.GrainInterfaces;
 
 
 namespace UnitTests.Grains
 {
-    public class SimplePersistentGrain_State : GrainState
+    public class SimplePersistentGrain_State 
     {
         public int A { get; set; }
         public int B { get; set; }

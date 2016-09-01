@@ -29,11 +29,10 @@ using Orleans.Concurrency;
 using Orleans.Providers;
 using UnitTests.GrainInterfaces;
 using System.Globalization;
-using Orleans.CodeGeneration;
 
 namespace UnitTests.Grains
 {
-    public class SimpleGenericGrainState<T> : GrainState
+    public class SimpleGenericGrainState<T> 
     {
         public T A { get; set; }
         public T B { get; set; }
@@ -72,7 +71,7 @@ namespace UnitTests.Grains
         }
     }
 
-    public class SimpleGenericGrainUState<U> : GrainState
+    public class SimpleGenericGrainUState<U> 
     {
         public U A { get; set; }
         public U B { get; set; }
@@ -111,7 +110,7 @@ namespace UnitTests.Grains
         }
     }
 
-    public class SimpleGenericGrain2State<T, U> : GrainState
+    public class SimpleGenericGrain2State<T, U> 
     {
         public T A { get; set; }
         public U B { get; set; }
@@ -166,7 +165,7 @@ namespace UnitTests.Grains
             return Task.FromResult(retValue);
         }
     }
-    public class IGrainWithListFieldsState : GrainState
+    public class IGrainWithListFieldsState
     {
         public IList<string> Items { get; set; }
     }
@@ -193,7 +192,7 @@ namespace UnitTests.Grains
         }
     }
 
-    public class GenericGrainWithListFieldsState<T> : GrainState
+    public class GenericGrainWithListFieldsState<T> 
     {
         public IList<T> Items { get; set; }
     }
@@ -221,24 +220,24 @@ namespace UnitTests.Grains
         }
     }
 
-    public class GenericReaderWriterState<T> : GrainState
+    public class GenericReaderWriterState<T> 
     {
         public T Value { get; set; }
     }
     
 
-    public class GenericReader2State<TOne, TTwo> : GrainState
+    public class GenericReader2State<TOne, TTwo> 
     {
         public TOne Value1 { get; set; }
         public TTwo Value2 { get; set; }
     }
-    public class GenericReaderWriterGrain2State<TOne, TTwo> : GrainState
+    public class GenericReaderWriterGrain2State<TOne, TTwo> 
     {
         public TOne Value1 { get; set; }
         public TTwo Value2 { get; set; }
     }
 
-    public class GenericReader3State<TOne, TTwo, TThree> : GrainState
+    public class GenericReader3State<TOne, TTwo, TThree> 
     {
         public TOne Value1 { get; set; }
         public TTwo Value2 { get; set; }

@@ -21,27 +21,24 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private readonly Producer _producer;
 
         // Metrics
-        private readonly static Meter MeterProducedMessagesPerSecond = Metric.Context("KafkaStreamProvider").Meter("Produced Messages Per Second", Unit.Events);
+        private static readonly Meter MeterProducedMessagesPerSecond = Metric.Context("KafkaStreamProvider").Meter("Produced Messages Per Second", Unit.Events);
         private static readonly Histogram HistogramProducedMessageBatchSize = Metric.Context("KafkaStreamProvider").Histogram("Produced Message Batch Size", Unit.Events);
         private static readonly Timer TimerTimeToProduceMessage = Metric.Context("KafkaStreamProvider").Timer("Time To Produce Message", Unit.Custom("Produces"));
     
-        public bool IsRewindable { get { return true; } }
+        public bool IsRewindable => true;
 
-        public string Name { get; private set; }
+        public string Name { get; }
 
-        public StreamProviderDirection Direction
-        {
-            get { return StreamProviderDirection.ReadWrite; }
-        }
+        public StreamProviderDirection Direction => StreamProviderDirection.ReadWrite;
 
         public KafkaQueueAdapter(HashRingBasedStreamQueueMapper queueMapper, KafkaStreamProviderOptions options,
             string providerName, IKafkaBatchFactory batchFactory, Logger logger)
         {
-            if (options == null) throw new ArgumentNullException("options");
-            if (batchFactory == null) throw new ArgumentNullException("batchFactory");
-            if (queueMapper == null) throw new ArgumentNullException("queueMapper");
-            if (logger == null) throw new ArgumentNullException("logger");
-            if (string.IsNullOrEmpty(providerName)) throw new ArgumentNullException("providerName");
+            if (options == null) throw new ArgumentNullException(nameof(options));
+            if (batchFactory == null) throw new ArgumentNullException(nameof(batchFactory));
+            if (queueMapper == null) throw new ArgumentNullException(nameof(queueMapper));
+            if (logger == null) throw new ArgumentNullException(nameof(logger));
+            if (string.IsNullOrEmpty(providerName)) throw new ArgumentNullException(nameof(providerName));
 
             _options = options;
             _streamQueueMapper = queueMapper;
@@ -99,8 +96,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 
             using (TimerTimeToProduceMessage.NewContext())
             {
-                response = await Task.Run(() =>
-                                _producer.SendMessageAsync(_options.TopicName, messageToSend, (short) _options.AckLevel, partition: partitionId));
+                response = await _producer.SendMessageAsync(_options.TopicName, messageToSend, (short) _options.AckLevel, partition: partitionId);
             }
 
             // This is ackLevel != 0 check

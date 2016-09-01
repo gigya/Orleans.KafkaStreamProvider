@@ -53,11 +53,11 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private readonly string _consumerGroupName;
         private readonly string _topicName;
 
-        public IEnumerable<Uri> ConnectionStrings { get { return _connectionStrings; } }
+        public IEnumerable<Uri> ConnectionStrings => _connectionStrings;
         public int NumOfQueues { get; set; }
         public int CacheSize { get; set; }
-        public string ConsumerGroupName { get {return _consumerGroupName;}}
-        public string TopicName { get { return _topicName; }}
+        public string ConsumerGroupName => _consumerGroupName;
+        public string TopicName => _topicName;
         public int ProduceBatchSize { get; set; }
         public int TimeToWaitForBatchInMs { get; set; }
         public int MaxBytesInMessageSet { get; set; }
@@ -74,10 +74,10 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 
         public KafkaStreamProviderOptions(IEnumerable<Uri> connectionStrings, string topicName, string consumerGroupName)
         {
-            if (string.IsNullOrEmpty(topicName)) throw new ArgumentNullException("topicName");
-            if (string.IsNullOrEmpty(consumerGroupName)) throw new ArgumentNullException("consumerGroupName");
+            if (string.IsNullOrEmpty(topicName)) throw new ArgumentNullException(nameof(topicName));
+            if (string.IsNullOrEmpty(consumerGroupName)) throw new ArgumentNullException(nameof(consumerGroupName));
             var enumerableConnectionStrings = connectionStrings as IList<Uri> ?? connectionStrings.ToList();
-            if (connectionStrings == null || !enumerableConnectionStrings.Any()) throw new ArgumentNullException("connectionStrings");
+            if (connectionStrings == null || !enumerableConnectionStrings.Any()) throw new ArgumentNullException(nameof(connectionStrings));
 
             _connectionStrings = enumerableConnectionStrings;
             _topicName = topicName;
@@ -102,7 +102,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 
         public KafkaStreamProviderOptions(IProviderConfiguration config)
         {
-            if (config == null) throw new ArgumentNullException("config");
+            if (config == null) throw new ArgumentNullException(nameof(config));
 
             string rawConnectionStrings = GetRequiredParam(ConnectionStringsParam, config);
 

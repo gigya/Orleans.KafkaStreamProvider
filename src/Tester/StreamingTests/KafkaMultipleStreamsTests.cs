@@ -3,6 +3,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Orleans.Runtime;
 using Orleans.TestingHost;
 using UnitTests.StreamingTests;
 using UnitTests.Tester;
@@ -19,6 +20,7 @@ namespace Tester.StreamingTests
         private const string StreamNamespace = "KafkaSubscriptionMultipleStreamsTestsNamespace";
 
         private readonly MultipleStreamsTestRunner _runner;
+        private static TestingSiloHost _host;
 
         public KafkaMultipleStreamsTests()
             : base( new TestingSiloOptions()
@@ -29,13 +31,14 @@ namespace Tester.StreamingTests
             })
         {
             _runner = new MultipleStreamsTestRunner(KafkaStreamProviderName, logger);
+            _host = this;
         }
 
         // Use ClassCleanup to run code after all tests in a class have run
         [ClassCleanup]
         public static void MyClassCleanup()
         {
-            StopAllSilos();
+            _host.StopAllSilos();
         }
 
         [TestMethod, TestCategory("Functional"), TestCategory("KafkaStreamProvider"), TestCategory("Streaming")]

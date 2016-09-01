@@ -7,6 +7,7 @@ using Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache;
 using Orleans.Providers.Streams.Common;
 using Orleans.Runtime;
 using Orleans.Streams;
+using TestGrains;
 
 namespace Orleans.KafkaStreamProviderTest
 {
@@ -120,7 +121,7 @@ namespace Orleans.KafkaStreamProviderTest
 
             Exception placeholder;
 
-            var cursor = cache.GetCacheCursor(streamGuid, streamNamespace, batchMock1.Object.SequenceToken);
+            var cursor = cache.GetCacheCursor(new StreamKey(streamGuid, streamNamespace), batchMock1.Object.SequenceToken);
 
             Assert.AreEqual(3, cache.Size);
 
@@ -165,7 +166,7 @@ namespace Orleans.KafkaStreamProviderTest
             var cache = new TimedQueueCache(_defaultId, TimeSpan.FromSeconds(1), msgs.Count, _defaultCacheBucketNum, _logger);
             cache.AddToCache(msgs);
 
-            var cursor = cache.GetCacheCursor(streamGuid, streamNamespace, batchMock1.Object.SequenceToken);
+            var cursor = cache.GetCacheCursor(new StreamKey(streamGuid, streamNamespace), batchMock1.Object.SequenceToken);
 
             Task.Delay(TimeSpan.FromSeconds(2)).Wait();
 
@@ -187,7 +188,7 @@ namespace Orleans.KafkaStreamProviderTest
             var cache = new TimedQueueCache(_defaultId, TimeSpan.FromSeconds(1), msgs.Count, _defaultCacheBucketNum, _logger);
             cache.AddToCache(msgs);
 
-            var cursor = cache.GetCacheCursor(streamGuid, streamNamespace, batchMock2.Object.SequenceToken);
+            var cursor = cache.GetCacheCursor(new StreamKey(streamGuid, streamNamespace), batchMock2.Object.SequenceToken);
 
             Task.Delay(TimeSpan.FromSeconds(2)).Wait();
 
@@ -212,7 +213,7 @@ namespace Orleans.KafkaStreamProviderTest
             Task.Delay(TimeSpan.FromSeconds(2)).Wait();
 
             Assert.IsTrue(!cache.IsUnderPressure());
-            Assert.AreEqual(1, cache.MaxAddCount);
+            Assert.AreEqual(1, cache.GetMaxAddCount());
         }
 
         [TestMethod]
@@ -236,7 +237,7 @@ namespace Orleans.KafkaStreamProviderTest
             Task.Delay(TimeSpan.FromSeconds(2)).Wait();
 
             Assert.IsTrue(!cache.IsUnderPressure());
-            Assert.AreEqual(2, cache.MaxAddCount);
+            Assert.AreEqual(2, cache.GetMaxAddCount());
         }
 
         [TestMethod]
@@ -261,7 +262,7 @@ namespace Orleans.KafkaStreamProviderTest
 
             Exception placeholder;
 
-            var cursor = cache.GetCacheCursor(streamGuid, streamNamespace, batchMock1.Object.SequenceToken);
+            var cursor = cache.GetCacheCursor(new StreamKey(streamGuid, streamNamespace), batchMock1.Object.SequenceToken);
 
             Assert.AreEqual(5, cache.Size);
 
@@ -294,7 +295,7 @@ namespace Orleans.KafkaStreamProviderTest
 
             Exception placeholder;
 
-            var cursor = cache.GetCacheCursor(streamGuid, streamNamespace, batchMock5.Object.SequenceToken);
+            var cursor = cache.GetCacheCursor(new StreamKey(streamGuid, streamNamespace), batchMock5.Object.SequenceToken);
 
             Assert.AreEqual(6, cache.Size);
 
@@ -327,7 +328,7 @@ namespace Orleans.KafkaStreamProviderTest
 
             Exception placeholder;
 
-            var cursor = cache.GetCacheCursor(streamGuid, streamNamespace, batchMock1.Object.SequenceToken);
+            var cursor = cache.GetCacheCursor(new StreamKey(streamGuid, streamNamespace), batchMock1.Object.SequenceToken);
 
             Assert.AreEqual(5, cache.Size);
 

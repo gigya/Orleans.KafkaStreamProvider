@@ -85,35 +85,15 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
         private readonly Counter _counterMessagesInCache;
         private readonly Counter _counterNumberOfCursorsCausingPressure;
 
-        public QueueId Id { get; private set; }
+        public QueueId Id { get; }
 
-        public int Size
-        {
-            get { return _cachedMessages.Count; }
-        }
+        public int Size => _cachedMessages.Count;
+        
+		public int MaxAddCount => _maxNumberToAdd;
 
-        /// <summary>
-        /// Because our bucket sizes our inconsistent (they are also dependant to time),
-        /// we need to make sure that the cache doesn't take more messages than it can. 
-        /// see the function CalculateMessagesToAdd 
-        /// </summary>
-        public int MaxAddCount
-        {
-            get
-            {
-                return _maxNumberToAdd;
-            }
-        }
+        internal TimedQueueCacheItem FirstItem => _cachedMessages.First.Value;
 
-        internal TimedQueueCacheItem FirstItem
-        {
-            get { return _cachedMessages.First.Value; }
-        }
-
-        internal TimedQueueCacheItem LastItem
-        {
-            get { return _cachedMessages.Last.Value; }
-        }
+        internal TimedQueueCacheItem LastItem => _cachedMessages.Last.Value;
 
         public TimedQueueCache(QueueId queueId, TimeSpan cacheTimespan, int cacheSize, int numOfBuckets, Logger logger)
         {
@@ -136,7 +116,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
 
         ~TimedQueueCache()
         {
-            if (Id == null) return; ;
+            if (Id == null) return;
 
             // We are using the destructor to update the TimedQueueCache Metrics (currently this is the only point where we can do this)
             if (_counterMessagesInCache != null && _cachedMessages != null)
@@ -156,7 +136,17 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
                 _counterNumberOfCursorsCausingPressure.Decrement(Id.ToString(), _numOfCursorsCausingPressure);
             }
         }
-
+		
+        /// <summary>
+        /// Because our bucket sizes our inconsistent (they are also dependant to time),
+        /// we need to make sure that the cache doesn't take more messages than it can. 
+        /// see the function CalculateMessagesToAdd 
+        /// </summary>
+        public int GetMaxAddCount()
+        {
+            return _maxNumberToAdd;
+        }
+		
         public bool IsUnderPressure()
         {
             // empty cache
@@ -216,7 +206,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
 
         public virtual void AddToCache(IList<IBatchContainer> msgs)
         {
-            if (msgs == null) throw new ArgumentNullException("msgs");
+            if (msgs == null) throw new ArgumentNullException(nameof(msgs));
 
             Log(_logger, "TimedQueueCache for QueueId:{0}, AddToCache: added {1} items to cache.", Id.ToString(), msgs.Count);
 
@@ -226,16 +216,17 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
             }
         }
 
-        public virtual IQueueCacheCursor GetCacheCursor(Guid streamGuid, string streamNamespace, StreamSequenceToken token)
+        //public virtual IQueueCacheCursor GetCacheCursor(Guid streamGuid, string streamNamespace, StreamSequenceToken token)
+        public virtual IQueueCacheCursor GetCacheCursor(IStreamIdentity streamIdentity, StreamSequenceToken token)
         {
             if (token != null && !(token is EventSequenceToken))
             {
                 // Null token can come from a stream subscriber that is just interested to
                 // start consuming from latest (the most recent event added to the cache).
-                throw new ArgumentOutOfRangeException("token", "token must be of type EventSequenceToken");
+                throw new ArgumentOutOfRangeException(nameof(token), "token must be of type EventSequenceToken");
             }
 
-            var cursor = new TimedQueueCacheCursor(this, streamGuid, streamNamespace, _logger);
+            var cursor = new TimedQueueCacheCursor(this, streamIdentity.Guid, streamIdentity.Namespace, _logger);
             InitializeCursor(cursor, token);
             return cursor;
         }
@@ -330,7 +321,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
 
             batch = null;
 
-            if (cursor == null) throw new ArgumentNullException("cursor");
+            if (cursor == null) throw new ArgumentNullException(nameof(cursor));
 
             //if not set, try to set and then get next
             if (!cursor.IsSet)
@@ -403,7 +394,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
 
         private void Add(IBatchContainer batch, StreamSequenceToken sequenceToken)
         {
-            if (batch == null) throw new ArgumentNullException("batch");
+            if (batch == null) throw new ArgumentNullException(nameof(batch));
 
             var cacheBucket = GetOrCreateBucket();
 

@@ -24,10 +24,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
         internal LinkedListNode<TimedQueueCacheItem> NextElement { get; private set; }
         internal StreamSequenceToken SequenceToken { get; private set; }
 
-        internal bool IsSet
-        {
-            get { return NextElement != null; }
-        }
+        internal bool IsSet => NextElement != null;
 
         internal void Reset(StreamSequenceToken token)
         {
@@ -45,7 +42,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
         {
             if (cache == null)
             {
-                throw new ArgumentNullException("cache");
+                throw new ArgumentNullException(nameof(cache));
             }
             _cache = cache;
             _streamGuid = streamGuid;
@@ -105,7 +102,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
         public override string ToString()
         {
             return string.Format("<TimedQueueCacheCursor: Element={0}, SequenceToken={1}>",
-                NextElement != null ? NextElement.Value.Batch.ToString() : "null", SequenceToken != null ? SequenceToken.ToString() : "null");
+                NextElement != null ? NextElement.Value.Batch.ToString() : "null", SequenceToken?.ToString() ?? "null");
         }
 
         public void Refresh()
@@ -114,6 +111,11 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
             {
                 _cache.InitializeCursor(this, SequenceToken);
             }
+        }
+
+        public void RecordDeliveryFailure()
+        {
+            _logger.Warn(0, "Delivery has failed");
         }
     }
 }
