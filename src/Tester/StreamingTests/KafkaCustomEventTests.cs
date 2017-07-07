@@ -169,7 +169,7 @@ namespace Tester.StreamingTests
                 SiloConfigFile = new FileInfo("OrleansConfigurationForStreamingUnitTests.xml"),
             })
         {
-            _runner = new CustomEventTestRunner(KafkaStreamProviderName, logger);
+            _runner = new CustomEventTestRunner(KafkaStreamProviderName, Client.Logger);
             _host = this;
         }
 
@@ -183,7 +183,7 @@ namespace Tester.StreamingTests
         [TestMethod, TestCategory("Functional"), TestCategory("KafkaStreamProvider"), TestCategory("Streaming")]
         public async Task SimpleCustomEventTaskTest()
         {
-            logger.Info("************************ SimpleCustomEventTask *********************************");
+            Client.Logger.Info("************************ SimpleCustomEventTask *********************************");
             string valueToSend = @"
                 event=newComment& 
                 eventData=[{ 

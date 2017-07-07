@@ -44,19 +44,19 @@ namespace UnitTests.Grains
         {
             hostingGrain.logger.Info("OnNextAsync(item={0}, token={1})", item, token != null ? token.ToString() : "null");
             hostingGrain.numConsumedItems++;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }       
 
         public Task OnCompletedAsync()
         {
             hostingGrain.logger.Info("OnCompletedAsync()");
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task OnErrorAsync(Exception ex)
         {
             hostingGrain.logger.Info("OnErrorAsync({0})", ex);
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
     }
 
@@ -72,7 +72,7 @@ namespace UnitTests.Grains
             logger = base.GetLogger("SampleStreaming_ProducerGrain " + base.IdentityString);
             logger.Info("OnActivateAsync");
             numProducedItems = 0;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task BecomeProducer(Guid streamId, string streamNamespace, string providerToUse)
@@ -80,14 +80,14 @@ namespace UnitTests.Grains
             logger.Info("BecomeProducer");
             IStreamProvider streamProvider = base.GetStreamProvider(providerToUse);
             producer = streamProvider.GetStream<int>(streamId, streamNamespace);
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task StartPeriodicProducing()
         {
             logger.Info("StartPeriodicProducing");
             producerTimer = base.RegisterTimer(TimerCallback, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(1));
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task StopPeriodicProducing()
@@ -95,7 +95,7 @@ namespace UnitTests.Grains
             logger.Info("StopPeriodicProducing");
             producerTimer.Dispose();
             producerTimer = null;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task<int> GetNumberProduced()
@@ -107,7 +107,7 @@ namespace UnitTests.Grains
         public Task ClearNumberProduced()
         {
             numProducedItems = 0;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task Produce()
@@ -117,7 +117,7 @@ namespace UnitTests.Grains
 
         private Task TimerCallback(object state)
         {
-            return producerTimer != null? Fire(): TaskDone.Done;
+            return producerTimer != null? Fire(): Task.CompletedTask;
         }
 
         private Task Fire([CallerMemberName] string caller = null)
@@ -130,7 +130,7 @@ namespace UnitTests.Grains
         public override Task OnDeactivateAsync()
         {
             logger.Info("OnDeactivateAsync");
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
     }
 
@@ -148,7 +148,7 @@ namespace UnitTests.Grains
             logger.Info("OnActivateAsync");
             numConsumedItems = 0;
             consumerHandle = null;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public async Task BecomeConsumer(Guid streamId, string streamNamespace, string providerToUse)
@@ -178,7 +178,7 @@ namespace UnitTests.Grains
         public override Task OnDeactivateAsync()
         {
             logger.Info("OnDeactivateAsync");
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
     }
 
@@ -213,17 +213,17 @@ namespace UnitTests.Grains
             lastToken = token;
             logger.Info($"Received an event {item}");
             numConsumedItems++;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task OnCompletedAsync()
         {
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task OnErrorAsync(Exception ex)
         {
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
     }
 
@@ -241,7 +241,7 @@ namespace UnitTests.Grains
             logger.Info( "OnActivateAsync" );
             numConsumedItems = 0;
             consumerHandle = null;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public async Task BecomeConsumer(Guid streamId, string streamNamespace, string providerToUse)
@@ -272,25 +272,25 @@ namespace UnitTests.Grains
         {
             logger.Info( "OnNextAsync({0}{1})", item, token != null ? token.ToString() : "null" );
             numConsumedItems++;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task OnCompletedAsync()
         {
             logger.Info( "OnCompletedAsync()" );
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task OnErrorAsync( Exception ex )
         {
             logger.Info( "OnErrorAsync({0})", ex );
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public override Task OnDeactivateAsync()
         {
             logger.Info("OnDeactivateAsync");
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
     }
 }

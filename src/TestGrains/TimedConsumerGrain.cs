@@ -29,13 +29,13 @@ namespace TestGrains
         public Task OnCompletedAsync()
         {
             _hostingGrain.Logger.Info("OnCompletedAsync()");
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task OnErrorAsync(Exception ex)
         {
             _hostingGrain.Logger.Info("OnErrorAsync({0})", ex);
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
     }
 
@@ -56,7 +56,7 @@ namespace TestGrains
             NumConsumedItems = 0;
             _consumerHandle = null;
             ReceivedTokens = new Dictionary<int, StreamSequenceToken>();
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public async Task<StreamSubscriptionHandle<int>> BecomeConsumer(Guid streamId, string streamNamespace, StreamSequenceToken token, TimeSpan timeToConsume, string providerToUse)
@@ -93,7 +93,7 @@ namespace TestGrains
         public override Task OnDeactivateAsync()
         {
             Logger.Info("OnDeactivateAsync");
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
     }
 }

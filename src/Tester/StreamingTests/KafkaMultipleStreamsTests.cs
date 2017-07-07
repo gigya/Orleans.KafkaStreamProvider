@@ -30,7 +30,7 @@ namespace Tester.StreamingTests
                 SiloConfigFile = new FileInfo("OrleansConfigurationForStreamingUnitTests.xml"),
             })
         {
-            _runner = new MultipleStreamsTestRunner(KafkaStreamProviderName, logger);
+            _runner = new MultipleStreamsTestRunner(KafkaStreamProviderName, Client.Logger);
             _host = this;
         }
 
@@ -44,7 +44,7 @@ namespace Tester.StreamingTests
         [TestMethod, TestCategory("Functional"), TestCategory("KafkaStreamProvider"), TestCategory("Streaming")]
         public async Task MultipleStreamsSameNamespaceTest()
         {
-            logger.Info("************************ KafkaMultipleStreamsSameNamespace *********************************");
+            Client.Logger.Info("************************ KafkaMultipleStreamsSameNamespace *********************************");
             await _runner.MultipleStreamsSameNamespaceTest(StreamNamespace);
         }
 
@@ -52,35 +52,35 @@ namespace Tester.StreamingTests
         public async Task MultipleStreamsDifferentNamespaceTest()
         {
             // TODO: EranO you want to look at this
-            logger.Info("************************ KafkaMultipleStreamsDifferentNamespace *********************************");
+            Client.Logger.Info("************************ KafkaMultipleStreamsDifferentNamespace *********************************");
             await _runner.MultipleStreamsDifferentNamespaceTest();
         }
 
         [TestMethod, TestCategory("Functional"), TestCategory("KafkaStreamProvider"), TestCategory("Streaming")]
         public async Task MultipleStreamsDifferentNamespcaeDifferentConsumers()
         {
-            logger.Info("************************ MultipleStreamsDifferentNamespcaeDifferentConsumers *********************************");
+            Client.Logger.Info("************************ MultipleStreamsDifferentNamespcaeDifferentConsumers *********************************");
             await _runner.MultipleStreamsDifferentNamespcaeDifferentConsumers();
         }
 
         [TestMethod, TestCategory("Functional"), TestCategory("KafkaStreamProvider"), TestCategory("Streaming")]
         public async Task MultipleProducersSameGrainSameNamespaceDifferentConsumers()
         {
-            logger.Info("************************ MultipleProducersSameGrainSameNamespaceDifferentConsumers *********************************");
+            Client.Logger.Info("************************ MultipleProducersSameGrainSameNamespaceDifferentConsumers *********************************");
             await _runner.MultipleProducersSameGrainSameNamespaceDifferentConsumers();
         }
 
         [TestMethod, TestCategory("Functional"), TestCategory("KafkaStreamProvider"), TestCategory("Streaming")]
         public async Task MultipleProducersSameGrainDifferentNamespaceDifferentConsumers()
         {
-            logger.Info("************************ MultipleProducersSameGrainDifferentNamespaceDifferentConsumers *********************************");
+            Client.Logger.Info("************************ MultipleProducersSameGrainDifferentNamespaceDifferentConsumers *********************************");
             await _runner.MultipleProducersSameGrainDifferentNamespaceDifferentConsumers();
         }
 
         [TestMethod, TestCategory("Functional"), TestCategory("KafkaStreamProvider"), TestCategory("Streaming")]
         public async Task MultipleProducersSameGrainDifferentNamespaceSameConsumer()
         {
-            logger.Info("************************ MultipleProducersSameGrainDifferentNamespaceSameConsumer *********************************");
+            Client.Logger.Info("************************ MultipleProducersSameGrainDifferentNamespaceSameConsumer *********************************");
             await _runner.MultipleProducersSameGrainDifferentNamespaceSameConsumer();
         }
     }

@@ -22,7 +22,7 @@ namespace TestGrains
             Logger = GetLogger("CustomEventProducerGrain " + IdentityString);
             Logger.Info("OnActivateAsync");
             _numProducedItems = 0;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task BecomeProducer(Guid streamId, string streamNamespace, string providerToUse)
@@ -30,7 +30,7 @@ namespace TestGrains
             Logger.Info("BecomeProducer");
             IStreamProvider streamProvider = GetStreamProvider(providerToUse);
             _producer = streamProvider.GetStream<T>(streamId, streamNamespace);
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task StartPeriodicBatchProducing(int batchSize, T valueToProduce)
@@ -38,12 +38,12 @@ namespace TestGrains
             Logger.Info("StartPeriodicProducing");
             Tuple<int, T> batchValueTuple = new Tuple<int, T>(batchSize, valueToProduce);
             _producerTimer = RegisterTimer(TimerCallback, batchValueTuple, TimeSpan.Zero, TimeSpan.FromMilliseconds(1));
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         private Task TimerCallback(object state)
         {
-            return _producerTimer != null ? Fire((Tuple<int,T>)state) : TaskDone.Done;
+            return _producerTimer != null ? Fire((Tuple<int,T>)state) : Task.CompletedTask;
         }
 
         public Task StopPeriodicBatchProducing()
@@ -51,7 +51,7 @@ namespace TestGrains
             Logger.Info("StopPeriodicProducing");
             _producerTimer.Dispose();
             _producerTimer = null;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task<int> GetNumberProduced()
@@ -63,7 +63,7 @@ namespace TestGrains
         public Task ClearNumberProduced()
         {
             _numProducedItems = 0;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task Produce(int batchSize, T valueToProduce)

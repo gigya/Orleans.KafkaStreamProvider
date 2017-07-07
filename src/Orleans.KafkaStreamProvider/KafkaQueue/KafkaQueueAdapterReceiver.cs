@@ -8,6 +8,7 @@ using Metrics;
 using Orleans.Providers.Streams.Common;
 using Orleans.Runtime;
 using Orleans.Streams;
+using Orleans.Serialization;
 
 namespace Orleans.KafkaStreamProvider.KafkaQueue
 {
@@ -18,13 +19,14 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private readonly IKafkaBatchFactory _factory;
         private readonly Logger _logger;
         private readonly KafkaStreamProviderOptions _options;
+        private readonly SerializationManager _serializationManager;
 
         // Metrics
-        private static readonly Meter MeterConsumedMessagesPerSecond = Metric.Context("KafkaStreamProvider").Meter("Consumed Messages Per Second", Unit.Events);
-        private static readonly Histogram HistogramConsumedMessagesPerFetch = Metric.Context("KafkaStreamProvider").Histogram("Consumed Messages Per Fetch", Unit.Custom("Messages"));
-        private static readonly Counter CounterActiveReceivers = Metric.Context("KafkaStreamProvider").Counter("Active Receivers", Unit.Custom("Receivers"));
-        private static readonly Timer TimerTimeToGetMessageFromKafka = Metric.Context("KafkaStreamProvider").Timer("Time To Get Message From Kafka", Unit.Custom("Fetches"));
-        private static readonly Timer TimerTimeToCommitOffset = Metric.Context("KafkaStreamProvider").Timer("Time To Commit Offset", Unit.Custom("Commits"));
+        private static readonly Meter MeterConsumedMessagesPerSecond = Metrics.Metric.Context("KafkaStreamProvider").Meter("Consumed Messages Per Second", Unit.Events);
+        private static readonly Histogram HistogramConsumedMessagesPerFetch = Metrics.Metric.Context("KafkaStreamProvider").Histogram("Consumed Messages Per Fetch", Unit.Custom("Messages"));
+        private static readonly Counter CounterActiveReceivers = Metrics.Metric.Context("KafkaStreamProvider").Counter("Active Receivers", Unit.Custom("Receivers"));
+        private static readonly Timer TimerTimeToGetMessageFromKafka = Metrics.Metric.Context("KafkaStreamProvider").Timer("Time To Get Message From Kafka", Unit.Custom("Fetches"));
+        private static readonly Timer TimerTimeToCommitOffset = Metrics.Metric.Context("KafkaStreamProvider").Timer("Time To Commit Offset", Unit.Custom("Commits"));
         private readonly Counter _counterCurrentOffset;
 
         public QueueId Id { get; }
@@ -41,18 +43,20 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             }
         }
 
-        public KafkaQueueAdapterReceiver(QueueId queueId, IManualConsumer consumer, KafkaStreamProviderOptions options,
+        public KafkaQueueAdapterReceiver(SerializationManager serializationManager, QueueId queueId, IManualConsumer consumer, KafkaStreamProviderOptions options,
             IKafkaBatchFactory factory, Logger logger)
         {
             // input checks
             if (queueId == null) throw new ArgumentNullException(nameof(queueId));
+            if (serializationManager == null) throw new ArgumentNullException(nameof(serializationManager));
             if (consumer == null) throw new ArgumentNullException(nameof(consumer));
             if (factory == null) throw new ArgumentNullException(nameof(factory));
             if (options == null) throw new ArgumentNullException(nameof(options));
             if (logger == null) throw new ArgumentNullException(nameof(logger));
 
-            _counterCurrentOffset = Metric.Context("KafkaStreamProvider").Counter($"CurrentOffset queueId:({queueId.GetNumericId()})", unit:  Unit.Custom("Log"));
-       
+            _counterCurrentOffset = Metrics.Metric.Context("KafkaStreamProvider").Counter($"CurrentOffset queueId:({queueId.GetNumericId()})", unit:  Unit.Custom("Log"));
+
+            _serializationManager = serializationManager;
             _options = options;
             Id = queueId;
             _consumer = consumer;
@@ -135,7 +139,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
                 }
 
                 var messages = fetchingTask.Result.ToList();
-                batches = messages.Select(m => _factory.FromKafkaMessage(m, m.Meta.Offset)).ToList();
+                batches = messages.Select(m => _factory.FromKafkaMessage(m, m.Meta.Offset, _serializationManager)).ToList();
 
                 // No batches, we are done here..
                 if (batches.Count <= 0) return batches;

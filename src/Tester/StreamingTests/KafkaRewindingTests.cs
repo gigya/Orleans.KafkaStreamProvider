@@ -27,7 +27,7 @@ namespace Tester.StreamingTests
                 SiloConfigFile = new FileInfo("OrleansConfigurationForRewinding.xml"),
             })
         {
-            _runner = new RewindingTestRunner(KafkaStreamProviderName, logger);
+            _runner = new RewindingTestRunner(KafkaStreamProviderName, Client.Logger);
             _host = this;
         }
 
@@ -49,42 +49,42 @@ namespace Tester.StreamingTests
         [TestMethod]
         public async Task SubscribingWithOldSequenceToken()
         {
-            logger.Info("************************ KafkaMultipleStreamsSameNamespace *********************************");
+            Client.Logger.Info("************************ KafkaMultipleStreamsSameNamespace *********************************");
             await _runner.SubscribingWithOldSequenceToken();
         }
 
         [TestMethod]
         public async Task SubscribingWithTooOldSequenceToken()
         {
-            logger.Info("************************ SubscribingWithTooOldSequenceToken *********************************");
+            Client.Logger.Info("************************ SubscribingWithTooOldSequenceToken *********************************");
             await _runner.SubscribingWithTooOldSequenceToken();
         }
 
         [TestMethod]
         public async Task SubscribingWithOldSequenceTokenForFirstTime()
         {
-            logger.Info("************************ SubscribingWithOldSequenceTokenForFirstTime *********************************");
+            Client.Logger.Info("************************ SubscribingWithOldSequenceTokenForFirstTime *********************************");
             await _runner.SubscribingWithTooOldSequenceTokenForFirstTime();            
         }
 
         [TestMethod]
         public async Task SubscribingMultipleConsumersDifferentTokens()
         {
-            logger.Info("************************ SubscribingMultipleConsumersDifferentTokens *********************************");
+            Client.Logger.Info("************************ SubscribingMultipleConsumersDifferentTokens *********************************");
             await _runner.SubscribingMultipleConsumersDifferentTokens();
         }
 
         [TestMethod]
         public async Task SubscribingWithOldSequenceTokenAfterBatchSending()
         {
-            logger.Info("************************ SubscribingWithOldSequenceTokenAfterBatchSending *********************************");
+            Client.Logger.Info("************************ SubscribingWithOldSequenceTokenAfterBatchSending *********************************");
             await _runner.SubscribingWithOldSequenceTokenAfterBatchSending();
         }
 
         [TestMethod]
         public async Task SubscribingWithOldSequenceTokenAfterBatchSendingOnlyOneBatch()
         {
-            logger.Info("************************ SubscribingWithOldSequenceTokenAfterBatchSending *********************************");
+            Client.Logger.Info("************************ SubscribingWithOldSequenceTokenAfterBatchSending *********************************");
             await _runner.SubscribingWithOldSequenceTokenAfterBatchSendingOnlyOneBatch();
         }     
     }

@@ -22,19 +22,19 @@ namespace TestGrains
             _hostingGrain.NumConsumedItems++;
             _hostingGrain.LastConsumedItem = item;
 
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task OnCompletedAsync()
         {
             _hostingGrain.Logger.Info("OnCompletedAsync()");
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task OnErrorAsync(Exception ex)
         {
             _hostingGrain.Logger.Info("OnErrorAsync({0})", ex);
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
     }
 
@@ -53,7 +53,7 @@ namespace TestGrains
             Logger.Info("OnActivateAsync");
             NumConsumedItems = 0;
             _consumerHandle = null;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public async Task BecomeConsumer(Guid streamId, string streamNamespace, string providerToUse)
@@ -83,7 +83,7 @@ namespace TestGrains
         public override Task OnDeactivateAsync()
         {
             Logger.Info("OnDeactivateAsync");
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task<T> GetLastConsumedItem()

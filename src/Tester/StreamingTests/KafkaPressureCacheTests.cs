@@ -28,7 +28,7 @@ namespace Tester.StreamingTests
                 SiloConfigFile = new FileInfo("OrleansConfigurationForPressureTests.xml"),
             })
         {
-            _runner = new PressuredCacheTestRunner(KafkaStreamProviderName, logger);
+            _runner = new PressuredCacheTestRunner(KafkaStreamProviderName, Client.Logger);
             _host = this;
         }
 
@@ -42,28 +42,28 @@ namespace Tester.StreamingTests
         [TestMethod]
         public async Task CacheIsUnderPressureDueToTimeSpanGuarantee()
         {
-            logger.Info("************************ CacheIsUnderPressureDueToTimeSpanGuarantee *********************************");
+            Client.Logger.Info("************************ CacheIsUnderPressureDueToTimeSpanGuarantee *********************************");
             await _runner.CacheIsUnderPressureDueToTimeSpanGuarantee();
         }
 
         [TestMethod]
         public async Task CacheIsUnderPressreDueToLateSubscriber()
         {
-            logger.Info("************************ CacheIsUnderPressreDueToLateSubscriber *********************************");
+            Client.Logger.Info("************************ CacheIsUnderPressreDueToLateSubscriber *********************************");
             await _runner.CacheIsUnderPressreDueToLateSubscriber();
         }
 
         [TestMethod]
         public async Task CacheIsOvertimedDueToSlowConsumer()
         {
-            logger.Info("************************ CacheIsOvertimedDueToSlowConsumer *********************************");
+            Client.Logger.Info("************************ CacheIsOvertimedDueToSlowConsumer *********************************");
             await _runner.CacheIsOvertimedDueToSlowConsumer();
         }
 
         [TestMethod]
         public async Task CacheIsUnderPressureDueToSlowConsumer()
         {
-            logger.Info("************************ CacheIsOvertimedDueToSlowConsumer *********************************");
+            Client.Logger.Info("************************ CacheIsOvertimedDueToSlowConsumer *********************************");
             await _runner.CacheIsUnderPressureDueToSlowConsumer();
         }
     }

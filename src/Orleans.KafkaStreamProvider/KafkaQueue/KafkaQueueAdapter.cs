@@ -8,6 +8,7 @@ using KafkaNet.Protocol;
 using Metrics;
 using Orleans.Runtime;
 using Orleans.Streams;
+using Orleans.Serialization;
 
 namespace Orleans.KafkaStreamProvider.KafkaQueue
 {
@@ -19,32 +20,31 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private readonly Logger _logger;
         private readonly KafkaStreamProviderOptions _options;
         private readonly Producer _producer;
+        private readonly SerializationManager _serializationManager;
 
         // Metrics
-        private static readonly Meter MeterProducedMessagesPerSecond = Metric.Context("KafkaStreamProvider").Meter("Produced Messages Per Second", Unit.Events);
-        private static readonly Histogram HistogramProducedMessageBatchSize = Metric.Context("KafkaStreamProvider").Histogram("Produced Message Batch Size", Unit.Events);
-        private static readonly Timer TimerTimeToProduceMessage = Metric.Context("KafkaStreamProvider").Timer("Time To Produce Message", Unit.Custom("Produces"));
-    
+        private static readonly Meter MeterProducedMessagesPerSecond = Metrics.Metric.Context("KafkaStreamProvider").Meter("Produced Messages Per Second", Unit.Events);
+        private static readonly Histogram HistogramProducedMessageBatchSize = Metrics.Metric.Context("KafkaStreamProvider").Histogram("Produced Message Batch Size", Unit.Events);
+        private static readonly Timer TimerTimeToProduceMessage = Metrics.Metric.Context("KafkaStreamProvider").Timer("Time To Produce Message", Unit.Custom("Produces"));
+
         public bool IsRewindable => true;
 
         public string Name { get; }
 
         public StreamProviderDirection Direction => StreamProviderDirection.ReadWrite;
 
-        public KafkaQueueAdapter(HashRingBasedStreamQueueMapper queueMapper, KafkaStreamProviderOptions options,
-            string providerName, IKafkaBatchFactory batchFactory, Logger logger)
+        public KafkaQueueAdapter(SerializationManager serializationManager, HashRingBasedStreamQueueMapper queueMapper, 
+            KafkaStreamProviderOptions options, string providerName, IKafkaBatchFactory batchFactory, Logger logger)
         {
-            if (options == null) throw new ArgumentNullException(nameof(options));
-            if (batchFactory == null) throw new ArgumentNullException(nameof(batchFactory));
-            if (queueMapper == null) throw new ArgumentNullException(nameof(queueMapper));
-            if (logger == null) throw new ArgumentNullException(nameof(logger));
             if (string.IsNullOrEmpty(providerName)) throw new ArgumentNullException(nameof(providerName));
 
-            _options = options;
-            _streamQueueMapper = queueMapper;
             Name = providerName;
-            _batchFactory = batchFactory;
-            _logger = logger;
+
+            _serializationManager = serializationManager ?? throw new ArgumentNullException(nameof(serializationManager));
+            _options = options ?? throw new ArgumentNullException(nameof(options));
+            _streamQueueMapper = queueMapper ?? throw new ArgumentNullException(nameof(queueMapper));
+            _batchFactory = batchFactory ?? throw new ArgumentNullException(nameof(batchFactory));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
             // Creating a producer
             KafkaOptions kafkaOptions = new KafkaOptions(_options.ConnectionStrings.ToArray())
@@ -69,7 +69,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 
             // Creating a receiver
             var manualConsumer = new ManualConsumer(partitionId, _options.TopicName, _gateway, clientName, _options.MaxBytesInMessageSet);
-            var receiverToReturn = new KafkaQueueAdapterReceiver(queueId, manualConsumer, _options, _batchFactory, _logger);
+            var receiverToReturn = new KafkaQueueAdapterReceiver(_serializationManager, queueId, manualConsumer, _options, _batchFactory, _logger);
 
             return receiverToReturn;
         }
@@ -83,7 +83,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             _logger.Verbose("KafkaQueueAdapter - For StreamId: {0}, StreamNamespace:{1} using partition {2}", streamGuid, streamNamespace, partitionId);
 
             var enumeratedEvents = events.ToList();
-            var payload = _batchFactory.ToKafkaMessage(streamGuid, streamNamespace, enumeratedEvents.AsEnumerable(), requestContext);            
+            var payload = _batchFactory.ToKafkaMessage(streamGuid, streamNamespace, enumeratedEvents.AsEnumerable(), requestContext, _serializationManager);            
             if (payload == null)
             {
                 _logger.Info("The batch factory returned a faulty message, the message was not sent");

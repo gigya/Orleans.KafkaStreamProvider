@@ -76,7 +76,7 @@ namespace Tester.StreamingTests
         [TestMethod, TestCategory("BVT"), TestCategory("Functional"), TestCategory("Streaming")]
         public async Task SampleStreamingTests_1()
         {
-            logger.Info("************************ SampleStreamingTests_1 *********************************");
+            Client.Logger.Info("************************ SampleStreamingTests_1 *********************************");
             _streamId = Guid.NewGuid();
             _streamProvider = KafkaStreamProviderName;
             await StreamingTests_Consumer_Producer(_streamId, _streamProvider);
@@ -85,7 +85,7 @@ namespace Tester.StreamingTests
         [TestMethod, TestCategory("Functional"), TestCategory("Streaming")]
         public async Task SampleStreamingTests_2()
         {
-            logger.Info("************************ SampleStreamingTests_2 *********************************");
+            Client.Logger.Info("************************ SampleStreamingTests_2 *********************************");
             _streamId = Guid.NewGuid();
             _streamProvider = KafkaStreamProviderName;
             await StreamingTests_Producer_Consumer(_streamId, _streamProvider);
@@ -94,7 +94,7 @@ namespace Tester.StreamingTests
         [TestMethod, TestCategory("Functional"), TestCategory("Streaming" )]
         public async Task SampleStreamingTests_3()
         {
-            logger.Info("************************ SampleStreamingTests_3 *********************************" );
+            Client.Logger.Info("************************ SampleStreamingTests_3 *********************************" );
             _streamId = Guid.NewGuid();
             _streamProvider = KafkaStreamProviderName;
             await StreamingTests_Producer_InlineConsumer(_streamId, _streamProvider );
@@ -166,7 +166,7 @@ namespace Tester.StreamingTests
         {
             var numProduced = await producer.GetNumberProduced();
             var numConsumed = await consumer.GetNumberConsumed();
-            logger.Info("CheckCounters: numProduced = {0}, numConsumed = {1}", numProduced, numConsumed);
+            Client.Logger.Info("CheckCounters: numProduced = {0}, numConsumed = {1}", numProduced, numConsumed);
             if (assertIsTrue)
             {
                 Assert.AreEqual(numProduced, numConsumed, String.Format("numProduced = {0}, numConsumed = {1}", numProduced, numConsumed));

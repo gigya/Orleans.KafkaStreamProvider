@@ -26,7 +26,7 @@ namespace Tester.StreamingTests
                 SiloConfigFile = new FileInfo("OrleansConfigurationForStreamingUnitTests.xml")
             })
         {
-            _runner = new BatchProducingTestRunner(KafkaStreamProviderName, logger);
+            _runner = new BatchProducingTestRunner(KafkaStreamProviderName, Client.Logger);
             _host = this;
         }
 
@@ -40,42 +40,42 @@ namespace Tester.StreamingTests
         [TestMethod, TestCategory("Functional"), TestCategory("KafkaStreamProvider"), TestCategory("Streaming")]
         public async Task SimpleBatchTesting()
         {
-            logger.Info("************************ SimpleBatchTesting *********************************");
+            Client.Logger.Info("************************ SimpleBatchTesting *********************************");
             await _runner.SimpleBatchTesting();
         }
 
         [TestMethod, TestCategory("Functional"), TestCategory("KafkaStreamProvider"), TestCategory("Streaming")]
         public async Task BatchTestMultipleConsumersOneStream()
         {
-            logger.Info("************************ BatchTestMultipleConsumersOneStream *********************************");
+            Client.Logger.Info("************************ BatchTestMultipleConsumersOneStream *********************************");
             await _runner.BatchTestMultipleConsumersOneStream();
         }
 
         [TestMethod, TestCategory("Functional"), TestCategory("KafkaStreamProvider"), TestCategory("Streaming")]
         public async Task BatchTestMultipleStreamsOneConsumer()
         {
-            logger.Info("************************ BatchTestMultipleStreamsOneConsumer *********************************");
+            Client.Logger.Info("************************ BatchTestMultipleStreamsOneConsumer *********************************");
             await _runner.BatchTestMultipleStreamsOneConsumer();
         }
 
         [TestMethod, TestCategory("Functional"), TestCategory("KafkaStreamProvider"), TestCategory("Streaming")]
         public async Task BatchTestLoadTesting()
         {
-            logger.Info("************************ BatchTestLoadTesting ************************");
+            Client.Logger.Info("************************ BatchTestLoadTesting ************************");
             await _runner.BatchTestLoadTesting();
         }
 
         [TestMethod, TestCategory("Functional"), TestCategory("KafkaStreamProvider"), TestCategory("Streaming")]
         public async Task BatchTestLoadTestingWithImplicitSubscription()
-        {            
-            logger.Info("************************ BatchTestLoadTesting ************************");
+        {
+            Client.Logger.Info("************************ BatchTestLoadTesting ************************");
             await _runner.BatchTestLoadTestingWithImplicitSubscription();
         }
 
         [TestMethod, TestCategory("Functional"), TestCategory("KafkaStreamProvider"), TestCategory("Streaming")]
         public async Task BatchTestMultipleProducers()
         {
-            logger.Info("************************ BatchTestMultipleProducers ************************");
+            Client.Logger.Info("************************ BatchTestMultipleProducers ************************");
             await _runner.BatchTestMultipleProducers(10, 10);
         }
 
@@ -83,7 +83,7 @@ namespace Tester.StreamingTests
         [Ignore]
         public async Task InfiniteTest()
         {
-            logger.Info("************************ InfiniteTest ************************");
+            Client.Logger.Info("************************ InfiniteTest ************************");
             await _runner.InfiniteTest();
         }
     }
