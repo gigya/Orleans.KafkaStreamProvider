@@ -33,7 +33,7 @@ namespace Tester.StreamingTests
                 SiloConfigFile = new FileInfo("OrleansConfigurationForStreamingUnitTests.xml"),
             })
         {
-            _runner = new SubscriptionMultiplicityTestRunner(KafkaStreamProviderName, GrainClient.Logger);
+            _runner = new SubscriptionMultiplicityTestRunner(KafkaStreamProviderName, Client.Logger);
             _host = this;
         }
 
