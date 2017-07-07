@@ -26,7 +26,7 @@ namespace Orleans.KafkaStreamProviderTest
         public KafkaQueueAdapterUnitTests()
         {
             Mock<Logger> loggerMock = new Mock<Logger>();
-            var connectionStrings = new List<Uri> {new Uri("http://kafka1:9092;http://kafka2:9092") };
+            var connectionStrings = new List<Uri> {new Uri("http://kafka1:9092"), new Uri("http://kafka2:9092") };
             var topicName = "Jonathan.ab.KafkaStreamProviderTestsNew";
             var consumerGroupName = "TestConsumerGroupName";
 
