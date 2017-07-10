@@ -46,7 +46,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             _serializationManager = serviceProvider.GetRequiredService<SerializationManager>();
             _streamQueueMapper = new HashRingBasedStreamQueueMapper(_options.NumOfQueues, providerName);
             _logger = logger;
-            _adapter = new KafkaQueueAdapter(_serializationManager, _streamQueueMapper, _options, providerName, new KafkaBatchFactory(), _logger);
+            _adapter = new KafkaQueueAdapter(_serializationManager, _streamQueueMapper, _options, providerName, _options.KafkaBatchFactory(), _logger);
             _adapterCache = new TimedQueueAdapterCache(this, TimeSpan.FromSeconds(_options.CacheTimespanInSeconds), _options.CacheSize, _options.CacheNumOfBuckets, logger);
         }
 

@@ -19,13 +19,18 @@ namespace Tester.StreamingTests
         private readonly string _streamProviderName;
         private readonly Logger _logger;
         private readonly Random r;
+        private readonly string _configFile;
 
-        public BatchProducingTestRunner(string streamProviderName, Logger logger)
+        public BatchProducingTestRunner(string streamProviderName, Logger logger, string configFile)
         {
             if (streamProviderName == null) throw new ArgumentNullException("streamProviderName");
 
             _streamProviderName = streamProviderName;
-            _logger = logger;   
+            _logger = logger;
+            _configFile = configFile;
+            
+            GrainClient.Initialize(_configFile);
+
             r = new Random();
         }
 
@@ -114,6 +119,8 @@ namespace Tester.StreamingTests
 
         public async Task BatchTestLoadTesting()
         {
+            GrainClient.Initialize();
+
             var proudcer = GrainClient.GrainFactory.GetGrain<IBatchProducerGrain>(Guid.NewGuid());
             var consumer = GrainClient.GrainFactory.GetGrain<ISampleStreaming_ConsumerGrain>(Guid.NewGuid());
             var batchSize = 1000;

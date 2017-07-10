@@ -26,7 +26,7 @@ namespace Tester.StreamingTests
                 SiloConfigFile = new FileInfo("OrleansConfigurationForStreamingUnitTests.xml")
             })
         {
-            _runner = new BatchProducingTestRunner(KafkaStreamProviderName, Client.Logger);
+            _runner = new BatchProducingTestRunner(KafkaStreamProviderName, Client.Logger, "OrleansConfigurationForStreamingUnitTests.xml");
             _host = this;
         }
 
