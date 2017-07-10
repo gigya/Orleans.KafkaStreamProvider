@@ -30,7 +30,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             if (String.IsNullOrEmpty(providerName)) throw new ArgumentNullException(nameof(providerName));
 
             // Creating an options object with all the config values
-            _options = new KafkaStreamProviderOptions(config);
+            _options = new KafkaStreamProviderOptions(config, serviceProvider);
 
             if (!_options.UsingExternalMetrics)
             {

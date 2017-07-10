@@ -104,7 +104,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             KafkaBatchFactory = DefaultKafkaBatchFactory;
         }
 
-        public KafkaStreamProviderOptions(IProviderConfiguration config)
+        public KafkaStreamProviderOptions(IProviderConfiguration config, IServiceProvider serviceProvider)
         {
             if (config == null) throw new ArgumentNullException(nameof(config));
 
@@ -136,7 +136,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             MetricsPort = GetOptionalParamInt(MetricsPortParam, DefaultMetricsPort, config);
             IncludeMetrics = GetOptionalParamBool(IncludeMetricsParam, DefaultIncludeMetrics, config);
             UsingExternalMetrics = GetOptionalParamBool(UsingExternalMetricsParam, DefaultUsingExternalMetrics, config);
-            KafkaBatchFactory = GetOptionalParamKafkaBatchFactory(KafkaBatchFactoryParam, DefaultKafkaBatchFactory, config);
+            KafkaBatchFactory = GetOptionalParamKafkaBatchFactory(KafkaBatchFactoryParam, DefaultKafkaBatchFactory, config, serviceProvider);
         }
 
         private static string GetRequiredParam(string paramName, IProviderConfiguration config)
@@ -170,7 +170,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             return paramValue;
         }
         
-        private Func<IKafkaBatchFactory> GetOptionalParamKafkaBatchFactory(string paramName, Func<IKafkaBatchFactory> defaultValue, IProviderConfiguration config)
+        private Func<IKafkaBatchFactory> GetOptionalParamKafkaBatchFactory(string paramName, Func<IKafkaBatchFactory> defaultValue, IProviderConfiguration config, IServiceProvider serviceProvider)
         {
             string paramValuePreParsed;
             var paramValue = defaultValue;
@@ -182,10 +182,8 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
                 throw new ArgumentException(String.Format("Could not locate the type {0}. Please ensure it is a fully qualified type name and the associated assembly has been loaded", paramName));
             else if (!typeof(IKafkaBatchFactory).IsAssignableFrom(batchFactoryType))
                 throw new ArgumentException(String.Format("The specified type {0} does not implement IKafkaBatchFactory", paramName));
-            else if (batchFactoryType.GetConstructor(Type.EmptyTypes) == null)
-                throw new ArgumentException(String.Format("The specified type {0} does not have a public parameterless constructor", paramName));
             else
-                paramValue = () => Activator.CreateInstance(batchFactoryType) as IKafkaBatchFactory;
+                paramValue = () => (serviceProvider.GetService(batchFactoryType) ?? Activator.CreateInstance(batchFactoryType)) as IKafkaBatchFactory;
 
             return paramValue;
         }
