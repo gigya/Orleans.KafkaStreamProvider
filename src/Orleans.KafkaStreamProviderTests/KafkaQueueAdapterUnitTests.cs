@@ -90,7 +90,7 @@ namespace Orleans.KafkaStreamProviderTest
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
             Dictionary<string, object> requestContext = new Dictionary<string, object>();
 
-            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<IEnumerable<int>>(), requestContext, _serializationManager)).Returns(new Message(){Value = new byte[] { 0, 1, 2, 3 }});
+            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<IEnumerable<int>>(), requestContext, _serializationManager)).Returns(new[] { new Message() { Value = new byte[] { 0, 1, 2, 3 } } });
 
             KafkaQueueAdapter adapter = new KafkaQueueAdapter(_serializationManager, _streamQueueMapper, _options, _providerName, factoryMock.Object, _logger);
 
@@ -103,7 +103,7 @@ namespace Orleans.KafkaStreamProviderTest
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
             Dictionary<string, object> requestContext = new Dictionary<string, object>();
 
-            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<IEnumerable<int>>(), requestContext, _serializationManager)).Returns(new Message() { Value = new byte[] { 0, 1, 2, 3 } });
+            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<IEnumerable<int>>(), requestContext, _serializationManager)).Returns(new [] { new Message() { Value = new byte[] { 0, 1, 2, 3 } } });
 
             KafkaQueueAdapter adapter = new KafkaQueueAdapter(_serializationManager, _streamQueueMapper, _options, _providerName, factoryMock.Object, _logger);
 
@@ -119,7 +119,7 @@ namespace Orleans.KafkaStreamProviderTest
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
             Dictionary<string, object> requestContext = new Dictionary<string, object>();
 
-            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<IEnumerable<int>>(), requestContext, _serializationManager)).Returns((Message)null);
+            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<IEnumerable<int>>(), requestContext, _serializationManager)).Returns(new[] { (Message)null }); // This really ought to return an Enumerable.Empty
 
             KafkaQueueAdapter adapter = new KafkaQueueAdapter(_serializationManager, _streamQueueMapper, _options, _providerName, factoryMock.Object, _logger);
 
@@ -134,7 +134,7 @@ namespace Orleans.KafkaStreamProviderTest
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
             Dictionary<string, object> requestContext = new Dictionary<string, object>();
 
-            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<IEnumerable<int>>(), requestContext, _serializationManager)).Returns((Message)null);
+            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<IEnumerable<int>>(), requestContext, _serializationManager)).Returns(new[] { (Message)null }); // This really ought to return an Enumerable.Empty
 
             KafkaStreamProviderOptions differentOptions = new KafkaStreamProviderOptions(_options.ConnectionStrings,
                 _options.TopicName, _options.ConsumerGroupName) {AckLevel = 0};
@@ -152,7 +152,7 @@ namespace Orleans.KafkaStreamProviderTest
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
             Dictionary<string, object> requestContext = new Dictionary<string, object>();
 
-            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<IEnumerable<int>>(), requestContext, _serializationManager)).Returns(new Message() { Value = new byte[] { 0, 1, 2, 3 } });
+            factoryMock.Setup(x => x.ToKafkaMessage(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<IEnumerable<int>>(), requestContext, _serializationManager)).Returns(new[] { new Message() { Value = new byte[] { 0, 1, 2, 3 } } });
 
             var twoQueuesStreamMapper = new HashRingBasedStreamQueueMapper(2, _options.TopicName);
             var twoQueuesOptions = new KafkaStreamProviderOptions(_options.ConnectionStrings, _options.TopicName, _options.ConsumerGroupName){NumOfQueues = 2};
