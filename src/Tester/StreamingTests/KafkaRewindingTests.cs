@@ -8,6 +8,7 @@ using UnitTests.Tester;
 
 namespace Tester.StreamingTests
 {
+    [DeploymentItem("ClientConfiguration.xml")]
     [DeploymentItem("OrleansConfigurationForRewinding.xml")]
     [DeploymentItem("OrleansProviders.dll")]
     [DeploymentItem("Orleans.KafkaStreamProvider.dll")]

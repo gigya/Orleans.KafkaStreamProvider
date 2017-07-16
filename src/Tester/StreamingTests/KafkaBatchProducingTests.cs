@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Orleans;
 using Orleans.Runtime;
 using Orleans.TestingHost;
 using UnitTests.Tester;
@@ -8,6 +9,8 @@ using UnitTests.Tester;
 namespace Tester.StreamingTests
 {
     [DeploymentItem("OrleansConfigurationForStreamingUnitTests.xml")]
+    [DeploymentItem("ClientConfiguration.xml")]
+
     [DeploymentItem("OrleansProviders.dll")]
     [DeploymentItem("Orleans.KafkaStreamProvider.dll")]
     [TestClass]
@@ -26,9 +29,13 @@ namespace Tester.StreamingTests
                 SiloConfigFile = new FileInfo("OrleansConfigurationForStreamingUnitTests.xml")
             })
         {
+            GrainClient.Initialize("ClientConfiguration.xml");
+
             _runner = new BatchProducingTestRunner(KafkaStreamProviderName, Client.Logger);
             _host = this;
         }
+
+    
 
         // Use ClassCleanup to run code after all tests in a class have run
         [ClassCleanup]

@@ -13,6 +13,8 @@ using UnitTests.Tester;
 
 namespace Tester.StreamingTests
 {
+    [DeploymentItem("ClientConfiguration.xml")]
+
     [DeploymentItem("OrleansConfigurationForStreamingUnitTests.xml")]
     [DeploymentItem("OrleansProviders.dll")]
     [DeploymentItem("Orleans.KafkaStreamProvider.dll")]
@@ -33,6 +35,8 @@ namespace Tester.StreamingTests
                 SiloConfigFile = new FileInfo("OrleansConfigurationForStreamingUnitTests.xml"),
             })
         {
+            GrainClient.Initialize("ClientConfiguration.xml");
+
             _runner = new SubscriptionMultiplicityTestRunner(KafkaStreamProviderName, Client.Logger);
             _host = this;
         }

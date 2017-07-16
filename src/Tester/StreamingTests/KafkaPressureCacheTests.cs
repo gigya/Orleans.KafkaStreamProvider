@@ -5,12 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Orleans;
 using Orleans.Runtime;
 using Orleans.TestingHost;
 using UnitTests.Tester;
 
 namespace Tester.StreamingTests
 {
+    [DeploymentItem("ClientConfiguration.xml")]
     [DeploymentItem("OrleansConfigurationForPressureTests.xml")]
     [DeploymentItem("OrleansProviders.dll")]
     [DeploymentItem("Orleans.KafkaStreamProvider.dll")]
@@ -26,10 +28,15 @@ namespace Tester.StreamingTests
                 StartFreshOrleans = false,
                 StartSecondary = false,
                 SiloConfigFile = new FileInfo("OrleansConfigurationForPressureTests.xml"),
+
             })
+
         {
+            GrainClient.Initialize("ClientConfiguration.xml");
+
             _runner = new PressuredCacheTestRunner(KafkaStreamProviderName, Client.Logger);
             _host = this;
+
         }
 
         // Use ClassCleanup to run code after all tests in a class have run
