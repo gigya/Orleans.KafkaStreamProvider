@@ -36,7 +36,6 @@ namespace Tester.StreamingTests
             _runner = new MultipleStreamsTestRunner(KafkaStreamProviderName, Client.Logger);
             _host = this;
             GrainClient.Initialize("ClientConfiguration.xml");
-
         }
 
         // Use ClassCleanup to run code after all tests in a class have run

@@ -32,11 +32,9 @@ namespace Tester.StreamingTests
             })
 
         {
-            GrainClient.Initialize("ClientConfiguration.xml");
-
             _runner = new PressuredCacheTestRunner(KafkaStreamProviderName, Client.Logger);
             _host = this;
-
+            GrainClient.Initialize("ClientConfiguration.xml");
         }
 
         // Use ClassCleanup to run code after all tests in a class have run

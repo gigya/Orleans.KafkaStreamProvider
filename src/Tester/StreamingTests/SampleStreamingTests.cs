@@ -61,7 +61,6 @@ namespace Tester.StreamingTests
         {
             _host = this;
             GrainClient.Initialize("ClientConfiguration.xml");
-
         }
 
         // Use ClassCleanup to run code after all tests in a class have run
