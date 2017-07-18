@@ -105,17 +105,17 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
                 NextElement != null ? NextElement.Value.Batch.ToString() : "null", SequenceToken?.ToString() ?? "null");
         }
 
-        public void Refresh()
-        {
-            if (!IsSet)
-            {
-                _cache.InitializeCursor(this, SequenceToken);
-            }
-        }
-
         public void RecordDeliveryFailure()
         {
             _logger.Warn(0, "Delivery has failed");
+        }
+
+        public void Refresh(StreamSequenceToken token)
+        {
+            if (!IsSet)
+            {
+                _cache.InitializeCursor(this, token);
+            }
         }
     }
 }

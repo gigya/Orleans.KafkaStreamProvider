@@ -53,7 +53,7 @@ namespace TestGrains
         {
             _logger = base.GetLogger("SampleStreaming_ProducerGrain " + base.IdentityString);
             _logger.Info("OnActivateAsync");            
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task<Orleans.Streams.IStreamIdentity> BecomeProducer(Guid streamId, string streamNamespace, string providerToUse)
@@ -91,13 +91,13 @@ namespace TestGrains
                 _producerTimers.Add(identity, timer);   
             }
 
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         private Task TimerCallback(object state)
         {
             IStreamIdentity key = (IStreamIdentity) state;
-            return _producerTimers[key] != null ? Fire(key) : TaskDone.Done;
+            return _producerTimers[key] != null ? Fire(key) : Task.CompletedTask;
         }
 
         private Task Fire(IStreamIdentity identity, [CallerMemberName] string caller = null)
@@ -121,7 +121,7 @@ namespace TestGrains
                 _producerTimers[identity] = null;
                 _producerTimers.Remove(identity);
             }
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task<Dictionary<Orleans.Streams.IStreamIdentity, int>> GetNumberProduced()
@@ -136,7 +136,7 @@ namespace TestGrains
                 _numProduced[key] = 0;
             }
 
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task Produce(IStreamIdentity identifier)

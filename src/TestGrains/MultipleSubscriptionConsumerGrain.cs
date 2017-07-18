@@ -21,7 +21,7 @@ namespace UnitTests.Grains
             public Task Increment()
             {
                 Value++;
-                return TaskDone.Done;
+                return Task.CompletedTask;
             }
 
             public void Clear()
@@ -39,7 +39,7 @@ namespace UnitTests.Grains
         {
             logger = base.GetLogger("MultipleSubscriptionConsumerGrain " + base.IdentityString);
             logger.Info("OnActivateAsync");
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public async Task<StreamSubscriptionHandle<int>> BecomeConsumer(Guid streamId, string streamNamespace, string providerToUse)
@@ -59,7 +59,7 @@ namespace UnitTests.Grains
                 {
                     logger.Info("Got next event {0}", e);
                     count.Increment();
-                    return TaskDone.Done;
+                    return Task.CompletedTask;
                 });
 
             // track counter
@@ -127,19 +127,19 @@ namespace UnitTests.Grains
             {
                 count.Clear();
             }
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task Deactivate()
         {
             DeactivateOnIdle();
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public override Task OnDeactivateAsync()
         {
             logger.Info("OnDeactivateAsync");
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
     }
 }

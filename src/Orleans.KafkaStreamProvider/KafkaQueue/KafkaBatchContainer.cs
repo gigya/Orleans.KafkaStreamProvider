@@ -64,27 +64,27 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             return _events.Any(item => shouldReceiveFunc(stream, filterData, item));
         }
 
-        internal static Message ToKafkaMessage<T>(Guid streamId, string streamNamespace, IEnumerable<T> events, Dictionary<string, object> requestContext)
+        internal static Message ToKafkaMessage<T>(Guid streamId, string streamNamespace, IEnumerable<T> events, Dictionary<string, object> requestContext, SerializationManager serializationManager)
         {
             KafkaBatchContainer container = new KafkaBatchContainer(streamId, streamNamespace, events.Cast<object>().ToList(), requestContext);
-            var rawBytes = SerializationManager.SerializeToByteArray(container);
+            var rawBytes = serializationManager.SerializeToByteArray(container);
             Message message = new Message(){ Value = rawBytes };
 
             return message;
         }
 
-        internal static Message ToKafkaMessage<T>(Guid streamId, string streamNamespace, T singleEvent, Dictionary<string, object> requestContext)
+        internal static Message ToKafkaMessage<T>(Guid streamId, string streamNamespace, T singleEvent, Dictionary<string, object> requestContext, SerializationManager serializationManager)
         {
             KafkaBatchContainer container = new KafkaBatchContainer(streamId, streamNamespace, singleEvent, requestContext);
-            var rawBytes = SerializationManager.SerializeToByteArray(container);
+            var rawBytes = serializationManager.SerializeToByteArray(container);
             Message message = new Message() { Value = rawBytes };
 
             return message;
         }
 
-        internal static KafkaBatchContainer FromKafkaMessage(Message message, long sequenceId)
+        internal static KafkaBatchContainer FromKafkaMessage(Message message, long sequenceId, SerializationManager serializationManager)
         {
-            var kafkaBatch = SerializationManager.DeserializeFromByteArray<KafkaBatchContainer>(message.Value);
+            var kafkaBatch = serializationManager.DeserializeFromByteArray<KafkaBatchContainer>(message.Value);
             kafkaBatch._sequenceToken = new EventSequenceToken(sequenceId);
 
             return kafkaBatch;

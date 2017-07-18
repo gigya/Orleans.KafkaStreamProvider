@@ -10,6 +10,8 @@ using Moq;
 using Orleans.KafkaStreamProvider.KafkaQueue;
 using Orleans.Runtime;
 using Orleans.Streams;
+using Orleans.Serialization;
+using Orleans.Runtime.Configuration;
 
 namespace Orleans.KafkaStreamProviderTest
 {
@@ -21,6 +23,7 @@ namespace Orleans.KafkaStreamProviderTest
         private readonly Logger _logger;
         private readonly KafkaStreamProviderOptions _options;
         private readonly QueueId _id;
+        private readonly SerializationManager _serializationManager;
 
         public KafkaQueueAdapterReceiverUnitTests()
         {
@@ -30,6 +33,8 @@ namespace Orleans.KafkaStreamProviderTest
             var connectionStrings = new List<Uri> {new Uri("http://192.168.10.27:9092")};
             var topicName = "TestTopic";
             var consumerGroupName = "TestConsumerGroup";
+
+            _serializationManager = new SerializationManager(new Mock<IServiceProvider>().Object, new Mock<IMessagingConfiguration>().Object, new Mock<ITraceConfiguration>().Object);
             _options = new KafkaStreamProviderOptions(connectionStrings.ToArray(), topicName, consumerGroupName);
             _id = QueueId.GetQueueId("test", 0, 0);
         }
@@ -40,7 +45,7 @@ namespace Orleans.KafkaStreamProviderTest
         {
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
 
-            KafkaQueueAdapterReceiver adapterReceiver = new KafkaQueueAdapterReceiver(_id, null, _options, factoryMock.Object, _logger);
+            KafkaQueueAdapterReceiver adapterReceiver = new KafkaQueueAdapterReceiver(_serializationManager, _id, null, _options, factoryMock.Object, _logger);
         }
 
         [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
@@ -50,7 +55,7 @@ namespace Orleans.KafkaStreamProviderTest
             Mock<IManualConsumer> consumerMock = new Mock<IManualConsumer>();
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
 
-            KafkaQueueAdapterReceiver adapterReceiver = new KafkaQueueAdapterReceiver(null, consumerMock.Object, _options, factoryMock.Object, _logger);
+            KafkaQueueAdapterReceiver adapterReceiver = new KafkaQueueAdapterReceiver(_serializationManager, null, consumerMock.Object, _options, factoryMock.Object, _logger);
         }
 
         [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
@@ -60,7 +65,7 @@ namespace Orleans.KafkaStreamProviderTest
             Mock<IManualConsumer> consumerMock = new Mock<IManualConsumer>();
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
 
-            KafkaQueueAdapterReceiver adapterReceiver = new KafkaQueueAdapterReceiver(_id, consumerMock.Object, null, factoryMock.Object, _logger);
+            KafkaQueueAdapterReceiver adapterReceiver = new KafkaQueueAdapterReceiver(_serializationManager, _id, consumerMock.Object, null, factoryMock.Object, _logger);
         }
 
         [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
@@ -70,7 +75,7 @@ namespace Orleans.KafkaStreamProviderTest
             Mock<IManualConsumer> consumerMock = new Mock<IManualConsumer>();
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
 
-            KafkaQueueAdapterReceiver adapterReceiver = new KafkaQueueAdapterReceiver(_id, consumerMock.Object, _options, null, _logger);
+            KafkaQueueAdapterReceiver adapterReceiver = new KafkaQueueAdapterReceiver(_serializationManager, _id, consumerMock.Object, _options, null, _logger);
         }
 
         [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
@@ -80,7 +85,7 @@ namespace Orleans.KafkaStreamProviderTest
             Mock<IManualConsumer> consumerMock = new Mock<IManualConsumer>();
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
 
-            KafkaQueueAdapterReceiver adapterReceiver = new KafkaQueueAdapterReceiver(_id, consumerMock.Object, _options, factoryMock.Object, null);
+            KafkaQueueAdapterReceiver adapterReceiver = new KafkaQueueAdapterReceiver(_serializationManager, _id, consumerMock.Object, _options, factoryMock.Object, null);
         }
 
         [TestMethod, TestCategory("UnitTest"), TestCategory("KafkaStreamProvider")]
@@ -94,7 +99,7 @@ namespace Orleans.KafkaStreamProviderTest
 
             consumerMock.Setup(x => x.FetchLastOffset()).ReturnsAsync(wantedOffset);
 
-            KafkaQueueAdapterReceiver adapterReceiver = new KafkaQueueAdapterReceiver(_id, consumerMock.Object, _options, factoryMock.Object, _logger);
+            KafkaQueueAdapterReceiver adapterReceiver = new KafkaQueueAdapterReceiver(_serializationManager, _id, consumerMock.Object, _options, factoryMock.Object, _logger);
 
             await adapterReceiver.Initialize(TimeSpan.MaxValue);
 
@@ -113,7 +118,7 @@ namespace Orleans.KafkaStreamProviderTest
 
             consumerMock.Setup(x => x.FetchOffset(_options.ConsumerGroupName)).ReturnsAsync(wantedOffset);
 
-            KafkaQueueAdapterReceiver adapterReceiver = new KafkaQueueAdapterReceiver(_id, consumerMock.Object, mockOptions, factoryMock.Object, _logger);
+            KafkaQueueAdapterReceiver adapterReceiver = new KafkaQueueAdapterReceiver(_serializationManager, _id, consumerMock.Object, mockOptions, factoryMock.Object, _logger);
 
             await adapterReceiver.Initialize(TimeSpan.MaxValue);
 
@@ -132,7 +137,7 @@ namespace Orleans.KafkaStreamProviderTest
 
             consumerMock.Setup(x => x.FetchOffset(_options.ConsumerGroupName)).Throws(new KafkaApplicationException("Test") { ErrorCode = (int)ErrorResponseCode.UnknownTopicOrPartition });
 
-            KafkaQueueAdapterReceiver adapterReceiver = new KafkaQueueAdapterReceiver(_id, consumerMock.Object, _options, factoryMock.Object, _logger);
+            KafkaQueueAdapterReceiver adapterReceiver = new KafkaQueueAdapterReceiver(_serializationManager, _id, consumerMock.Object, _options, factoryMock.Object, _logger);
             consumerMock.Setup(x => x.FetchLastOffset()).ReturnsAsync(wantedOffset);
 
             await adapterReceiver.Initialize(TimeSpan.MaxValue);
@@ -153,7 +158,7 @@ namespace Orleans.KafkaStreamProviderTest
 
             consumerMock.Setup(x => x.FetchOffset(_options.ConsumerGroupName)).Throws(new KafkaApplicationException("Test") { ErrorCode = (int)ErrorResponseCode.UnknownTopicOrPartition });
 
-            KafkaQueueAdapterReceiver adapterReceiver = new KafkaQueueAdapterReceiver(_id, consumerMock.Object, _options, factoryMock.Object, _logger);
+            KafkaQueueAdapterReceiver adapterReceiver = new KafkaQueueAdapterReceiver(_serializationManager, _id, consumerMock.Object, _options, factoryMock.Object, _logger);
             consumerMock.Setup(x => x.FetchLastOffset()).ReturnsAsync(wantedOffset).Callback(() => savedNewOffset=true);            
 
             await adapterReceiver.Initialize(TimeSpan.MaxValue);
@@ -178,12 +183,12 @@ namespace Orleans.KafkaStreamProviderTest
             
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
 
-            factoryMock.Setup(x => x.FromKafkaMessage(It.IsAny<Message>(), It.IsAny<long>())).Returns(batchContainerMock.Object);
+            factoryMock.Setup(x => x.FromKafkaMessage(It.IsAny<Message>(), It.IsAny<long>(), _serializationManager)).Returns(batchContainerMock.Object);
 
             var returnCollection = new List<Message>(){message1};
             consumerMock.Setup(x => x.FetchMessages(1, It.IsAny<long>())).ReturnsAsync(returnCollection);
 
-            KafkaQueueAdapterReceiver adapterReceiver = new KafkaQueueAdapterReceiver(_id, consumerMock.Object, _options, factoryMock.Object, _logger);
+            KafkaQueueAdapterReceiver adapterReceiver = new KafkaQueueAdapterReceiver(_serializationManager, _id, consumerMock.Object, _options, factoryMock.Object, _logger);
 
             int numToTake = 1;
 
@@ -210,14 +215,14 @@ namespace Orleans.KafkaStreamProviderTest
 
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
 
-            factoryMock.Setup(x => x.FromKafkaMessage(message1, It.IsAny<long>()))
+            factoryMock.Setup(x => x.FromKafkaMessage(message1, It.IsAny<long>(), _serializationManager))
                 .Returns(batchContainerMock1.Object);
-            factoryMock.Setup(x => x.FromKafkaMessage(message2, It.IsAny<long>()))
+            factoryMock.Setup(x => x.FromKafkaMessage(message2, It.IsAny<long>(), _serializationManager))
                 .Returns(batchContainerMock2.Object);
-            factoryMock.Setup(x => x.FromKafkaMessage(message3, It.IsAny<long>()))
+            factoryMock.Setup(x => x.FromKafkaMessage(message3, It.IsAny<long>(), _serializationManager))
                 .Returns(batchContainerMock3.Object);
 
-            KafkaQueueAdapterReceiver adapterReceiverMock = new KafkaQueueAdapterReceiver(_id, consumerMock.Object, _options, factoryMock.Object, _logger);            
+            KafkaQueueAdapterReceiver adapterReceiverMock = new KafkaQueueAdapterReceiver(_serializationManager, _id, consumerMock.Object, _options, factoryMock.Object, _logger);            
 
             int numToTake = 3;
 
@@ -239,7 +244,7 @@ namespace Orleans.KafkaStreamProviderTest
 
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
 
-            KafkaQueueAdapterReceiver adapterReceiverMock = new KafkaQueueAdapterReceiver(_id, consumerMock.Object, _options, factoryMock.Object, _logger);
+            KafkaQueueAdapterReceiver adapterReceiverMock = new KafkaQueueAdapterReceiver(_serializationManager, _id, consumerMock.Object, _options, factoryMock.Object, _logger);
 
             int numToTake = 3;
 
@@ -276,20 +281,20 @@ namespace Orleans.KafkaStreamProviderTest
 
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
 
-            factoryMock.Setup(x => x.FromKafkaMessage(message1, It.IsAny<long>()))
+            factoryMock.Setup(x => x.FromKafkaMessage(message1, It.IsAny<long>(), _serializationManager))
                 .Returns(batchContainerMock1.Object);
-            factoryMock.Setup(x => x.FromKafkaMessage(message2, It.IsAny<long>()))
+            factoryMock.Setup(x => x.FromKafkaMessage(message2, It.IsAny<long>(), _serializationManager))
                 .Returns(batchContainerMock2.Object);
-            factoryMock.Setup(x => x.FromKafkaMessage(message3, It.IsAny<long>()))
+            factoryMock.Setup(x => x.FromKafkaMessage(message3, It.IsAny<long>(), _serializationManager))
                 .Returns(batchContainerMock3.Object);
-            factoryMock.Setup(x => x.FromKafkaMessage(message4, It.IsAny<long>()))
+            factoryMock.Setup(x => x.FromKafkaMessage(message4, It.IsAny<long>(), _serializationManager))
             .Returns(batchContainerMock4.Object);
-            factoryMock.Setup(x => x.FromKafkaMessage(message5, It.IsAny<long>()))
+            factoryMock.Setup(x => x.FromKafkaMessage(message5, It.IsAny<long>(), _serializationManager))
                 .Returns(batchContainerMock5.Object);
-            factoryMock.Setup(x => x.FromKafkaMessage(message6, It.IsAny<long>()))
+            factoryMock.Setup(x => x.FromKafkaMessage(message6, It.IsAny<long>(), _serializationManager))
                 .Returns(batchContainerMock6.Object);
 
-            KafkaQueueAdapterReceiver adapterReceiverMock = new KafkaQueueAdapterReceiver(_id, consumerMock.Object, _options, factoryMock.Object, _logger);
+            KafkaQueueAdapterReceiver adapterReceiverMock = new KafkaQueueAdapterReceiver(_serializationManager, _id, consumerMock.Object, _options, factoryMock.Object, _logger);
 
             await adapterReceiverMock.Initialize(TimeSpan.MaxValue);
 
@@ -341,27 +346,27 @@ namespace Orleans.KafkaStreamProviderTest
 
             consumerMock.Setup(x => x.FetchOffset(_options.ConsumerGroupName)).Returns(Task.FromResult<long>(0));
 
-            consumerMock.Setup(x => x.UpdateOrCreateOffset(_options.ConsumerGroupName, 3)).Returns(TaskDone.Done)
+            consumerMock.Setup(x => x.UpdateOrCreateOffset(_options.ConsumerGroupName, 3)).Returns(Task.CompletedTask)
                 .Callback(() => hasCommited = true);
 
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
 
-            factoryMock.Setup(x => x.FromKafkaMessage(message1, It.IsAny<long>()))
+            factoryMock.Setup(x => x.FromKafkaMessage(message1, It.IsAny<long>(), _serializationManager))
                 .Returns(batchContainerMock1.Object);
-            factoryMock.Setup(x => x.FromKafkaMessage(message2, It.IsAny<long>()))
+            factoryMock.Setup(x => x.FromKafkaMessage(message2, It.IsAny<long>(), _serializationManager))
                 .Returns(batchContainerMock2.Object);
-            factoryMock.Setup(x => x.FromKafkaMessage(message3, It.IsAny<long>()))
+            factoryMock.Setup(x => x.FromKafkaMessage(message3, It.IsAny<long>(), _serializationManager))
                 .Returns(batchContainerMock3.Object);
-            factoryMock.Setup(x => x.FromKafkaMessage(message4, It.IsAny<long>()))
+            factoryMock.Setup(x => x.FromKafkaMessage(message4, It.IsAny<long>(), _serializationManager))
             .Returns(batchContainerMock4.Object);
-            factoryMock.Setup(x => x.FromKafkaMessage(message5, It.IsAny<long>()))
+            factoryMock.Setup(x => x.FromKafkaMessage(message5, It.IsAny<long>(), _serializationManager))
                 .Returns(batchContainerMock5.Object);
-            factoryMock.Setup(x => x.FromKafkaMessage(message6, It.IsAny<long>()))
+            factoryMock.Setup(x => x.FromKafkaMessage(message6, It.IsAny<long>(), _serializationManager))
                 .Returns(batchContainerMock6.Object);
 
             var newOptions = new KafkaStreamProviderOptions(_options.ConnectionStrings, _options.TopicName, _options.ConsumerGroupName){OffsetCommitInterval = 2, ShouldInitWithLastOffset = false};
 
-            KafkaQueueAdapterReceiver adapterReceiver = new KafkaQueueAdapterReceiver(_id, consumerMock.Object, newOptions, factoryMock.Object, _logger);
+            KafkaQueueAdapterReceiver adapterReceiver = new KafkaQueueAdapterReceiver(_serializationManager, _id, consumerMock.Object, newOptions, factoryMock.Object, _logger);
 
             await adapterReceiver.Initialize(TimeSpan.MaxValue);
 
@@ -374,7 +379,7 @@ namespace Orleans.KafkaStreamProviderTest
             Assert.AreEqual(batchContainerMock1.Object, result[0]);
 
             // Now sth has happened, restating the adapter, the offset should not be saved
-            adapterReceiver = new KafkaQueueAdapterReceiver(_id, consumerMock.Object, newOptions, factoryMock.Object, _logger);
+            adapterReceiver = new KafkaQueueAdapterReceiver(_serializationManager, _id, consumerMock.Object, newOptions, factoryMock.Object, _logger);
             await adapterReceiver.Initialize(TimeSpan.MaxValue);
 
             // Asking once again, should return 1 message
@@ -396,7 +401,7 @@ namespace Orleans.KafkaStreamProviderTest
             }
 
             // Now sth happened, but this time the offset was committed
-            adapterReceiver = new KafkaQueueAdapterReceiver(_id, consumerMock.Object, newOptions, factoryMock.Object, _logger);
+            adapterReceiver = new KafkaQueueAdapterReceiver(_serializationManager, _id, consumerMock.Object, newOptions, factoryMock.Object, _logger);
             await adapterReceiver.Initialize(TimeSpan.MaxValue);
 
             // This request should return the last 3 messages
@@ -430,14 +435,14 @@ namespace Orleans.KafkaStreamProviderTest
 
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
 
-            factoryMock.Setup(x => x.FromKafkaMessage(message1, It.IsAny<long>()))
+            factoryMock.Setup(x => x.FromKafkaMessage(message1, It.IsAny<long>(), _serializationManager))
                 .Returns(batchContainerMock1.Object);
-            factoryMock.Setup(x => x.FromKafkaMessage(message2, It.IsAny<long>()))
+            factoryMock.Setup(x => x.FromKafkaMessage(message2, It.IsAny<long>(), _serializationManager))
                 .Returns(batchContainerMock2.Object);
-            factoryMock.Setup(x => x.FromKafkaMessage(message3, It.IsAny<long>()))
+            factoryMock.Setup(x => x.FromKafkaMessage(message3, It.IsAny<long>(), _serializationManager))
                 .Returns(batchContainerMock3.Object);
 
-            KafkaQueueAdapterReceiver adapterReceiverMock = new KafkaQueueAdapterReceiver(_id, consumerMock.Object, _options, factoryMock.Object, _logger);
+            KafkaQueueAdapterReceiver adapterReceiverMock = new KafkaQueueAdapterReceiver(_serializationManager, _id, consumerMock.Object, _options, factoryMock.Object, _logger);
 
             await adapterReceiverMock.Initialize(TimeSpan.MaxValue);
 
@@ -464,7 +469,7 @@ namespace Orleans.KafkaStreamProviderTest
 
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
 
-            KafkaQueueAdapterReceiver adapterReceiverMock = new KafkaQueueAdapterReceiver(_id, consumerMock.Object, _options, factoryMock.Object, _logger);
+            KafkaQueueAdapterReceiver adapterReceiverMock = new KafkaQueueAdapterReceiver(_serializationManager, _id, consumerMock.Object, _options, factoryMock.Object, _logger);
 
             int numToTake = 3;
 
@@ -483,7 +488,7 @@ namespace Orleans.KafkaStreamProviderTest
 
             Mock<IKafkaBatchFactory> factoryMock = new Mock<IKafkaBatchFactory>();
 
-            KafkaQueueAdapterReceiver adapterReceiverMock = new KafkaQueueAdapterReceiver(_id, consumerMock.Object, _options, factoryMock.Object, _logger);
+            KafkaQueueAdapterReceiver adapterReceiverMock = new KafkaQueueAdapterReceiver(_serializationManager, _id, consumerMock.Object, _options, factoryMock.Object, _logger);
 
             int numToTake = 3;
 

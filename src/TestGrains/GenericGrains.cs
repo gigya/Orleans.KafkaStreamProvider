@@ -49,13 +49,13 @@ namespace UnitTests.Grains
         public Task SetA(T a)
         {
             State.A = a;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task SetB(T b)
         {
             State.B = b;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task<string> GetAxB()
@@ -88,13 +88,13 @@ namespace UnitTests.Grains
         public Task SetA(U a)
         {
             State.A = a;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task SetB(U b)
         {
             State.B = b;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task<string> GetAxB()
@@ -127,13 +127,13 @@ namespace UnitTests.Grains
         public Task SetA(T a)
         {
             State.A = a;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task SetB(U b)
         {
             State.B = b;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task<string> GetAxB()
@@ -183,7 +183,7 @@ namespace UnitTests.Grains
         public Task AddItem(string item)
         {
             State.Items.Add(item);
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task<IList<string>> GetItems()
@@ -211,7 +211,7 @@ namespace UnitTests.Grains
         public Task AddItem(T item)
         {
             State.Items.Add(item);
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task<IList<T>> GetItems()
@@ -251,7 +251,7 @@ namespace UnitTests.Grains
         public Task SetValue(T value)
         {
             State.Value = value;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task<T> GetValue()
@@ -266,12 +266,12 @@ namespace UnitTests.Grains
         public Task SetValue1(TOne value)
         {
             State.Value1 = value;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
         public Task SetValue2(TTwo value)
         {
             State.Value2 = value;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task<TOne> GetValue1()
@@ -291,17 +291,17 @@ namespace UnitTests.Grains
         public Task SetValue1(TOne value)
         {
             State.Value1 = value;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
         public Task SetValue2(TTwo value)
         {
             State.Value2 = value;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
         public Task SetValue3(TThree value)
         {
             State.Value3 = value;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task<TThree> GetValue3()
@@ -345,13 +345,13 @@ namespace UnitTests.Grains
         public Task SetA(T a)
         {
             this._a = a;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task SetB(U b)
         {
             this._b = b;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
     }
 
@@ -370,12 +370,12 @@ namespace UnitTests.Grains
         public Task Foo(TKey key, TMessage message, int x)
         {
             _x = x;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public override Task Bar(TKey key, TMessage message1, TMessage message2)
         {
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task<int> GetX()
@@ -435,7 +435,7 @@ namespace UnitTests.Grains
     {
         public Task Ping()
         {
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
     }
 
@@ -464,7 +464,7 @@ namespace UnitTests.Grains
 
         public Task Ping()
         {
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
     }
 
@@ -483,7 +483,7 @@ namespace UnitTests.Grains
         public Task SetValue(T value)
         {
             _value = value;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task<T> GetValue()
@@ -530,7 +530,7 @@ namespace UnitTests.Grains
                 null,
                 delay,
                 TimeSpan.FromMilliseconds(-1));
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
 
@@ -548,13 +548,13 @@ namespace UnitTests.Grains
         public override Task OnActivateAsync()
         {
             Console.WriteLine("***Activating*** {0}", this.GetPrimaryKey());
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public override Task OnDeactivateAsync()
         {
             Console.WriteLine("***Deactivating*** {0}", this.GetPrimaryKey());
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
     }
 }

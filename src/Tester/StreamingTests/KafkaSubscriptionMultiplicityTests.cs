@@ -13,6 +13,8 @@ using UnitTests.Tester;
 
 namespace Tester.StreamingTests
 {
+    [DeploymentItem("ClientConfiguration.xml")]
+
     [DeploymentItem("OrleansConfigurationForStreamingUnitTests.xml")]
     [DeploymentItem("OrleansProviders.dll")]
     [DeploymentItem("Orleans.KafkaStreamProvider.dll")]
@@ -33,8 +35,9 @@ namespace Tester.StreamingTests
                 SiloConfigFile = new FileInfo("OrleansConfigurationForStreamingUnitTests.xml"),
             })
         {
-            _runner = new SubscriptionMultiplicityTestRunner(KafkaStreamProviderName, GrainClient.Logger);
+            _runner = new SubscriptionMultiplicityTestRunner(KafkaStreamProviderName, Client.Logger);
             _host = this;
+            GrainClient.Initialize("ClientConfiguration.xml");
         }
 
         // Use ClassCleanup to run code after all tests in a class have run
@@ -47,35 +50,35 @@ namespace Tester.StreamingTests
         [TestMethod, TestCategory("Functional"), TestCategory("Kafka"), TestCategory("Storage"), TestCategory("Streaming")]
         public async Task KafkaMultipleSubscriptionTest()
         {
-            logger.Info("************************ KafkaMultipleSubscriptionTest *********************************");
+            Client.Logger.Info("************************ KafkaMultipleSubscriptionTest *********************************");
             await _runner.MultipleSubscriptionTest(Guid.NewGuid(), StreamNamespace);
         }
 
         [TestMethod, TestCategory("Functional"), TestCategory("Kafka"), TestCategory("Storage"), TestCategory("Streaming")]
         public async Task KafkaAddAndRemoveSubscriptionTest()
         {
-            logger.Info("************************ KafkaAddAndRemoveSubscriptionTest *********************************");
+            Client.Logger.Info("************************ KafkaAddAndRemoveSubscriptionTest *********************************");
             await _runner.AddAndRemoveSubscriptionTest(Guid.NewGuid(), StreamNamespace);
         }
 
         [TestMethod, TestCategory("Functional"), TestCategory("Kafka"), TestCategory("Storage"), TestCategory("Streaming")]
         public async Task KafkaResubscriptionTest()
         {
-            logger.Info("************************ KafkaResubscriptionTest *********************************");
+            Client.Logger.Info("************************ KafkaResubscriptionTest *********************************");
             await _runner.ResubscriptionTest(Guid.NewGuid(), StreamNamespace);
         }
 
         [TestMethod, TestCategory("Functional"), TestCategory("Kafka"), TestCategory("Storage"), TestCategory("Streaming")]
         public async Task KafkaResubscriptionAfterDeactivationTest()
         {
-            logger.Info("************************ KafkaResubscriptionAfterDeactivationTest *********************************");
+            Client.Logger.Info("************************ KafkaResubscriptionAfterDeactivationTest *********************************");
             await _runner.ResubscriptionAfterDeactivationTest(Guid.NewGuid(), StreamNamespace);
         }
 
         [TestMethod, TestCategory("Functional"), TestCategory("Kafka"), TestCategory("Storage"), TestCategory("Streaming")]
         public async Task KafkaActiveSubscriptionTest()
         {
-            logger.Info("************************ KafkaActiveSubscriptionTest *********************************");
+            Client.Logger.Info("************************ KafkaActiveSubscriptionTest *********************************");
             await _runner.ActiveSubscriptionTest(Guid.NewGuid(), StreamNamespace);
         }
     }

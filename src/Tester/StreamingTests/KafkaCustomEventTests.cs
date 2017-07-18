@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Orleans;
 using Orleans.Runtime;
 using Orleans.TestingHost;
 using UnitTests.Tester;
@@ -149,6 +150,7 @@ namespace Tester.StreamingTests
             return Equals((Event) obj);
         }
     }
+    [DeploymentItem("ClientConfiguration.xml")]
 
     [DeploymentItem("OrleansConfigurationForStreamingUnitTests.xml")]
     [DeploymentItem("OrleansProviders.dll")]
@@ -169,8 +171,9 @@ namespace Tester.StreamingTests
                 SiloConfigFile = new FileInfo("OrleansConfigurationForStreamingUnitTests.xml"),
             })
         {
-            _runner = new CustomEventTestRunner(KafkaStreamProviderName, logger);
+            _runner = new CustomEventTestRunner(KafkaStreamProviderName, Client.Logger);
             _host = this;
+            GrainClient.Initialize("ClientConfiguration.xml");
         }
 
         // Use ClassCleanup to run code after all tests in a class have run
@@ -183,7 +186,7 @@ namespace Tester.StreamingTests
         [TestMethod, TestCategory("Functional"), TestCategory("KafkaStreamProvider"), TestCategory("Streaming")]
         public async Task SimpleCustomEventTaskTest()
         {
-            logger.Info("************************ SimpleCustomEventTask *********************************");
+            Client.Logger.Info("************************ SimpleCustomEventTask *********************************");
             string valueToSend = @"
                 event=newComment& 
                 eventData=[{ 

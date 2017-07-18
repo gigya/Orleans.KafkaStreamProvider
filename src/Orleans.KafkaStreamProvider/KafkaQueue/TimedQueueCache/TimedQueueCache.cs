@@ -97,9 +97,9 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
 
         public TimedQueueCache(QueueId queueId, TimeSpan cacheTimespan, int cacheSize, int numOfBuckets, Logger logger)
         {
-            _counterMessagesInCache = Metric.Context("KafkaStreamProvider").Counter($"Messages In Cache queueId:({queueId.GetNumericId()})", Unit.Items);
-            _meterCacheEvacuationsPerSecond = Metric.Context("KafkaStreamProvider").Meter($"Cache Evacuations Per Second queueId:({queueId.GetNumericId()})", Unit.Items);
-            _counterNumberOfCursorsCausingPressure = Metric.Context("KafkaStreamProvider").Counter($"Cursors causing pressure queueId:({queueId.GetNumericId()})", Unit.Items);
+            _counterMessagesInCache = Metrics.Metric.Context("KafkaStreamProvider").Counter($"Messages In Cache queueId:({queueId.GetNumericId()})", Unit.Items);
+            _meterCacheEvacuationsPerSecond = Metrics.Metric.Context("KafkaStreamProvider").Meter($"Cache Evacuations Per Second queueId:({queueId.GetNumericId()})", Unit.Items);
+            _counterNumberOfCursorsCausingPressure = Metrics.Metric.Context("KafkaStreamProvider").Counter($"Cursors causing pressure queueId:({queueId.GetNumericId()})", Unit.Items);
 
             Id = queueId;
             _cachedMessages = new LinkedList<TimedQueueCacheItem>();
@@ -539,6 +539,14 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue.TimedQueueCache
 
             EventSequenceToken flooredToken = new EventSequenceToken(tokenAsEventSequenceToken.SequenceNumber);
             return flooredToken;
+        }
+    }
+
+    internal static class EventSequenceTokenExtensions
+    {
+        public static EventSequenceToken NextSequenceNumber(this EventSequenceToken token)
+        {
+            return new EventSequenceToken(token.SequenceNumber + 1, token.EventIndex);
         }
     }
 }

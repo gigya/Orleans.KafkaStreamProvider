@@ -39,7 +39,7 @@ namespace Orleans.KafkaStreamProviderTest
         {
             Mock<Logger> loggerMock = new Mock<Logger>();
             _logger = loggerMock.Object;
-            _defaultId = QueueId.GetQueueId("defaultQueue");
+            _defaultId = QueueId.GetQueueId("defaultQueue", 0, 0);
             _defaultCacheSize = 4096;
             _defaultCacheBucketNum = 10;
         }

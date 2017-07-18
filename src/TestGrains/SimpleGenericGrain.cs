@@ -35,12 +35,12 @@ namespace UnitTests.Grains
         public virtual Task Set(T t)
         {
             Value = t;
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public virtual Task Transform()
         {
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
 
         public Task<T> Get()
@@ -55,7 +55,7 @@ namespace UnitTests.Grains
             if(!thisReference.Equals(clientReference))
                 throw new Exception(String.Format("Case_3: 2 grain references are different, while should have been the same: gr1={0}, gr2={1}", thisReference, clientReference));
 
-            return TaskDone.Done;
+            return Task.CompletedTask;
         }
     }
 }

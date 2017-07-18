@@ -5,12 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Orleans;
 using Orleans.Runtime;
 using Orleans.TestingHost;
 using UnitTests.Tester;
 
 namespace Tester.StreamingTests
 {
+    [DeploymentItem("ClientConfiguration.xml")]
     [DeploymentItem("OrleansConfigurationForPressureTests.xml")]
     [DeploymentItem("OrleansProviders.dll")]
     [DeploymentItem("Orleans.KafkaStreamProvider.dll")]
@@ -26,10 +28,13 @@ namespace Tester.StreamingTests
                 StartFreshOrleans = false,
                 StartSecondary = false,
                 SiloConfigFile = new FileInfo("OrleansConfigurationForPressureTests.xml"),
+
             })
+
         {
-            _runner = new PressuredCacheTestRunner(KafkaStreamProviderName, logger);
+            _runner = new PressuredCacheTestRunner(KafkaStreamProviderName, Client.Logger);
             _host = this;
+            GrainClient.Initialize("ClientConfiguration.xml");
         }
 
         // Use ClassCleanup to run code after all tests in a class have run
@@ -42,28 +47,28 @@ namespace Tester.StreamingTests
         [TestMethod]
         public async Task CacheIsUnderPressureDueToTimeSpanGuarantee()
         {
-            logger.Info("************************ CacheIsUnderPressureDueToTimeSpanGuarantee *********************************");
+            Client.Logger.Info("************************ CacheIsUnderPressureDueToTimeSpanGuarantee *********************************");
             await _runner.CacheIsUnderPressureDueToTimeSpanGuarantee();
         }
 
         [TestMethod]
         public async Task CacheIsUnderPressreDueToLateSubscriber()
         {
-            logger.Info("************************ CacheIsUnderPressreDueToLateSubscriber *********************************");
+            Client.Logger.Info("************************ CacheIsUnderPressreDueToLateSubscriber *********************************");
             await _runner.CacheIsUnderPressreDueToLateSubscriber();
         }
 
         [TestMethod]
         public async Task CacheIsOvertimedDueToSlowConsumer()
         {
-            logger.Info("************************ CacheIsOvertimedDueToSlowConsumer *********************************");
+            Client.Logger.Info("************************ CacheIsOvertimedDueToSlowConsumer *********************************");
             await _runner.CacheIsOvertimedDueToSlowConsumer();
         }
 
         [TestMethod]
         public async Task CacheIsUnderPressureDueToSlowConsumer()
         {
-            logger.Info("************************ CacheIsOvertimedDueToSlowConsumer *********************************");
+            Client.Logger.Info("************************ CacheIsOvertimedDueToSlowConsumer *********************************");
             await _runner.CacheIsUnderPressureDueToSlowConsumer();
         }
     }
