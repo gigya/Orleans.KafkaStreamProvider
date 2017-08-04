@@ -3,6 +3,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Orleans;
 using Orleans.Runtime;
 using Orleans.TestingHost;
 using UnitTests.StreamingTests;
@@ -10,6 +11,8 @@ using UnitTests.Tester;
 
 namespace Tester.StreamingTests
 {
+    [DeploymentItem("ClientConfiguration.xml")]
+
     [DeploymentItem("OrleansConfigurationForStreamingUnitTests.xml")]
     [DeploymentItem("OrleansProviders.dll")]
     [DeploymentItem("Orleans.KafkaStreamProvider.dll")]
@@ -32,6 +35,7 @@ namespace Tester.StreamingTests
         {
             _runner = new MultipleStreamsTestRunner(KafkaStreamProviderName, Client.Logger);
             _host = this;
+            GrainClient.Initialize("ClientConfiguration.xml");
         }
 
         // Use ClassCleanup to run code after all tests in a class have run

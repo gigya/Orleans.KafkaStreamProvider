@@ -13,6 +13,8 @@ using UnitTests.Tester;
 
 namespace Tester.StreamingTests
 {
+    [DeploymentItem("ClientConfiguration.xml")]
+
     [DeploymentItem("OrleansConfigurationForStreamingUnitTests.xml")]
     [DeploymentItem("OrleansProviders.dll")]
     [DeploymentItem("Orleans.KafkaStreamProvider.dll")]
@@ -35,6 +37,7 @@ namespace Tester.StreamingTests
         {
             _runner = new SubscriptionMultiplicityTestRunner(KafkaStreamProviderName, Client.Logger);
             _host = this;
+            GrainClient.Initialize("ClientConfiguration.xml");
         }
 
         // Use ClassCleanup to run code after all tests in a class have run
