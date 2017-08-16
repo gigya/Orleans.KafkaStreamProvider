@@ -29,6 +29,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private const string MetricsPortParam = "MetricsPort";
         private const string IncludeMetricsParam = "IncludeMetrics";
         private const string UsingExternalMetricsParam = "UsingExternalMetrics";
+        private const string KafkaBatchFactoryParam = "KafkaBatchFactory";
 
 
         // Default values
@@ -47,6 +48,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         private const int DefaultMetricsPort = 20490;
         private const bool DefaultIncludeMetrics = true;
         private const bool DefaultUsingExternalMetrics = false;
+        private static readonly Func<IKafkaBatchFactory> DefaultKafkaBatchFactory = () => new KafkaBatchFactory();
 
         // Config values
         private readonly IEnumerable<Uri> _connectionStrings;
@@ -71,6 +73,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
         public int MetricsPort { get; set; }
         public bool IncludeMetrics { get; set; }
         public bool UsingExternalMetrics { get; set; }
+        public Func<IKafkaBatchFactory> KafkaBatchFactory { get; set; }
 
         public KafkaStreamProviderOptions(IEnumerable<Uri> connectionStrings, string topicName, string consumerGroupName)
         {
@@ -98,9 +101,10 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             MetricsPort = DefaultMetricsPort;
             IncludeMetrics = DefaultIncludeMetrics;
             UsingExternalMetrics = DefaultUsingExternalMetrics;
+            KafkaBatchFactory = DefaultKafkaBatchFactory;
         }
 
-        public KafkaStreamProviderOptions(IProviderConfiguration config)
+        public KafkaStreamProviderOptions(IProviderConfiguration config, IServiceProvider serviceProvider)
         {
             if (config == null) throw new ArgumentNullException(nameof(config));
 
@@ -132,6 +136,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             MetricsPort = GetOptionalParamInt(MetricsPortParam, DefaultMetricsPort, config);
             IncludeMetrics = GetOptionalParamBool(IncludeMetricsParam, DefaultIncludeMetrics, config);
             UsingExternalMetrics = GetOptionalParamBool(UsingExternalMetricsParam, DefaultUsingExternalMetrics, config);
+            KafkaBatchFactory = GetOptionalParamKafkaBatchFactory(KafkaBatchFactoryParam, DefaultKafkaBatchFactory, config, serviceProvider);
         }
 
         private static string GetRequiredParam(string paramName, IProviderConfiguration config)
@@ -161,6 +166,24 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
             if (!config.Properties.TryGetValue(paramName, out paramValuePreParsed)) return paramValue;
             if (!bool.TryParse(paramValuePreParsed, out paramValue))
                 throw new ArgumentException(String.Format("{0} invalid.  Must be boolean", paramName));
+
+            return paramValue;
+        }
+        
+        private Func<IKafkaBatchFactory> GetOptionalParamKafkaBatchFactory(string paramName, Func<IKafkaBatchFactory> defaultValue, IProviderConfiguration config, IServiceProvider serviceProvider)
+        {
+            string paramValuePreParsed;
+            var paramValue = defaultValue;
+            if (!config.Properties.TryGetValue(paramName, out paramValuePreParsed)) return paramValue;
+
+            Type batchFactoryType = Type.GetType(paramValuePreParsed, false, true);
+
+            if (batchFactoryType == null)
+                throw new ArgumentException(String.Format("Could not locate the type {0}. Please ensure it is a fully qualified type name and the associated assembly has been loaded", paramName));
+            else if (!typeof(IKafkaBatchFactory).IsAssignableFrom(batchFactoryType))
+                throw new ArgumentException(String.Format("The specified type {0} does not implement IKafkaBatchFactory", paramName));
+            else
+                paramValue = () => (serviceProvider.GetService(batchFactoryType) ?? Activator.CreateInstance(batchFactoryType)) as IKafkaBatchFactory;
 
             return paramValue;
         }

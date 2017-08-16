@@ -7,9 +7,9 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 {
     public class KafkaBatchFactory : IKafkaBatchFactory
     {
-        public Message ToKafkaMessage<T>(Guid streamId, string streamNamespace, IEnumerable<T> events, Dictionary<string, object> requestContext, SerializationManager serializationManager)
+        public IEnumerable<Message> ToKafkaMessage<T>(Guid streamId, string streamNamespace, IEnumerable<T> events, Dictionary<string, object> requestContext, SerializationManager serializationManager)
         {
-            return KafkaBatchContainer.ToKafkaMessage(streamId, streamNamespace, events, requestContext, serializationManager);
+            return new[] { KafkaBatchContainer.ToKafkaMessage(streamId, streamNamespace, events, requestContext, serializationManager) };
         }
 
         public Orleans.Streams.IBatchContainer FromKafkaMessage(Message kafkaMessage, long sequenceId, SerializationManager serializationManager)

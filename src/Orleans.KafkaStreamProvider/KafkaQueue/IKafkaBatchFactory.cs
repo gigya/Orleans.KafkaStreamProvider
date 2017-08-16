@@ -8,7 +8,7 @@ namespace Orleans.KafkaStreamProvider.KafkaQueue
 {
     public interface IKafkaBatchFactory
     {
-        Message ToKafkaMessage<T>(Guid streamId, string streamNamespace, IEnumerable<T> events, Dictionary<string, object> requestContext, SerializationManager serializationManager);
+        IEnumerable<Message> ToKafkaMessage<T>(Guid streamId, string streamNamespace, IEnumerable<T> events, Dictionary<string, object> requestContext, SerializationManager serializationManager);
 
         Message ToKafkaMessage<T>(Guid streamId, string streamNamespace, T singleEvent, Dictionary<string, object> requestContext, SerializationManager serializationManager);
 

@@ -29,9 +29,8 @@ namespace Tester.StreamingTests
                 SiloConfigFile = new FileInfo("OrleansConfigurationForStreamingUnitTests.xml")
             })
         {
-            _runner = new BatchProducingTestRunner(KafkaStreamProviderName, Client.Logger);
+            _runner = new BatchProducingTestRunner(KafkaStreamProviderName, Client.Logger, "ClientConfiguration.xml");
             _host = this;
-            GrainClient.Initialize("ClientConfiguration.xml");
         }
 
         // Use ClassCleanup to run code after all tests in a class have run
